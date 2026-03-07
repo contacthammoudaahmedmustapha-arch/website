@@ -1,628 +1,1263 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>METTEC 3D MAP — Groupe Bayoudh Métal</title>
+<title>METTEC — Le Parcours</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;background:#020d1a;font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif}
-canvas{display:block}
-#loading{position:fixed;inset:0;background:#020d1a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:9999;transition:opacity .8s}
-#loading.fade{opacity:0;pointer-events:none}
-.ld-title{font-size:72px;font-weight:900;letter-spacing:.2em;background:linear-gradient(135deg,#f9ea43,#9e6c0a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.ld-sub{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#2a4a6a}
-.ld-progress{width:220px;height:2px;background:rgba(245,218,26,.1);border-radius:2px;overflow:hidden;margin-top:6px}
-.ld-fill{height:100%;background:linear-gradient(90deg,#f5da1a,#c69808);width:0;transition:width .4s}
-.ld-dots{display:flex;gap:6px;margin-top:4px}
-.ld-dot{width:4px;height:4px;border-radius:50%;background:#f5da1a;animation:ld 1.4s ease-in-out infinite}
-.ld-dot:nth-child(2){animation-delay:.2s}.ld-dot:nth-child(3){animation-delay:.4s}
-@keyframes ld{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
-.ld-err{font-size:12px;color:#ff6655;letter-spacing:.08em;display:none;margin-top:4px;text-align:center;max-width:300px}
-#top{position:fixed;top:0;left:0;right:0;height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;z-index:200;background:rgba(2,13,26,.82);backdrop-filter:blur(22px);border-bottom:1px solid rgba(245,218,26,.12)}
-.logo-row{display:flex;align-items:center;gap:12px}
-.hex{width:36px;height:36px;background:linear-gradient(135deg,#f5da1a,#9e6c0a);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#020d1a;flex-shrink:0}
-.logo-name{font-weight:900;font-size:22px;color:#fff}
-.logo-name em{color:#f5da1a;font-style:normal}
-.map-badge{background:rgba(245,218,26,.12);border:1px solid rgba(245,218,26,.3);border-radius:20px;padding:3px 14px;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#f5da1a}
-.top-right{display:flex;align-items:center;gap:8px}
-.hbtn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:8px;padding:7px 16px;font-size:12px;font-weight:500;letter-spacing:.1em;color:#5a7a9a;cursor:pointer;transition:all .2s}
-.hbtn:hover{background:rgba(245,218,26,.1);border-color:rgba(245,218,26,.3);color:#f5da1a}
-.hbtn.on{background:rgba(245,218,26,.12);border-color:rgba(245,218,26,.35);color:#f5da1a}
-#timebox{position:fixed;top:74px;left:22px;z-index:200;background:rgba(2,13,26,.8);backdrop-filter:blur(16px);border:1px solid rgba(245,218,26,.12);border-radius:12px;padding:10px 16px}
-.time-n{font-size:22px;font-weight:700;color:#fff;line-height:1}
-.time-l{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#3a5a7a;margin-top:2px}
-#weather{position:fixed;top:74px;right:22px;z-index:200;background:rgba(2,13,26,.8);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:10px 16px;display:flex;align-items:center;gap:10px}
-.wx-icon{font-size:22px}.wx-n{font-size:18px;font-weight:700;color:#fff}.wx-l{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#3a5a7a}
-.blabel{position:fixed;pointer-events:none;transform:translate(-50%,-50%);z-index:150;text-align:center;transition:opacity .3s}
-.bldot{width:7px;height:7px;border-radius:50%;margin:0 auto 5px;animation:blink 2s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 4px currentColor}50%{opacity:.4;box-shadow:none}}
-.blname{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;background:rgba(2,13,26,.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:5px 14px;color:#c8daf0;transition:all .25s;cursor:pointer;pointer-events:all}
-.blname:hover,.blname.hl{background:rgba(245,218,26,.15);border-color:rgba(245,218,26,.45);color:#f5da1a}
-#legend{position:fixed;bottom:22px;left:22px;z-index:200;background:rgba(2,13,26,.85);backdrop-filter:blur(18px);border:1px solid rgba(245,218,26,.1);border-radius:14px;padding:16px 18px;min-width:200px}
-.leg-title{font-size:9px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#f5da1a;margin-bottom:13px}
-.leg-item{display:flex;align-items:center;gap:10px;margin-bottom:9px;cursor:pointer;transition:all .2s}
-.leg-item:last-child{margin-bottom:0}.leg-item:hover .leg-lbl{color:#fff}
-.leg-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0}
-.leg-lbl{font-size:12px;color:#5a7a9a;font-weight:400}
-#hints{position:fixed;bottom:22px;right:22px;z-index:200;background:rgba(2,13,26,.75);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 14px;font-size:11px;color:#3a5a7a;line-height:2}
-#hints span{color:#5a8aaa}
-#minimap{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;background:rgba(2,13,26,.85);backdrop-filter:blur(16px);border:1px solid rgba(245,218,26,.12);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:6px}
-.mm-dot{width:8px;height:8px;border-radius:2px;cursor:pointer;transition:transform .2s}.mm-dot:hover{transform:scale(1.4)}
-.mm-sep{width:1px;height:14px;background:rgba(255,255,255,.07)}
-#panel{position:fixed;right:0;top:62px;bottom:0;width:390px;background:rgba(2,13,26,.94);backdrop-filter:blur(28px) saturate(1.6);border-left:1px solid rgba(245,218,26,.14);z-index:300;transform:translateX(100%);transition:transform .45s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:28px 26px 40px}
-#panel.open{transform:translateX(0)}
-.p-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#5a7a9a;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.p-close:hover{background:rgba(245,218,26,.15);color:#f5da1a;border-color:rgba(245,218,26,.35)}
-.p-emoji{font-size:44px;margin-bottom:16px}.p-tag{font-size:10px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:#f5da1a;margin-bottom:7px}
-.p-title{font-size:28px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:4px}
-.p-sub{font-size:13px;color:#3a6080;margin-bottom:22px}
-.p-div{height:1px;background:rgba(255,255,255,.07);margin:18px 0}
-.p-desc{font-size:14px;line-height:1.82;color:#5a7a9a;margin-bottom:20px}
-.p-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
-.pstat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 12px}
-.pstat-v{font-size:24px;font-weight:900;background:linear-gradient(135deg,#f9ea43,#c69808);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.pstat-l{font-size:10px;color:#3a6080;margin-top:3px}
-.p-sect{font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#2a4a6a;margin:16px 0 10px}
-.p-row{display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:11px 13px;margin-bottom:7px}
-.p-row-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}.p-row-n{font-size:13px;color:#9ab8d0}
-.p-floor{background:rgba(255,255,255,.03);border-radius:12px;padding:14px 15px;margin-bottom:9px;border-left:3px solid transparent}
-.pf-floor{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px}
-.pf-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}.pf-desc{font-size:12px;color:#3a6080;line-height:1.65}
-.p-cta{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:linear-gradient(135deg,#f5da1a,#c69808);color:#020d1a;font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:17px;border-radius:12px;border:none;cursor:pointer;margin-top:22px;text-decoration:none;transition:opacity .2s,transform .2s}
-.p-cta:hover{opacity:.9;transform:translateY(-1px)}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(245,218,26,.25);border-radius:2px}
-body{cursor:none}
-#cur{width:8px;height:8px;background:#f5da1a;border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s}
-#cur-r{width:28px;height:28px;border:1.5px solid rgba(245,218,26,.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,opacity .25s}
-#cur.big{width:14px;height:14px}#cur-r.big{width:46px;height:46px;opacity:.3}
+/* ════════════════════════════════════════════
+   WARM INDUSTRIAL PALETTE — LE VOYAGE À PIED
+════════════════════════════════════════════ */
+:root{
+  --amber:#f5da1a; --amber-d:#c69808; --amber-pale:#fef8cc;
+  --ink:#1c1510; --ink2:#2d2318; --ink3:#3d3328;
+  --muted:#8a7a6a; --light:#f0e8d8; --cream:#faf6f0;
+  --rust:#c4521a; --copper:#b87333;
+  /* Dynamic — set by JS */
+  --step-bg:#f0e8d8; --step-accent:#c4521a; --step-rgb:196,82,26;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  background:var(--step-bg);
+  color:var(--ink);
+  font-family:'Barlow',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+  transition:background 1.4s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── CURSOR ── */
+#cur,#cur-ring{position:fixed;top:0;left:0;pointer-events:none;border-radius:50%;z-index:9999;transform:translate(-50%,-50%)}
+#cur{width:10px;height:10px;background:var(--ink);transition:width .2s,height .2s,background .2s}
+#cur-ring{width:36px;height:36px;border:1.5px solid rgba(28,21,16,.35);z-index:9998}
+body:has(a:hover) #cur,body:has(button:hover) #cur{width:16px;height:16px;background:var(--amber-d)}
+body:has(a:hover) #cur-ring,body:has(button:hover) #cur-ring{width:50px;height:50px;border-color:rgba(198,152,8,.5)}
+
+/* ── CANVAS GRAIN (warm) ── */
+#grain{position:fixed;inset:0;pointer-events:none;z-index:7900;opacity:.35;mix-blend-mode:multiply}
+
+/* ── WARM VIGNETTE ── */
+#vig{
+  position:fixed;inset:0;z-index:7800;pointer-events:none;
+  background:radial-gradient(ellipse 85% 75% at 50% 50%,transparent 30%,rgba(28,21,16,.35) 100%);
+  transition:opacity .6s;
+}
+
+/* ════════════════════════════════════════════
+   BARN DOORS — FACTORY GATES
+════════════════════════════════════════════ */
+#door-wrap{
+  position:fixed;inset:0;z-index:8500;pointer-events:none;
+  perspective:1500px;perspective-origin:50% 50%;
+}
+.door-panel{
+  position:absolute;top:0;bottom:0;width:50%;
+  will-change:transform;
+  backface-visibility:hidden;
+  /* Steel plate texture */
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0,rgba(255,255,255,.025) 1px,transparent 1px,transparent 80px),
+    repeating-linear-gradient(90deg,rgba(0,0,0,.06) 0,rgba(0,0,0,.06) 1px,transparent 1px,transparent 80px),
+    linear-gradient(165deg,#2e2820 0%,#1e1a14 45%,#252018 100%);
+}
+#door-l{
+  left:0;
+  transform-origin:left center;
+  transform:rotateY(-92deg);
+  /* Warning stripe at hinge edge (right side of left door) */
+}
+#door-r{
+  right:0;
+  transform-origin:right center;
+  transform:rotateY(92deg);
+}
+/* Construction warning stripes at meeting edge */
+#door-l::after,#door-r::after{
+  content:'';position:absolute;top:0;bottom:0;width:14px;
+  background:repeating-linear-gradient(-45deg,var(--amber) 0,var(--amber) 7px,#1e1a14 7px,#1e1a14 14px);
+}
+#door-l::after{right:0}
+#door-r::after{left:0}
+/* Door stamp / METTEC logo */
+.door-stamp{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  opacity:.5;
+}
+.door-stamp .ds-hex{
+  width:52px;height:52px;background:var(--amber);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;
+}
+.door-stamp .ds-hex span{font-family:'Bebas Neue';font-size:18px;color:var(--ink)}
+.door-stamp .ds-name{font-family:'Bebas Neue';font-size:18px;color:rgba(245,218,26,.7);letter-spacing:.2em}
+/* Push bar */
+.door-bar{position:absolute;bottom:25%;width:60%;height:10px;border-radius:5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.06)}
+#door-l .door-bar{right:10%}
+#door-r .door-bar{left:10%}
+/* Door bolt rivets */
+.rivets{position:absolute;display:grid;gap:12px}
+.rivet{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.05)}
+
+/* ── DOOR LIGHT (crack of light between doors) ── */
+#door-light{
+  position:fixed;top:0;bottom:0;left:50%;z-index:8400;
+  width:0px;transform:translateX(-50%);
+  background:linear-gradient(90deg,transparent,rgba(245,218,26,.6),transparent);
+  pointer-events:none;opacity:0;
+  filter:blur(8px);
+}
+
+/* ════════════════════════════════════════════
+   NAVBAR — warm dark on light
+════════════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5vw;height:68px;
+  background:transparent;
+  transition:background .4s,border-color .4s,box-shadow .4s;
+  border-bottom:1px solid transparent;
+}
+nav.on{
+  background:rgba(250,246,240,.94);
+  backdrop-filter:blur(20px);
+  border-color:rgba(28,21,16,.08);
+  box-shadow:0 2px 20px rgba(28,21,16,.06);
+}
+.nl{display:flex;align-items:center;gap:10px;text-decoration:none}
+.ni{width:34px;height:34px;background:var(--ink);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center}
+.ni span{font-family:'Bebas Neue';font-size:13px;color:var(--amber)}
+.nm{font-family:'Bebas Neue';font-size:24px;letter-spacing:.12em;color:var(--ink);line-height:1}
+.nm em{color:var(--rust);font-style:normal}
+.ns{font-size:8px;font-weight:600;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:6px;list-style:none}
+.nav-links a{font-family:'Barlow Condensed';font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 14px;border-radius:4px;transition:color .2s;position:relative}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--ink)!important;color:var(--amber)!important;font-weight:700!important;padding:8px 18px!important;border-radius:4px!important}
+.nav-cta:hover{background:var(--ink2)!important}
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.burger span{display:block;width:24px;height:2px;background:var(--ink);transition:transform .3s,opacity .3s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mob{display:none;position:fixed;inset:0;top:68px;background:rgba(250,246,240,.98);backdrop-filter:blur(20px);z-index:850;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.mob.open{display:flex}
+.mob a{font-family:'Bebas Neue';font-size:38px;letter-spacing:.12em;color:var(--ink);text-decoration:none;transition:color .2s}
+.mob a:hover{color:var(--rust)}
+
+/* ════════════════════════════════════════════
+   HERO — standing at the trailhead
+════════════════════════════════════════════ */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:100px 5vw 80px;
+  position:relative;overflow:hidden;
+  background:var(--cream);
+}
+/* Horizon line */
+.h-horizon{
+  position:absolute;top:55%;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(196,82,26,.25) 30%,rgba(196,82,26,.25) 70%,transparent);
+}
+/* Perspective floor grid */
+.h-floor{
+  position:absolute;bottom:0;left:0;right:0;height:45%;
+  transform:perspective(600px) rotateX(65deg);
+  transform-origin:bottom center;
+  background:
+    repeating-linear-gradient(90deg,rgba(180,130,80,.1) 0,rgba(180,130,80,.1) 1px,transparent 1px,transparent 9vw),
+    repeating-linear-gradient(0deg,rgba(180,130,80,.08) 0,rgba(180,130,80,.08) 1px,transparent 1px,transparent 40px);
+  mask-image:linear-gradient(to top,rgba(0,0,0,.6),transparent);
+}
+/* Floating dust motes */
+.mote{
+  position:absolute;border-radius:50%;
+  background:rgba(196,82,26,.15);filter:blur(40px);
+  animation:moteFloat ease-in-out infinite alternate;
+}
+@keyframes moteFloat{from{transform:translateY(0)}to{transform:translateY(-40px)}}
+
+.htag{display:inline-flex;align-items:center;gap:10px;font-family:'Barlow Condensed';font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--rust);margin-bottom:32px;position:relative;z-index:2;animation:fu .8s ease both}
+.htag::before,.htag::after{content:'';display:inline-block;width:28px;height:1px;background:var(--rust)}
+h1.ht{font-family:'Bebas Neue';font-size:clamp(72px,10vw,140px);line-height:.86;letter-spacing:.04em;color:var(--ink);position:relative;z-index:2;animation:fu .8s .1s ease both}
+h1.ht .a{color:var(--rust)}
+h1.ht .o{-webkit-text-stroke:2px rgba(28,21,16,.18);color:transparent}
+.hsub{font-size:clamp(15px,1.6vw,18px);font-weight:300;font-style:italic;line-height:1.9;color:var(--muted);max-width:520px;margin:28px auto 0;position:relative;z-index:2;animation:fu .8s .2s ease both}
+.hsub strong{color:var(--ink);font-weight:600;font-style:normal}
+.hbtns{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:48px;position:relative;z-index:2;animation:fu .8s .3s ease both}
+.bp{display:inline-flex;align-items:center;gap:9px;background:var(--ink);color:var(--amber);font-family:'Barlow Condensed';font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:15px 36px;border-radius:4px;text-decoration:none;border:none;cursor:pointer;transition:background .25s,transform .2s}
+.bp:hover{background:var(--ink2);transform:translateY(-2px)}
+.bg2{display:inline-flex;align-items:center;gap:9px;color:var(--ink);font-family:'Barlow Condensed';font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:14px 36px;border-radius:4px;text-decoration:none;border:1.5px solid rgba(28,21,16,.25);transition:border-color .2s,color .2s,transform .2s}
+.bg2:hover{border-color:var(--rust);color:var(--rust);transform:translateY(-2px)}
+.hstats{display:flex;gap:56px;margin-top:64px;position:relative;z-index:2;animation:fu .8s .4s ease both}
+.sv{font-family:'Bebas Neue';font-size:48px;color:var(--rust);line-height:1}
+.sl{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.scr{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font-family:'Barlow Condensed';font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);z-index:2;animation:fu .8s .6s ease both}
+.scr-line{width:1px;height:36px;background:linear-gradient(var(--rust),transparent);animation:sp 1.6s ease-in-out infinite}
+@keyframes sp{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes fu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* ════════════════════════════════════════════
+   JOURNEY PROGRESS — winding trail
+════════════════════════════════════════════ */
+#pgb{
+  position:fixed;top:0;left:0;right:0;z-index:800;
+  transform:translateY(-100%);
+  transition:transform .5s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;
+  height:56px;
+}
+#pgb.vis{transform:translateY(68px);pointer-events:all}
+.ptrack{
+  background:rgba(250,246,240,.94);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(28,21,16,.08);
+  height:100%;
+  display:flex;align-items:center;
+  padding:0 4vw;
+  gap:0;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.ptrack::-webkit-scrollbar{display:none}
+/* Thin progress line behind dots */
+.ptrack-line{position:absolute;left:4vw;right:4vw;height:1px;background:rgba(28,21,16,.08);top:50%;transform:translateY(-50%);z-index:0}
+.ptrack-fill{height:100%;background:var(--step-accent);transition:width 1.2s cubic-bezier(.4,0,.2,1);width:0%}
+.pstep{
+  display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding:0 10px;flex-shrink:0;cursor:pointer;
+  position:relative;z-index:1;opacity:.4;transition:opacity .3s;
+}
+.pstep.active{opacity:1}.pstep.done{opacity:.7}
+.psn{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid rgba(28,21,16,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed';font-size:9px;font-weight:700;color:var(--muted);
+  background:var(--cream);
+  transition:all .3s;
+}
+.pstep.active .psn{background:var(--step-accent);border-color:var(--step-accent);color:#fff}
+.pstep.done .psn{background:rgba(var(--step-rgb),.12);border-color:var(--step-accent);color:var(--step-accent)}
+.psl{font-family:'Barlow Condensed';font-size:8px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.pstep.active .psl{color:var(--step-accent)}.pstep.done .psl{color:var(--muted)}
+
+/* ════════════════════════════════════════════
+   PROCESS INTRO
+════════════════════════════════════════════ */
+#pintr{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:80px 5vw;
+  position:relative;overflow:hidden;
+  background:var(--light);
+}
+.pinbg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 40% 50%,rgba(196,82,26,.06) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 70% 50%,rgba(245,218,26,.05) 0%,transparent 60%)}
+/* Diagonal stripe accent */
+.pinbg::after{
+  content:'';position:absolute;top:0;right:0;width:40%;bottom:0;
+  background:repeating-linear-gradient(-45deg,rgba(28,21,16,.015) 0,rgba(28,21,16,.015) 1px,transparent 1px,transparent 20px);
+}
+.pin-badge{display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(196,82,26,.3);border-radius:100px;padding:6px 18px;font-family:'Barlow Condensed';font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);margin-bottom:36px;position:relative;z-index:2}
+.pin-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--rust);animation:pd 1.5s ease infinite}
+@keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+.pin-t{font-family:'Bebas Neue';font-size:clamp(52px,7vw,100px);line-height:.86;letter-spacing:.04em;color:var(--ink);position:relative;z-index:2;margin-bottom:20px}
+.pin-t .y{color:var(--rust)}.pin-t .o{-webkit-text-stroke:2px rgba(28,21,16,.15);color:transparent}
+.pin-sub{font-size:16px;font-weight:300;font-style:italic;line-height:1.9;color:var(--muted);max-width:540px;margin:0 auto 48px;position:relative;z-index:2}
+.pin-sub strong{color:var(--ink);font-weight:600;font-style:normal}
+.mini-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:820px;margin:0 auto 48px;position:relative;z-index:2}
+.ms{display:flex;align-items:center;gap:8px;background:rgba(28,21,16,.04);border:1px solid rgba(28,21,16,.09);border-radius:5px;padding:8px 14px;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+.ms:hover{border-color:rgba(196,82,26,.35);background:rgba(196,82,26,.05);transform:translateY(-2px)}
+.msn{font-family:'Bebas Neue';font-size:18px;color:var(--rust);line-height:1}
+.mst{font-family:'Barlow Condensed';font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+/* ════════════════════════════════════════════
+   FILM SECTION
+════════════════════════════════════════════ */
+#film{position:relative}
+.film-sticky{
+  position:sticky;top:0;height:100vh;
+  overflow:hidden;
+  display:flex;
+}
+
+/* ═══ SLIDES ═══ */
+.slide{
+  position:absolute;inset:0;
+  display:flex;
+  align-items:stretch;
+  pointer-events:none;
+  will-change:opacity,transform;
+  /* Hidden default */
+  opacity:0;
+  transform:translateY(50px) scale(.97);
+}
+.slide.even{flex-direction:row-reverse}
+
+/* ── ACTIVE ── */
+.slide.s-active{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:all;
+  transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.16,1,.3,1);
+}
+/* Camera footstep bob on arrival */
+.slide.s-active .s-inner{
+  animation:walkBob .9s .2s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes walkBob{
+  0%{transform:translateY(24px) rotateX(4deg)}
+  55%{transform:translateY(-6px) rotateX(-.8deg)}
+  100%{transform:translateY(0) rotateX(0)}
+}
+.slide.s-active .s-detail-item{
+  animation:itemWalk .5s ease both;
+}
+.slide.s-active .s-detail-item:nth-child(1){animation-delay:.45s}
+.slide.s-active .s-detail-item:nth-child(2){animation-delay:.55s}
+.slide.s-active .s-detail-item:nth-child(3){animation-delay:.65s}
+@keyframes itemWalk{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+
+/* ── IMAGE COLUMN ── */
+.s-img-col{
+  width:55%;flex-shrink:0;
+  position:relative;overflow:hidden;
+  will-change:transform;
+}
+.slide.even .s-img-col{width:52%}
+.s-img-frame{position:absolute;inset:-4%;} /* slightly oversized for parallax */
+.s-img-frame img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:contrast(1.04) saturate(.88) brightness(.95);
+  transition:transform 10s ease;
+}
+.slide.s-active .s-img-frame img{transform:scale(1.05)}
+/* Warm overlay on image */
+.s-img-frame::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to right,transparent 60%,var(--step-bg) 100%);
+  transition:background 1.4s ease;
+}
+.slide.even .s-img-frame::after{
+  background:linear-gradient(to left,transparent 60%,var(--step-bg) 100%);
+}
+/* Scan lines */
+.s-img-frame::before{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(28,21,16,.025) 3px,rgba(28,21,16,.025) 6px);
+}
+/* Location stamp on image */
+.s-location{
+  position:absolute;top:28px;left:24px;z-index:10;
+  background:rgba(250,246,240,.92);backdrop-filter:blur(8px);
+  border-radius:4px;padding:8px 14px;
+  border-left:3px solid var(--step-accent);
+  transition:border-color 1.4s;
+}
+.s-location .loc-num{font-family:'Bebas Neue';font-size:28px;color:var(--step-accent);line-height:1;transition:color 1.4s}
+.s-location .loc-phase{font-family:'Barlow Condensed';font-size:8px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+/* Environment tag */
+.s-env-tag{
+  position:absolute;bottom:24px;right:20px;z-index:10;
+  font-family:'Barlow Condensed';font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(250,246,240,.6);
+  writing-mode:vertical-lr;
+  display:flex;align-items:center;gap:6px;
+}
+.s-env-tag::before{content:'';width:1px;height:30px;background:rgba(250,246,240,.3)}
+
+/* ── TEXT COLUMN ── */
+.s-txt-col{
+  flex:1;
+  display:flex;align-items:center;
+  padding:100px 5vw 80px 4vw;
+  position:relative;overflow:hidden;
+  will-change:transform;
+}
+.slide.even .s-txt-col{padding:100px 4vw 80px 5vw}
+
+/* Ghost background number */
+.s-ghost{
+  position:absolute;
+  font-family:'Bebas Neue';
+  font-size:clamp(180px,28vw,380px);
+  line-height:1;
+  color:var(--step-accent);
+  opacity:.07;
+  right:-3vw;bottom:-4vh;
+  pointer-events:none;
+  z-index:0;
+  user-select:none;
+  transition:color 1.4s;
+}
+.slide.even .s-ghost{right:auto;left:-3vw}
+
+.s-inner{position:relative;z-index:1}
+.s-tag{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Barlow Condensed';font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--step-accent);margin-bottom:18px;
+  transition:color 1.4s;
+}
+.s-tag::before{content:'';width:22px;height:1px;background:currentColor}
+.s-tag span{opacity:.6}
+
+.s-title{
+  font-family:'Bebas Neue';
+  font-size:clamp(40px,4.2vw,64px);
+  line-height:.9;letter-spacing:.04em;
+  color:var(--ink);margin-bottom:22px;
+}
+.s-title em{
+  color:var(--step-accent);
+  font-style:normal;
+  transition:color 1.4s;
+  display:block;
+}
+.s-desc{
+  font-size:15px;font-weight:300;font-style:italic;line-height:1.85;
+  color:var(--muted);margin-bottom:28px;max-width:380px;
+}
+.s-desc strong{color:var(--ink);font-weight:600;font-style:normal}
+
+.s-details{display:flex;flex-direction:column;gap:10px}
+.s-detail-item{
+  display:flex;align-items:flex-start;gap:12px;
+  background:rgba(28,21,16,.04);
+  border:1px solid rgba(28,21,16,.08);
+  border-left:2.5px solid rgba(var(--step-rgb),.5);
+  border-radius:4px;padding:11px 16px;
+  transition:border-color 1.4s;
+}
+.s-detail-item svg{flex-shrink:0;margin-top:2px;color:var(--step-accent);transition:color 1.4s}
+.s-detail-item p{font-size:13px;font-weight:400;line-height:1.65;color:var(--muted)}
+.s-detail-item p strong{color:var(--ink)}
+
+/* ════════════════════════════════════════════
+   JOURNEY HUD — compass + path + km
+════════════════════════════════════════════ */
+/* Compass (left side) */
+#compass{
+  position:fixed;left:2.5vw;top:50%;transform:translateY(-50%);
+  z-index:810;display:none;flex-direction:column;align-items:center;gap:10px;
+}
+#compass.vis{display:flex}
+.compass-rose{
+  width:48px;height:48px;position:relative;
+}
+.compass-ring{
+  width:48px;height:48px;border-radius:50%;
+  border:1.5px solid rgba(28,21,16,.2);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.compass-ring::before{
+  content:'N';position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  font-family:'Bebas Neue';font-size:11px;color:var(--step-accent);
+  transition:color 1.4s;
+}
+.compass-needle{
+  width:2px;height:20px;border-radius:1px;
+  background:linear-gradient(var(--step-accent) 50%,rgba(28,21,16,.3) 50%);
+  transition:transform 1.2s cubic-bezier(.34,1.56,.64,1),background 1.4s;
+}
+.compass-env{
+  font-family:'Barlow Condensed';font-size:8px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);writing-mode:vertical-lr;
+  margin-top:4px;
+}
+
+/* Journey path (right side) */
+#journey-hud{
+  position:fixed;right:2.5vw;top:50%;transform:translateY(-50%);
+  z-index:810;display:none;flex-direction:column;align-items:center;gap:6px;
+}
+#journey-hud.vis{display:flex}
+.j-node{
+  width:8px;height:8px;border-radius:50%;
+  border:1.5px solid rgba(28,21,16,.2);
+  background:transparent;
+  position:relative;cursor:pointer;
+  transition:all .4s;flex-shrink:0;
+}
+.j-node.done{background:rgba(var(--step-rgb),.5);border-color:var(--step-accent)}
+.j-node.active{
+  background:var(--step-accent);
+  border-color:var(--step-accent);
+  transform:scale(1.6);
+  box-shadow:0 0 0 4px rgba(var(--step-rgb),.2);
+}
+.j-connector{width:1px;height:10px;background:rgba(28,21,16,.12);flex-shrink:0}
+.j-connector.done{background:rgba(var(--step-rgb),.4)}
+
+/* KM counter (bottom nav area) */
+.fn-km{
+  font-family:'Barlow Condensed';
+  font-size:10px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);
+  text-align:center;
+  margin-top:4px;
+}
+.fn-km strong{color:var(--step-accent);font-family:'Bebas Neue';font-size:20px;display:block;line-height:1;transition:color 1.4s}
+
+/* BOTTOM NAVIGATION */
+.film-nav{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+  z-index:850;display:none;align-items:center;gap:18px;
+}
+.film-nav.vis{display:flex}
+.fn-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:50px;height:50px;border-radius:50%;
+  background:rgba(250,246,240,.85);
+  border:1.5px solid rgba(28,21,16,.15);
+  cursor:pointer;color:var(--ink);
+  transition:background .2s,border-color .2s,transform .2s;
+  backdrop-filter:blur(12px);
+  box-shadow:0 4px 20px rgba(28,21,16,.08);
+}
+.fn-btn:hover{background:var(--step-accent);border-color:var(--step-accent);color:#fff;transform:scale(1.08)}
+.fn-btn svg{width:18px;height:18px}
+.fn-center{display:flex;flex-direction:column;align-items:center;min-width:120px}
+.fn-num{
+  font-family:'Bebas Neue';font-size:40px;
+  color:var(--step-accent);line-height:1;
+  transition:color 1.4s;
+}
+.fn-num.bump{animation:nbump .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes nbump{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}
+.fn-total{font-family:'Barlow Condensed';font-size:10px;font-weight:600;letter-spacing:.12em;color:var(--muted)}
+
+/* ════════════════════════════════════════════
+   FINAL CTA — warm arrival
+══════════════════════════════════════════ */
+#fcta{
+  padding:120px 5vw;text-align:center;
+  background:var(--ink);position:relative;overflow:hidden;
+}
+.fcta-noise{position:absolute;inset:0;background-image:repeating-linear-gradient(-45deg,rgba(245,218,26,.015) 0,rgba(245,218,26,.015) 1px,transparent 1px,transparent 20px);pointer-events:none}
+.fcta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:300px;background:radial-gradient(ellipse,rgba(245,218,26,.1) 0%,transparent 70%);pointer-events:none}
+.ftag{display:inline-flex;align-items:center;gap:10px;font-family:'Barlow Condensed';font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--amber-d);margin-bottom:28px;position:relative;z-index:2}
+.ftag::before,.ftag::after{content:'';display:inline-block;width:22px;height:1px;background:var(--amber-d)}
+.ftt{font-family:'Bebas Neue';font-size:clamp(52px,7vw,96px);line-height:.88;letter-spacing:.04em;color:#fff;position:relative;z-index:2;margin-bottom:20px}
+.ftt span{color:var(--amber)}
+.fsb{font-size:16px;font-weight:300;font-style:italic;color:rgba(240,232,216,.6);max-width:460px;margin:0 auto 48px;line-height:1.8;position:relative;z-index:2}
+.fbtns{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;position:relative;z-index:2}
+.bp-inv{display:inline-flex;align-items:center;gap:9px;background:var(--amber);color:var(--ink);font-family:'Barlow Condensed';font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:15px 36px;border-radius:4px;text-decoration:none;border:none;cursor:pointer;transition:background .2s,transform .2s}
+.bp-inv:hover{background:var(--amber-pale);transform:translateY(-2px)}
+.bg-inv{display:inline-flex;align-items:center;gap:9px;color:rgba(240,232,216,.7);font-family:'Barlow Condensed';font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:14px 36px;border-radius:4px;text-decoration:none;border:1.5px solid rgba(240,232,216,.2);transition:all .2s}
+.bg-inv:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px)}
+
+footer{background:var(--ink2);border-top:1px solid rgba(255,255,255,.05);padding:36px 5vw;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.fc{font-family:'Barlow Condensed';font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .nav-links{display:none}.burger{display:flex}
+  .slide{flex-direction:column!important}
+  .s-img-col{width:100%;height:45vh;flex-shrink:0}
+  .s-txt-col{padding:32px 5vw 100px}
+  .hstats{gap:28px;flex-wrap:wrap;justify-content:center}
+  #compass{display:none!important}
+  #journey-hud{display:none!important}
+}
 </style>
 </head>
 <body>
-<div id="cur"></div><div id="cur-r"></div>
-<div id="loading">
-  <div class="ld-title">METTEC</div>
-  <div class="ld-sub">Chargement de la carte 3D...</div>
-  <div class="ld-progress"><div class="ld-fill" id="ldfill"></div></div>
-  <div class="ld-dots"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div>
-  <div class="ld-err" id="lderr"></div>
-</div>
-<canvas id="c"></canvas>
-<div id="top">
-  <div class="logo-row">
-    <div class="hex">M</div>
-    <div><div class="logo-name">MET<em>TEC</em></div></div>
-    <div class="map-badge">3D Map</div>
-  </div>
-  <div class="top-right">
-    <button class="hbtn" id="btnReset" onclick="resetCam()">⟳ Vue initiale</button>
-    <button class="hbtn" id="btnAuto" onclick="toggleAuto()">◉ Auto-rotation</button>
-    <button class="hbtn" onclick="document.getElementById('panel').classList.remove('open')">← Fermer</button>
-  </div>
-</div>
-<div id="timebox"><div class="time-n" id="timedisp">--:--</div><div class="time-l">Monastir, TN</div></div>
-<div id="weather"><div class="wx-icon">🌙</div><div><div class="wx-n">24°C</div><div class="wx-l">Ciel dégagé</div></div></div>
-<div id="lbls"></div>
-<div id="panel"><button class="p-close" onclick="closePanel()">✕</button><div id="pcontent"></div></div>
-<div id="legend">
-  <div class="leg-title">Ateliers METTEC</div>
-  <div class="leg-item" onclick="focusOn('production')"><div class="leg-sq" style="background:#f5da1a"></div><span class="leg-lbl">🏭 Production</span></div>
-  <div class="leg-item" onclick="focusOn('soudeurs')"><div class="leg-sq" style="background:#ff8c00"></div><span class="leg-lbl">⚡ Soudure</span></div>
-  <div class="leg-item" onclick="focusOn('menuisiers')"><div class="leg-sq" style="background:#e5c20d"></div><span class="leg-lbl">🔧 Menuiserie</span></div>
-  <div class="leg-item" onclick="focusOn('controle')"><div class="leg-sq" style="background:#00cc88"></div><span class="leg-lbl">✅ Contrôle Qualité</span></div>
-  <div class="leg-item" onclick="focusOn('admin')"><div class="leg-sq" style="background:#4a9eff"></div><span class="leg-lbl">🏢 Administration</span></div>
-</div>
-<div id="minimap">
-  <div class="mm-dot" style="background:#f5da1a" onclick="focusOn('production')"></div><div class="mm-sep"></div>
-  <div class="mm-dot" style="background:#ff8c00" onclick="focusOn('soudeurs')"></div><div class="mm-sep"></div>
-  <div class="mm-dot" style="background:#e5c20d" onclick="focusOn('menuisiers')"></div><div class="mm-sep"></div>
-  <div class="mm-dot" style="background:#00cc88" onclick="focusOn('controle')"></div><div class="mm-sep"></div>
-  <div class="mm-dot" style="background:#4a9eff" onclick="focusOn('admin')"></div>
-</div>
-<div id="hints"><span>🖱 Drag</span> orbiter &nbsp;·&nbsp; <span>⚙ Scroll</span> zoom &nbsp;·&nbsp; <span>Click</span> explorer</div>
 
-<!-- TOUT dans un seul bloc script : chargement Three.js + logique app -->
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- CANVAS GRAIN -->
+<canvas id="grain"></canvas>
+
+<!-- WARM VIGNETTE -->
+<div id="vig"></div>
+
+<!-- DOOR LIGHT CRACK -->
+<div id="door-light"></div>
+
+<!-- BARN DOORS -->
+<div id="door-wrap">
+  <div class="door-panel" id="door-l">
+    <div class="door-stamp">
+      <div class="ds-hex"><span>MT</span></div>
+      <div class="ds-name">METTEC</div>
+    </div>
+    <div class="door-bar"></div>
+    <div class="rivets" style="top:15%;left:8%;grid-template-columns:1fr 1fr;gap:30px 20px">
+      <div class="rivet"></div><div class="rivet"></div>
+      <div class="rivet"></div><div class="rivet"></div>
+    </div>
+    <div class="rivets" style="bottom:15%;left:8%;grid-template-columns:1fr 1fr;gap:30px 20px">
+      <div class="rivet"></div><div class="rivet"></div>
+      <div class="rivet"></div><div class="rivet"></div>
+    </div>
+  </div>
+  <div class="door-panel" id="door-r">
+    <div class="door-stamp">
+      <div class="ds-hex"><span>MT</span></div>
+      <div class="ds-name">METTEC</div>
+    </div>
+    <div class="door-bar"></div>
+    <div class="rivets" style="top:15%;right:8%;grid-template-columns:1fr 1fr;gap:30px 20px">
+      <div class="rivet"></div><div class="rivet"></div>
+      <div class="rivet"></div><div class="rivet"></div>
+    </div>
+    <div class="rivets" style="bottom:15%;right:8%;grid-template-columns:1fr 1fr;gap:30px 20px">
+      <div class="rivet"></div><div class="rivet"></div>
+      <div class="rivet"></div><div class="rivet"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="nav">
+  <a class="nl" href="#">
+    <div class="ni"><span>MT</span></div>
+    <div style="display:flex;flex-direction:column">
+      <div class="nm">MET<em>TEC</em></div>
+      <div class="ns">Cabines Modulaires</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#hero">Accueil</a></li>
+    <li><a href="#pintr">Processus</a></li>
+    <li><a href="#fcta">Contact</a></li>
+    <li><a href="#fcta" class="nav-cta">Devis Gratuit</a></li>
+  </ul>
+  <button class="burger" id="burg"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob" id="mob">
+  <a href="#hero">Accueil</a>
+  <a href="#pintr">Processus</a>
+  <a href="#fcta">Contact</a>
+  <a href="#fcta" style="background:var(--ink);color:var(--amber);padding:12px 36px;border-radius:6px">Devis</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="h-horizon"></div>
+  <div class="h-floor"></div>
+  <div class="mote" style="width:320px;height:320px;left:5%;top:30%;animation-duration:7s;animation-delay:0s"></div>
+  <div class="mote" style="width:200px;height:200px;right:8%;top:50%;animation-duration:10s;animation-delay:2s"></div>
+  <div class="mote" style="width:150px;height:150px;left:30%;top:60%;animation-duration:8s;animation-delay:4s"></div>
+  <div class="htag">Cabines Modulaires Certifiées Indestructibles</div>
+  <h1 class="ht">BÂTI,<br><span class="a">POUR</span><br><span class="o">DURER</span></h1>
+  <p class="hsub">Cabine Modulaire METTEC — <strong>Panneau sandwich PU 100mm</strong> — Acier S355 galvanisé — EN 1090 — <em>Un voyage construit pas à pas, avec vous</em>.</p>
+  <div class="hbtns">
+    <button class="bp" onclick="document.getElementById('pintr').scrollIntoView({behavior:'smooth'})">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      Entrer dans le parcours
+    </button>
+    <a href="#fcta" class="bg2">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.18 1.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.128.96.341 1.905.63 2.82a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.46-.46a2 2 0 012.11-.45c.916.29 1.86.502 2.82.63A2 2 0 0122 16.92z"/></svg>
+      Nous contacter
+    </a>
+  </div>
+  <div class="hstats">
+    <div><div class="sv">+200</div><div class="sl">Cabines livrées</div></div>
+    <div><div class="sv">15<span style="font-size:22px;color:var(--muted)">ans</span></div><div class="sl">D'excellence</div></div>
+    <div><div class="sv">42,000N</div><div class="sl">Résistance certifiée</div></div>
+  </div>
+  <div class="scr"><div class="scr-line"></div>Marcher avec nous</div>
+</section>
+
+<!-- PROGRESS BAR -->
+<div id="pgb">
+  <div class="ptrack" id="ptrack">
+    <div class="ptrack-line"><div class="ptrack-fill" id="ptfill"></div></div>
+  </div>
+</div>
+
+<!-- PROCESS INTRO -->
+<section id="pintr">
+  <div class="pinbg"></div>
+  <div class="pin-badge">Notre méthode éprouvée</div>
+  <h2 class="pin-t">11 ÉTAPES<br><span class="y">VERS</span> L'<br><span class="o">INDESTRUCTIBLE</span></h2>
+  <p class="pin-sub">Chaque cabine METTEC suit un chemin rigoureux et transparent. <strong>De l'analyse à la livraison</strong>, nous marchons avec vous à chaque pas.</p>
+  <div class="mini-grid" id="mgrid"></div>
+  <button class="bp" onclick="startFilm()">
+    Commencer le voyage
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+  </button>
+</section>
+
+<!-- FILM -->
+<div id="film">
+  <div class="film-sticky" id="sticky">
+    <div class="scene" id="scene"></div>
+  </div>
+</div>
+
+<!-- COMPASS HUD -->
+<div id="compass">
+  <div class="compass-ring">
+    <div class="compass-needle" id="cneedle"></div>
+  </div>
+  <div class="compass-env" id="cenv">SABLE</div>
+</div>
+
+<!-- JOURNEY PATH HUD -->
+<div id="journey-hud" id="jhud"></div>
+
+<!-- BOTTOM NAV -->
+<div class="film-nav" id="fnav">
+  <button class="fn-btn" id="fn-prev">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+  </button>
+  <div class="fn-center">
+    <div class="fn-num" id="fncur">01</div>
+    <div class="fn-total">/ 11 ÉTAPES</div>
+    <div class="fn-km"><strong id="fn-km-val">0.0</strong>km parcourus</div>
+  </div>
+  <button class="fn-btn" id="fn-next">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
+<!-- FINAL CTA -->
+<section id="fcta">
+  <div class="fcta-noise"></div>
+  <div class="fcta-glow"></div>
+  <div class="ftag">Arrivée — Prêt à démarrer</div>
+  <h2 class="ftt">VOTRE CABINE<br><span>VOUS ATTEND</span></h2>
+  <p class="fsb">Vous avez parcouru les 11 étapes. Il est temps de construire <em>ensemble</em> votre espace indestructible.</p>
+  <div class="fbtns">
+    <a href="#" class="bp-inv">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.18 1.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.128.96.341 1.905.63 2.82a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.46-.46a2 2 0 012.11-.45c.916.29 1.86.502 2.82.63A2 2 0 0122 16.92z"/></svg>
+      Demander un devis gratuit
+    </a>
+    <a href="#hero" class="bg-inv">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Recommencer le voyage
+    </a>
+  </div>
+</section>
+
+<footer>
+  <a class="nl" href="#">
+    <div class="ni"><span>MT</span></div>
+    <div style="display:flex;flex-direction:column"><div class="nm" style="font-size:20px;color:#fff">MET<em style="color:var(--amber)">TEC</em></div></div>
+  </a>
+  <div class="fc">© 2025 METTEC — Monastir, Tunisie — Acier S355 — EN 1090</div>
+</footer>
+
 <script>
-(function(){
-  // ── LOADER PROGRESS ─────────────────────────────────────
-  var fill = document.getElementById('ldfill');
-  var errEl = document.getElementById('lderr');
-  var prog = 0;
-  var iv = setInterval(function(){
-    prog += 4 + Math.random()*8;
-    if(prog >= 82){ prog = 82; clearInterval(iv); }
-    fill.style.width = prog + '%';
-  }, 90);
+/* ══════════════════════════════════════════
+   ENVIRONMENT — 11 warm industrial worlds
+══════════════════════════════════════════ */
+const ENV=[
+  {bg:'#f0e7d5',accent:'#c4521a',rgb:'196,82,26',name:'SABLE'},
+  {bg:'#e8ddd0',accent:'#9b6030',rgb:'155,96,48',name:'ARGILE'},
+  {bg:'#dddad5',accent:'#60605a',rgb:'96,96,90',name:'BÉTON'},
+  {bg:'#e8d4be',accent:'#c44010',rgb:'196,64,16',name:'FORGE'},
+  {bg:'#e2cdb0',accent:'#b03808',rgb:'176,56,8',name:'FEU'},
+  {bg:'#d8e0d5',accent:'#4a7848',rgb:'74,120,72',name:'PATINE'},
+  {bg:'#d8dce8',accent:'#3a62a0',rgb:'58,98,160',name:'ACIER'},
+  {bg:'#e0dad5',accent:'#8a6858',rgb:'138,104,88',name:'CUIVRE'},
+  {bg:'#e8e4d8',accent:'#a08020',rgb:'160,128,32',name:'LAITON'},
+  {bg:'#f0ecd8',accent:'#c09018',rgb:'192,144,24',name:'OR'},
+  {bg:'#faf6ee',accent:'#c8a010',rgb:'200,160,16',name:'LUMIÈRE'},
+];
 
-  function hideLoader(){
-    clearInterval(iv);
-    fill.style.width = '100%';
-    setTimeout(function(){
-      var l = document.getElementById('loading');
-      l.classList.add('fade');
-      setTimeout(function(){ l.style.display='none'; }, 900);
-    }, 350);
-  }
+/* ══════════════════════════════════════════
+   STEPS DATA — CABINES MODULAIRES
+══════════════════════════════════════════ */
+const STEPS=[
+  {num:'01',phase:'Analyse',title:'CAHIER DES\nCHARGES',
+    desc:'Nos ingénieurs analysent en profondeur vos besoins pour votre <strong>cabine modulaire sur mesure</strong>, contraintes et objectifs pour poser des bases solides et irréprochables.',
+    details:[
+      {icon:'doc',t:'<strong>Analyse des besoins</strong> — Réunions techniques et relevés de site.'},
+      {icon:'eye',t:'<strong>Étude de faisabilité</strong> — Contraintes techniques, réglementaires, budgétaires.'},
+      {icon:'time',t:'<strong>Planning prévisionnel</strong> — Calendrier réaliste avec jalons clés.'}
+    ]},
+  {num:'02',phase:'Conception',title:'CONCEPTION\n2D',
+    desc:'Nos ingénieurs traduisent votre vision en <strong>plans techniques cotés et normés</strong> pour garantir une cabine sans écart.',
+    details:[
+      {icon:'ruler',t:'<strong>Plans d\'architecture</strong> — Dessins 2D cotés selon les normes.'},
+      {icon:'shield',t:'<strong>Calculs de structure</strong> — Dimensionnement aux Eurocodes.'},
+      {icon:'doc',t:'<strong>Dossier technique</strong> — Validation client et administration.'}
+    ]},
+  {num:'03',phase:'Conception',title:'MODÉLISATION\n3D',
+    desc:'Avant de couper un seul millimètre d\'acier, nous construisons votre <strong>cabine en réalité virtuelle</strong>.',
+    details:[
+      {icon:'cube',t:'<strong>Maquette numérique BIM</strong> — Modélisation 3D complète de la cabine.'},
+      {icon:'eye',t:'<strong>Visite virtuelle</strong> — Votre cabine avant les travaux.'},
+      {icon:'gear',t:'<strong>Détection des conflits</strong> — Interférences résolues en amont.'}
+    ]},
+  {num:'04',phase:'Fabrication',title:'STRUCTURE\nMÉTALLIQUE',
+    desc:'Nos lignes de découpe <strong>plasma et laser CNC</strong> transforment l\'acier S355 brut en composants de précision pour la structure de votre cabine.',
+    details:[
+      {icon:'bolt',t:'<strong>Découpe plasma & laser</strong> — Précision < 0.1mm.'},
+      {icon:'gear',t:'<strong>Poinçonnage & pliage CNC</strong> — Reproductibilité parfaite.'},
+      {icon:'check',t:'<strong>Contrôle dimensionnel</strong> — Vérification systématique.'}
+    ]},
+  {num:'05',phase:'Fabrication',title:'SOUDURE\nCERTIFIÉE',
+    desc:'Nos soudeurs certifiés assemblent la structure de votre cabine avec des <strong>cordons contrôlés par ultrason</strong> — zéro compromis.',
+    details:[
+      {icon:'fire',t:'<strong>Soudure MIG/MAG & TIG</strong> — Procédés certifiés EN ISO 9606.'},
+      {icon:'eye',t:'<strong>Contrôle non destructif</strong> — Ultrason et ressuage.'},
+      {icon:'shield',t:'<strong>Traçabilité complète</strong> — Chaque cordon documenté.'}
+    ]},
+  {num:'06',phase:'Finition',title:'GALVANISATION\n& TRAITEMENT',
+    desc:'Grenaillage, galvanisation EN ISO 1461 et finition polyuréthane garantissent <strong>87 ans de protection corrosion</strong> pour votre cabine.',
+    details:[
+      {icon:'shield',t:'<strong>Grenaillage SA 2.5</strong> — Adhérence maximale.'},
+      {icon:'drop',t:'<strong>Galvanisation 87μm</strong> — Protection corrosion, UV.'},
+      {icon:'check',t:'<strong>Contrôle d\'épaisseur</strong> — Validation de chaque couche.'}
+    ]},
+  {num:'07',phase:'Enveloppe',title:'PANNEAUX\nSANDWICH PU',
+    desc:'L\'enveloppe de votre cabine assure une <strong>isolation thermique et acoustique</strong> haute performance. Panneau PU 100mm — λ=0.022 W/m·K.',
+    details:[
+      {icon:'layers',t:'<strong>Panneaux polyuréthane 100mm</strong> — R > 5 m².K/W.'},
+      {icon:'wind',t:'<strong>Étanchéité à l\'air</strong> — Conformité RT2020.'},
+      {icon:'bolt',t:'<strong>Fixation mécanique</strong> — Résistance vent & neige.'}
+    ]},
+  {num:'08',phase:'Installations',title:'RÉSEAUX\nINTÉGRÉS',
+    desc:'Électricité, eau, air comprimé — nous intégrons tous vos <strong>réseaux techniques</strong> pour une cabine opérationnelle clé en main.',
+    details:[
+      {icon:'bolt',t:'<strong>Électricité & éclairage</strong> — Tableaux, câblage, LED.'},
+      {icon:'drop',t:'<strong>Plomberie & sanitaires</strong> — Eau froide/chaude.'},
+      {icon:'wind',t:'<strong>Ventilation & climatisation</strong> — VMC et extracteurs.'}
+    ]},
+  {num:'09',phase:'Finitions',title:'AMÉNAGEMENT\n& ACCESSOIRES',
+    desc:'Portes, fenêtres, quais de chargement — chaque <strong>accessoire sélectionné et posé</strong> avec soin dans votre cabine.',
+    details:[
+      {icon:'door',t:'<strong>Menuiseries & occultations</strong> — Portes industrielles.'},
+      {icon:'layers',t:'<strong>Quais & niveleurs</strong> — Équipements logistiques.'},
+      {icon:'gear',t:'<strong>Signalétique & sécurité</strong> — Marquage, issues.'}
+    ]},
+  {num:'10',phase:'Qualité',title:'CONTRÔLE\nQUALITÉ 360°',
+    desc:'Notre équipe QA effectue une <strong>inspection exhaustive 360°</strong> avant toute livraison de cabine. 0 non-conformité.',
+    details:[
+      {icon:'check',t:'<strong>Inspection finale 360°</strong> — Vérification par corps de métier.'},
+      {icon:'doc',t:'<strong>Dossier des ouvrages</strong> — Plans conformes et PV d\'essais.'},
+      {icon:'shield',t:'<strong>Garantie décennale</strong> — Assurance tous risques.'}
+    ]},
+  {num:'11',phase:'Livraison',title:'TRANSPORT\n& INSTALLATION',
+    desc:'Le moment que nous attendons ensemble : la <strong>remise des clés</strong>. Votre cabine livrée et installée dans les règles de l\'art.',
+    details:[
+      {icon:'key',t:'<strong>Réception contradictoire</strong> — Visite et signature du PV.'},
+      {icon:'doc',t:'<strong>Formation & documentation</strong> — Manuels d\'exploitation.'},
+      {icon:'shield',t:'<strong>Service après-livraison</strong> — Hotline et maintenance.'}
+    ]}
+];
 
-  function showError(msg){
-    clearInterval(iv);
-    errEl.textContent = msg;
-    errEl.style.display = 'block';
-  }
-
-  // Failsafe : ferme le loader après 20s quoi qu'il arrive
-  var failsafe = setTimeout(function(){ hideLoader(); }, 20000);
-
-  // ── CHARGER THREE.JS DYNAMIQUEMENT ──────────────────────
-  var s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-  s.onload = function(){
-    clearTimeout(failsafe);
-    try {
-      startApp();
-      hideLoader();
-    } catch(e) {
-      showError('⚠ Erreur: ' + e.message);
-      console.error(e);
-    }
+function ico(t){
+  const m={
+    doc:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+    check:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`,
+    time:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    ruler:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17L17 3"/><path d="M7 7L5 9M11 7L9 9M15 7L13 9"/></svg>`,
+    shield:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+    cube:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>`,
+    eye:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+    gear:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06-.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>`,
+    bolt:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    fire:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.5.5-3 1.5-4"/></svg>`,
+    drop:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>`,
+    wind:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg>`,
+    layers:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>`,
+    door:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16"/></svg>`,
+    key:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="4"/><path d="M12 12l8 8M14 14l2 2M17 11l2 2"/></svg>`
   };
-  s.onerror = function(){
-    clearTimeout(failsafe);
-    showError('⚠ Impossible de charger Three.js — vérifiez votre connexion internet.');
-  };
-  document.head.appendChild(s);
+  return m[t]||m.check;
+}
 
-  // ══════════════════════════════════════════════════════════
-  // APP PRINCIPALE
-  // ══════════════════════════════════════════════════════════
-  function startApp(){
+/* ══════════════════════════════════════════
+   BUILD DOM
+══════════════════════════════════════════ */
+const scene=document.getElementById('scene');
+const mgrid=document.getElementById('mgrid');
+const ptrack=document.getElementById('ptrack');
+const jhud=document.getElementById('journey-hud');
 
-    // ── CURSOR ────────────────────────────────────────────
-    var cur=document.getElementById('cur'), curR=document.getElementById('cur-r');
-    var mx=0,my=0,rx=0,ry=0;
-    document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
-    (function ck(){
-      cur.style.left=mx+'px'; cur.style.top=my+'px';
-      rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
-      curR.style.left=rx+'px'; curR.style.top=ry+'px';
-      requestAnimationFrame(ck);
-    })();
-    document.querySelectorAll('button,a,.hbtn,.leg-item,.blname,.mm-dot,.p-close,.p-cta').forEach(function(el){
-      el.addEventListener('mouseenter',function(){cur.classList.add('big');curR.classList.add('big');});
-      el.addEventListener('mouseleave',function(){cur.classList.remove('big');curR.classList.remove('big');});
+STEPS.forEach((s,i)=>{
+  // Mini grid
+  const ms=document.createElement('div');ms.className='ms';
+  ms.innerHTML=`<span class="msn">${s.num}</span><span class="mst">${s.phase}</span>`;
+  ms.onclick=()=>goToStep(i);mgrid.appendChild(ms);
+
+  // Progress track
+  const ps=document.createElement('div');ps.className='pstep';ps.id=`ps${i}`;
+  ps.innerHTML=`<div class="psn">${s.num}</div><div class="psl">${s.phase}</div>`;
+  ps.onclick=()=>goToStep(i);ptrack.appendChild(ps);
+
+  // Journey HUD nodes
+  if(i>0){const conn=document.createElement('div');conn.className='j-connector';conn.id=`jconn${i}`;jhud.appendChild(conn)}
+  const jn=document.createElement('div');jn.className='j-node';jn.id=`jn${i}`;
+  jn.title=s.phase;jn.onclick=()=>goToStep(i);jhud.appendChild(jn);
+
+  // Slide
+  const lines=s.title.split('\n');
+  const even=i%2===1;
+  const slide=document.createElement('div');
+  slide.className='slide'+(even?' even':'');
+  slide.id=`sl${i}`;
+
+  slide.innerHTML=`
+    <div class="s-img-col" id="simg${i}">
+      <div class="s-img-frame">
+        <img src="step${i+1}.webp" alt="${s.phase}" loading="lazy"
+          onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,rgba(28,21,16,.08),rgba(28,21,16,.03))'"/>
+      </div>
+      <div class="s-location">
+        <div class="loc-num">${s.num}</div>
+        <div class="loc-phase">${s.phase}</div>
+      </div>
+      <div class="s-env-tag">${ENV[i].name}</div>
+    </div>
+    <div class="s-txt-col" id="stxt${i}">
+      <div class="s-ghost">${s.num}</div>
+      <div class="s-inner">
+        <div class="s-tag">${s.phase} <span>— ÉTAPE ${s.num}</span></div>
+        <h3 class="s-title">${lines.slice(0,-1).join('<br>')}<em>${lines[lines.length-1]}</em></h3>
+        <p class="s-desc">${s.desc}</p>
+        <div class="s-details">
+          ${s.details.map(d=>`<div class="s-detail-item">${ico(d.icon)}<p>${d.t}</p></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  scene.appendChild(slide);
+});
+
+/* ══════════════════════════════════════════
+   CANVAS WARM GRAIN
+══════════════════════════════════════════ */
+const canvas=document.getElementById('grain');
+const ctx=canvas.getContext('2d');
+let grainI=0.18,grainT=0.18;
+
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resizeCanvas();window.addEventListener('resize',resizeCanvas,{passive:true});
+
+function drawGrain(){
+  const w=canvas.width,h=canvas.height;
+  const id=ctx.createImageData(w,h);const d=id.data;
+  for(let i=0;i<d.length;i+=4){
+    const v=(Math.random()-.5)*255*grainI;
+    // Warm-tinted grain (slightly orange)
+    d[i]=128+v*1.05;d[i+1]=128+v*0.95;d[i+2]=128+v*0.85;
+    d[i+3]=Math.abs(v)*1.5;
+  }
+  ctx.putImageData(id,0,0);
+  grainI+=(grainT-grainI)*.1;
+  requestAnimationFrame(drawGrain);
+}
+drawGrain();
+
+/* ══════════════════════════════════════════
+   CSS VARIABLE UPDATES
+══════════════════════════════════════════ */
+function applyEnv(idx){
+  const e=ENV[idx];
+  const root=document.documentElement;
+  root.style.setProperty('--step-bg',e.bg);
+  root.style.setProperty('--step-accent',e.accent);
+  root.style.setProperty('--step-rgb',e.rgb);
+  // Update image overlay gradient
+  document.querySelectorAll('.s-img-frame').forEach(f=>{
+    f.style.transition='unset';
+  });
+}
+
+/* ══════════════════════════════════════════
+   BARN DOOR TRANSITION ENGINE
+══════════════════════════════════════════ */
+const doorL=document.getElementById('door-l');
+const doorR=document.getElementById('door-r');
+const doorLight=document.getElementById('door-light');
+
+function setDoorEasing(dur,easing){
+  doorL.style.transition=`transform ${dur}ms ${easing}`;
+  doorR.style.transition=`transform ${dur}ms ${easing}`;
+}
+
+function doorsClose(cb){
+  setDoorEasing(380,'cubic-bezier(.4,0,1,1)');
+  doorL.style.transform='rotateY(0deg)';
+  doorR.style.transform='rotateY(0deg)';
+  // Light crack disappears as doors meet
+  doorLight.style.opacity='0';
+  setTimeout(cb,380);
+}
+
+function doorsOpen(cb){
+  // Swing a bit past 90 for dramatic feel
+  setDoorEasing(520,'cubic-bezier(0,0,.2,1)');
+  doorL.style.transform='rotateY(-96deg)';
+  doorR.style.transform='rotateY(96deg)';
+  // Light crack briefly visible
+  setTimeout(()=>{
+    doorLight.style.opacity='0.8';
+    doorLight.style.width='20px';
+    doorLight.style.transition='opacity .08s, width .08s';
+    setTimeout(()=>{
+      doorLight.style.opacity='0';
+      doorLight.style.width='0px';
+    },120);
+  },80);
+  if(cb) setTimeout(cb,520);
+}
+
+/* ══════════════════════════════════════════
+   FILM ENGINE
+══════════════════════════════════════════ */
+let cur=0,filmActive=false,transitioning=false;
+const TOTAL=STEPS.length;
+const filmEl=document.getElementById('film');
+const pgbEl=document.getElementById('pgb');
+const ptfill=document.getElementById('ptfill');
+const fnavEl=document.getElementById('fnav');
+const compassEl=document.getElementById('compass');
+const jhudEl=document.getElementById('journey-hud');
+const cneedle=document.getElementById('cneedle');
+const cenvEl=document.getElementById('cenv');
+const fncurEl=document.getElementById('fncur');
+const fnKmEl=document.getElementById('fn-km-val');
+
+const SLIDE_SCROLL=Math.round(window.innerHeight*.9);
+filmEl.style.height=(SLIDE_SCROLL*TOTAL+window.innerHeight)+'px';
+
+// KM distances per step (0 to 4.6km journey)
+const KM_PER_STEP=4.6/10;
+
+function showSlide(toIdx,dir){
+  if(transitioning||toIdx===cur||toIdx<0||toIdx>=TOTAL) return;
+  transitioning=true;
+  grainT=0.65;
+
+  const fromIdx=cur;
+  cur=toIdx;
+
+  doorsClose(()=>{
+    // Behind closed doors: swap environment + slide
+    applyEnv(toIdx);
+
+    // Hide old slide
+    const fromSlide=document.getElementById(`sl${fromIdx}`);
+    if(fromSlide){
+      fromSlide.classList.remove('s-active');
+      fromSlide.style.opacity='0';
+    }
+    // Show new slide (no animation yet — it'll animate when doors open)
+    const toSlide=document.getElementById(`sl${toIdx}`);
+    if(toSlide){
+      toSlide.style.transition='none';
+      toSlide.style.opacity='0';
+      toSlide.style.transform='translateY(50px) scale(.97)';
+    }
+
+    // Open doors
+    doorsOpen(()=>{
+      // Trigger walk-in animation
+      if(toSlide){
+        toSlide.classList.add('s-active');
+        toSlide.style.transition='';
+        toSlide.style.transform='';
+        toSlide.style.opacity='';
+      }
+      grainT=0.18;
+      transitioning=false;
     });
+  });
 
-    // ── RENDERER ──────────────────────────────────────────
-    var W=window.innerWidth, H=window.innerHeight;
-    var canvas=document.getElementById('c');
-    var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true});
-    renderer.setSize(W,H);
-    renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-    renderer.shadowMap.enabled=true;
-    renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-    renderer.toneMapping=THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure=0.9;
-    window.addEventListener('resize',function(){
-      renderer.setSize(window.innerWidth,window.innerHeight);
-      cam.aspect=window.innerWidth/window.innerHeight;
-      cam.updateProjectionMatrix();
-    });
+  updateUI();
+}
 
-    // ── SCENE ─────────────────────────────────────────────
-    var scene=new THREE.Scene();
-    scene.background=new THREE.Color(0x020d1a);
-    scene.fog=new THREE.FogExp2(0x020d1a,0.015);
+function updateUI(){
+  const e=ENV[cur];
 
-    // ── CAMERA ────────────────────────────────────────────
-    var cam=new THREE.PerspectiveCamera(52,W/H,0.1,300);
-    var sph={theta:Math.PI*0.22,phi:1.05,r:50};
-    var tgt={theta:sph.theta,phi:sph.phi,r:sph.r};
-    var autoRot=true;
+  // Counter
+  const numEl=fncurEl;
+  numEl.classList.remove('bump');
+  void numEl.offsetWidth;
+  numEl.textContent=STEPS[cur].num;
+  numEl.classList.add('bump');
 
-    window.resetCam=function(){ tgt={theta:Math.PI*0.22,phi:1.05,r:50}; };
-    window.toggleAuto=function(){ autoRot=!autoRot; document.getElementById('btnAuto').classList.toggle('on',autoRot); };
+  // KM
+  fnKmEl.textContent=(cur*KM_PER_STEP).toFixed(1);
 
-    // ── CONTROLS ──────────────────────────────────────────
-    var dragging=false, pm={x:0,y:0};
-    canvas.addEventListener('mousedown',function(e){ dragging=true; pm={x:e.clientX,y:e.clientY}; autoRot=false; document.getElementById('btnAuto').classList.remove('on'); });
-    window.addEventListener('mouseup',function(){ dragging=false; });
-    window.addEventListener('mousemove',function(e){
-      if(!dragging)return;
-      tgt.theta-=(e.clientX-pm.x)*0.006;
-      tgt.phi=Math.max(.3,Math.min(1.35,tgt.phi+(e.clientY-pm.y)*0.006));
-      pm={x:e.clientX,y:e.clientY};
-    });
-    canvas.addEventListener('wheel',function(e){ tgt.r=Math.max(12,Math.min(80,tgt.r+e.deltaY*.05)); });
-    canvas.addEventListener('touchstart',function(e){ dragging=true; pm={x:e.touches[0].clientX,y:e.touches[0].clientY}; autoRot=false; });
-    window.addEventListener('touchend',function(){ dragging=false; });
-    window.addEventListener('touchmove',function(e){
-      if(!dragging)return;
-      tgt.theta-=(e.touches[0].clientX-pm.x)*0.006;
-      tgt.phi=Math.max(.3,Math.min(1.35,tgt.phi+(e.touches[0].clientY-pm.y)*0.006));
-      pm={x:e.touches[0].clientX,y:e.touches[0].clientY};
-    });
+  // Progress bar fill
+  ptfill.style.width=((cur/(TOTAL-1))*100)+'%';
 
-    // ── LIGHTS ────────────────────────────────────────────
-    scene.add(new THREE.AmbientLight(0x1a3a5c,0.5));
-    var moon=new THREE.DirectionalLight(0x8ab4cc,1.1);
-    moon.position.set(-18,28,12); moon.castShadow=true; moon.shadow.mapSize.set(2048,2048);
-    moon.shadow.camera.near=.5; moon.shadow.camera.far=100;
-    moon.shadow.camera.left=-40; moon.shadow.camera.right=40;
-    moon.shadow.camera.top=40; moon.shadow.camera.bottom=-40;
-    scene.add(moon);
-    var fl=new THREE.DirectionalLight(0x3a5a7a,0.3); fl.position.set(20,8,-10); scene.add(fl);
+  // Progress steps
+  document.querySelectorAll('.pstep').forEach((el,i)=>{
+    el.classList.toggle('active',i===cur);
+    el.classList.toggle('done',i<cur);
+  });
 
-    // ── STARS ─────────────────────────────────────────────
-    (function(){
-      var n=2000, pos=new Float32Array(n*3);
-      for(var i=0;i<n;i++){
-        var th=Math.random()*Math.PI*2, ph=Math.acos(Math.random()*2-1), r=100+Math.random()*50;
-        pos[i*3]=r*Math.sin(ph)*Math.cos(th); pos[i*3+1]=Math.abs(r*Math.cos(ph)); pos[i*3+2]=r*Math.sin(ph)*Math.sin(th);
-      }
-      var sg=new THREE.BufferGeometry();
-      sg.setAttribute('position',new THREE.BufferAttribute(pos,3));
-      scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:.28,transparent:true,opacity:.65})));
-    })();
+  // Journey HUD nodes
+  document.querySelectorAll('.j-node').forEach((el,i)=>{
+    el.classList.toggle('active',i===cur);
+    el.classList.toggle('done',i<cur);
+  });
+  document.querySelectorAll('.j-connector').forEach((el,i)=>{
+    el.classList.toggle('done',i<cur);
+  });
 
-    // ── GROUND ────────────────────────────────────────────
-    var gnd=new THREE.Mesh(new THREE.PlaneGeometry(90,90),new THREE.MeshLambertMaterial({color:0x050f1e}));
-    gnd.rotation.x=-Math.PI/2; gnd.receiveShadow=true; scene.add(gnd);
-    var grid=new THREE.GridHelper(90,90,0x0c2035,0x080e1a); grid.position.y=.02; scene.add(grid);
+  // Compass
+  cenvEl.textContent=e.name;
+  // Needle points slightly differently per step (simulated compass drift)
+  const angles=[0,-8,5,-3,10,-5,8,-12,4,-6,0];
+  cneedle.style.transform=`rotate(${angles[cur]||0}deg)`;
 
-    // ── ROADS ─────────────────────────────────────────────
-    function road(x,z,w,d){
-      var m=new THREE.Mesh(new THREE.BoxGeometry(w,0.06,d),new THREE.MeshLambertMaterial({color:0x0a1d30}));
-      m.position.set(x,.03,z); m.receiveShadow=true; scene.add(m);
+  // Scroll progress step into view
+  const act=document.getElementById(`ps${cur}`);
+  if(act) act.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+
+function goToStep(idx){
+  const dir=idx>cur?1:-1;
+  const filmTop=filmEl.offsetTop;
+  const target=filmTop+idx*SLIDE_SCROLL+10;
+  window.scrollTo({top:target,behavior:'smooth'});
+  showSlide(idx,dir);
+}
+
+function startFilm(){filmEl.scrollIntoView({behavior:'smooth'})}
+
+/* ══════════════════════════════════════════
+   MOUSE PARALLAX (multi-layer depth)
+══════════════════════════════════════════ */
+let pmx=0,pmy=0,spx=0,spy=0;
+document.addEventListener('mousemove',e=>{
+  pmx=(e.clientX/window.innerWidth-.5)*2;
+  pmy=(e.clientY/window.innerHeight-.5)*2;
+});
+
+(function parallaxLoop(){
+  spx+=(pmx-spx)*.07;
+  spy+=(pmy-spy)*.07;
+
+  if(filmActive&&!transitioning){
+    const asl=document.getElementById(`sl${cur}`);
+    if(asl){
+      const imgCol=asl.querySelector('.s-img-col');
+      const inner=asl.querySelector('.s-inner');
+      const ghost=asl.querySelector('.s-ghost');
+      const loc=asl.querySelector('.s-location');
+
+      // Deepest layer: image (moves most, opposite to mouse)
+      if(imgCol) imgCol.style.transform=`translateX(${spx*-20}px) translateY(${spy*-12}px)`;
+      // Mid layer: text
+      if(inner) inner.style.transform=`translateX(${spx*10}px) translateY(${spy*6}px)`;
+      // Floating ghost number (slowest drift)
+      if(ghost) ghost.style.transform=`translateX(${spx*-35}px) translateY(${spy*-20}px)`;
+      // Location stamp (pops out)
+      if(loc) loc.style.transform=`translateX(${spx*-28}px) translateY(${spy*-18}px)`;
     }
-    road(-1,0,2.5,42); road(-4,-6,20,2.5); road(-4,0,20,2.5); road(-4,6,20,2.5); road(8,-3,2.5,18);
-    function dashedLine(ax,az,bx,bz,segs){
-      segs=segs||6;
-      var dx=(bx-ax)/segs, dz=(bz-az)/segs;
-      for(var i=0;i<segs;i+=2){
-        var m=new THREE.Mesh(new THREE.BoxGeometry(Math.abs(dx)>.1?dx*.6:.12,0.08,Math.abs(dz)>.1?dz*.6:.12),new THREE.MeshLambertMaterial({color:0xf5da1a,transparent:true,opacity:.3}));
-        m.position.set(ax+dx*(i+.5),0.06,az+dz*(i+.5)); scene.add(m);
-      }
-    }
-    dashedLine(-1,-16,-1,16,10); dashedLine(-12,0,8,0,8);
-
-    // ── LAMPS ─────────────────────────────────────────────
-    function lamp(x,z){
-      var g=new THREE.Group();
-      var pole=new THREE.Mesh(new THREE.CylinderGeometry(.07,.1,4.5,8),new THREE.MeshLambertMaterial({color:0x223344}));
-      pole.position.y=2.25; g.add(pole);
-      var bulb=new THREE.Mesh(new THREE.SphereGeometry(.22,8,8),new THREE.MeshStandardMaterial({color:0xfff8d0,emissive:0xffc060,emissiveIntensity:2.5,roughness:.2}));
-      bulb.position.y=4.6; g.add(bulb);
-      var ptl=new THREE.PointLight(0xffc060,.7,9); ptl.position.y=4.6; g.add(ptl);
-      g.position.set(x,0,z); scene.add(g);
-    }
-    [[-12,3],[-12,-3],[0,3],[0,-3],[0,-9],[0,9],[7,4],[7,-4],[-6,0],[-6,-9],[7,0]].forEach(function(p){lamp(p[0],p[1]);});
-
-    // ── TREES ─────────────────────────────────────────────
-    function tree(x,z){
-      var g=new THREE.Group();
-      var trunk=new THREE.Mesh(new THREE.CylinderGeometry(.1,.14,1.2,6),new THREE.MeshLambertMaterial({color:0x2a1a0a}));
-      trunk.position.y=.6; g.add(trunk);
-      [0,.55,1.05].forEach(function(yo,i){
-        var cone=new THREE.Mesh(new THREE.ConeGeometry(.85-i*.22,1.3,7),new THREE.MeshLambertMaterial({color:new THREE.Color().setHSL(.34,.4,.09+i*.02)}));
-        cone.position.y=1.1+yo; g.add(cone);
-      });
-      g.position.set(x,0,z); g.castShadow=true; scene.add(g);
-    }
-    [[-17,16],[-14,16],[-10,16],[-6,16],[3,16],[7,16],[12,16],[16,12],[16,7],[16,2],[16,-3],[16,-8],[16,-13],[12,-17],[7,-17],[2,-17],[-3,-17],[-8,-17],[-13,-17],[-17,-13],[-17,-8],[-17,-3],[-17,2],[-17,7],[-17,12]].forEach(function(p){tree(p[0],p[1]);});
-
-    // ── FENCE ─────────────────────────────────────────────
-    var fm=new THREE.MeshLambertMaterial({color:0x0f2035});
-    for(var fi=-16;fi<=16;fi+=3){
-      [[fi,17.5,2.4,.12],[fi,-17.5,2.4,.12],[17.5,fi,.12,2.4],[-17.5,fi,.12,2.4]].forEach(function(p){
-        var m=new THREE.Mesh(new THREE.BoxGeometry(p[2],.9,p[3]),fm); m.position.set(p[0],.45,p[1]); scene.add(m);
-      });
-    }
-
-    // ── GATE ──────────────────────────────────────────────
-    var gm=new THREE.MeshLambertMaterial({color:0x1a3a5c});
-    var gp1=new THREE.Mesh(new THREE.BoxGeometry(.4,3.5,.4),gm); gp1.position.set(-1.8,1.75,17.5); scene.add(gp1);
-    var gp2=gp1.clone(); gp2.position.set(1.8,1.75,17.5); scene.add(gp2);
-    var gtop=new THREE.Mesh(new THREE.BoxGeometry(4,.4,.4),new THREE.MeshLambertMaterial({color:0xf5da1a})); gtop.position.set(0,3.7,17.5); scene.add(gtop);
-    var gsign=new THREE.Mesh(new THREE.BoxGeometry(5,.8,.12),new THREE.MeshStandardMaterial({color:0xf5da1a,emissive:0xf5da1a,emissiveIntensity:.3})); gsign.position.set(0,4.2,17.5); scene.add(gsign);
-
-    // ── BUILDINGS ─────────────────────────────────────────
-    var allBuildings=[], clickables=[], buildingIndex={};
-
-    function addWindows(g,bw,bh,bd,ec,rows,fcols,scols){
-      var mat=new THREE.MeshStandardMaterial({color:0xfffde0,emissive:new THREE.Color(ec),emissiveIntensity:1.4,roughness:.2,metalness:.1});
-      for(var r=0;r<rows;r++){
-        var wy=.9+r*1.6;
-        for(var c=0;c<fcols;c++){
-          var wx=(c-(fcols-1)/2)*2.1;
-          var wf=new THREE.Mesh(new THREE.BoxGeometry(.72,.92,.09),mat); wf.position.set(wx,wy,bd/2+.04); g.add(wf);
-          var wb=wf.clone(); wb.position.set(wx,wy,-(bd/2+.04)); g.add(wb);
-        }
-        for(var c2=0;c2<scols;c2++){
-          var wz=(c2-(scols-1)/2)*2.1;
-          var wl=new THREE.Mesh(new THREE.BoxGeometry(.09,.92,.72),mat); wl.position.set(bw/2+.04,wy,wz); g.add(wl);
-          var wr=wl.clone(); wr.position.set(-(bw/2+.04),wy,wz); g.add(wr);
-        }
-      }
-    }
-
-    function makeBuilding(data){
-      var g=new THREE.Group();
-      var bw=data.size[0], bh=data.size[1], bd=data.size[2];
-      var fnd=new THREE.Mesh(new THREE.BoxGeometry(bw+.6,0.3,bd+.6),new THREE.MeshLambertMaterial({color:data.roofColor}));
-      fnd.position.y=.15; g.add(fnd);
-      var body=new THREE.Mesh(new THREE.BoxGeometry(bw,bh,bd),new THREE.MeshLambertMaterial({color:data.wallColor}));
-      body.position.y=bh/2; body.castShadow=true; body.receiveShadow=true; body.userData.bid=data.id;
-      g.add(body); clickables.push(body);
-      var roof=new THREE.Mesh(new THREE.BoxGeometry(bw+.25,.35,bd+.25),new THREE.MeshLambertMaterial({color:data.roofColor}));
-      roof.position.y=bh+.175; g.add(roof);
-      var strip=new THREE.Mesh(new THREE.BoxGeometry(bw+.3,.12,bd+.3),new THREE.MeshLambertMaterial({color:data.accent}));
-      strip.position.y=bh+.36; g.add(strip);
-      [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(s){
-        var vs=new THREE.Mesh(new THREE.BoxGeometry(.15,bh,.15),new THREE.MeshLambertMaterial({color:data.accent,transparent:true,opacity:.4}));
-        vs.position.set(s[0]*(bw/2+.07),bh/2,s[1]*(bd/2+.07)); g.add(vs);
-      });
-      var rows=Math.max(1,Math.floor((bh-.5)/1.6));
-      var fcols=Math.max(1,Math.floor((bw-.5)/2.1));
-      var scols=Math.max(1,Math.floor((bd-.5)/2.1));
-      addWindows(g,bw,bh,bd,data.accent,rows,fcols,scols);
-      var door=new THREE.Mesh(new THREE.BoxGeometry(1.4,2.4,.1),new THREE.MeshStandardMaterial({color:data.accent,emissive:new THREE.Color(data.accent),emissiveIntensity:.5}));
-      door.position.set(0,1.2,bd/2+.05); g.add(door);
-      var ds=new THREE.Mesh(new THREE.BoxGeometry(1.8,2.8,.08),new THREE.MeshLambertMaterial({color:data.accent,transparent:true,opacity:.25}));
-      ds.position.set(0,1.4,bd/2+.04); g.add(ds);
-      var bot=new THREE.Mesh(new THREE.BoxGeometry(bw+.1,.2,bd+.1),new THREE.MeshLambertMaterial({color:data.accent,transparent:true,opacity:.5}));
-      bot.position.y=.15; g.add(bot);
-      if(data.type==='factory'){
-        for(var vi=0;vi<3;vi++){
-          var v=new THREE.Mesh(new THREE.CylinderGeometry(.25,.3,.7,8),new THREE.MeshLambertMaterial({color:0x1a2d3a}));
-          v.position.set(-bw/2+1+vi*2.5,bh+.7,0); g.add(v);
-        }
-        var chim=new THREE.Mesh(new THREE.CylinderGeometry(.28,.34,3.5,8),new THREE.MeshLambertMaterial({color:0x0d1f2e}));
-        chim.position.set(bw/2-1,bh+1.75,-bd/2+1); g.add(chim);
-        var ct=new THREE.Mesh(new THREE.CylinderGeometry(.38,.28,.3,8),new THREE.MeshLambertMaterial({color:0x1a3040}));
-        ct.position.set(bw/2-1,bh+3.65,-bd/2+1); g.add(ct);
-      }
-      if(data.type==='admin'){
-        for(var fi2=1;fi2<Math.floor(bh/2.5);fi2++){
-          var fll=new THREE.Mesh(new THREE.BoxGeometry(bw+.15,.12,bd+.15),new THREE.MeshLambertMaterial({color:data.accent,transparent:true,opacity:.2}));
-          fll.position.y=fi2*2.5; g.add(fll);
-        }
-        var ant=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,2.5,6),new THREE.MeshLambertMaterial({color:0x334455}));
-        ant.position.set(0,bh+1.5,0); g.add(ant);
-        var ab=new THREE.Mesh(new THREE.SphereGeometry(.14,8,8),new THREE.MeshStandardMaterial({color:0xff3333,emissive:0xff0000,emissiveIntensity:2}));
-        ab.position.set(0,bh+2.8,0); g.add(ab);
-      }
-      if(data.type==='quality'){
-        var gp=new THREE.Mesh(new THREE.BoxGeometry(bw-.5,bh-.5,.08),new THREE.MeshStandardMaterial({color:0x1a4a3a,transparent:true,opacity:.45,roughness:.1,metalness:.3}));
-        gp.position.set(0,(bh-.5)/2,bd/2+.04); g.add(gp);
-      }
-      var ptl=new THREE.PointLight(data.accent,.6,Math.max(bw,bd)*1.8);
-      ptl.position.set(0,bh*.6,0); g.add(ptl);
-      g.position.set(data.pos[0],data.pos[1],data.pos[2]);
-      g.userData=data; scene.add(g); allBuildings.push(g); buildingIndex[data.id]=g;
-      return g;
-    }
-
-    var ateliers=[
-      {id:'production',name:'Atelier Production',sub:'Fabrication Métallique Lourde',emoji:'🏭',pos:[-11,0,-4],size:[9,5,7.5],wallColor:0x12263a,roofColor:0x0a1828,accent:0xf5da1a,type:'factory',color:'#f5da1a',
-        desc:'Cœur industriel de METTEC. Fabrication de structures en acier S235/S355, découpe laser, pliage CNC, assemblage et galvanisation. Pont roulant 3T. Capacité 8T/jour.',
-        stats:[{v:'8T',l:'Capacité/jour'},{v:'24',l:'Équipements'},{v:'15',l:'Opérateurs'},{v:'3T',l:'Pont roulant'}],
-        rows:[{n:'Charpentes métalliques',c:'#f5da1a'},{n:'Structures acier S235/S355',c:'#e5c20d'},{n:'Constructions modulaires',c:'#c69808'},{n:'Bardage & couverture métallique',c:'#9e6c0a'}]},
-      {id:'soudeurs',name:'Atelier Soudure',sub:'TIG · MIG/MAG · Électrode · Plasma',emoji:'⚡',pos:[-1,0,-10],size:[7.5,4,6.5],wallColor:0x1a1a28,roofColor:0x0d0d1c,accent:0xff8c00,type:'welding',color:'#ff8c00',
-        desc:'Soudage haute précision sur tous matériaux. Soudeurs certifiés EN 287 sur acier, inox 304/316L et aluminium. Équipements Lincoln Electric. Cabines anti-UV.',
-        stats:[{v:'12',l:'Postes soudure'},{v:'8',l:'Soudeurs certif.'},{v:'TIG',l:'Spécialité inox'},{v:'6mm',l:'Épaisseur max'}],
-        rows:[{n:'Soudage TIG inox 304/316L',c:'#ff8c00'},{n:'Soudage MIG/MAG acier',c:'#ff6600'},{n:'Assemblage & soudure structure',c:'#ff4400'},{n:'Contrôle & ressuage soudures',c:'#cc4400'}]},
-      {id:'menuisiers',name:'Menuiserie Métallique',sub:'Portes · Portails · Escaliers · Décor',emoji:'🔧',pos:[-1,0,5],size:[7,3.5,6],wallColor:0x142030,roofColor:0x0a1522,accent:0xe5c20d,type:'workshop',color:'#e5c20d',
-        desc:'Fabrication de menuiseries métalliques architecturales sur mesure : portes industrielles, portails motorisés, garde-corps, escaliers hélicoïdaux, claustra et grilles décoratives.',
-        stats:[{v:'6',l:'Menuisiers'},{v:'RAL',l:'Toutes teintes'},{v:'3-4',l:'Sem. délai'},{v:'Inox',l:'Acier · Alu'}],
-        rows:[{n:'Portes industrielles & anti-feu',c:'#e5c20d'},{n:'Portails coulissants motorisés',c:'#c69808'},{n:'Garde-corps & rampes inox',c:'#f5da1a'},{n:'Escaliers hélicoïdaux sur mesure',c:'#9e6c0a'}]},
-      {id:'controle',name:'Contrôle Qualité',sub:'Inspection · Tests · Certifications EN 1090',emoji:'✅',pos:[-13,0,5],size:[5.5,3,5],wallColor:0x0f2a20,roofColor:0x081a14,accent:0x00cc88,type:'quality',color:'#00cc88',
-        desc:'Département qualité intégré. Contrôle dimensionnel 3D, test de résistance, inspection des soudures par ressuage et ultrasons, conformité EN 1090, HACCP et normes tunisiennes.',
-        stats:[{v:'EN',l:'1090 certifié'},{v:'100%',l:'Contrôle pièces'},{v:'4',l:'Inspecteurs'},{v:'ISO',l:'Processus qualité'}],
-        rows:[{n:'Contrôle dimensionnel 3D',c:'#00cc88'},{n:'Tests résistance mécanique',c:'#00aa66'},{n:'Inspection soudures (US/ressuage)',c:'#009955'},{n:'Certification & documentation',c:'#008844'}]},
-      {id:'admin',name:'Administration',sub:'Commercial · Architecture · Design Intérieur',emoji:'🏢',pos:[9,0,-2],size:[7.5,10,8],wallColor:0x152840,roofColor:0x0c1a2e,accent:0x4a9eff,type:'admin',color:'#4a9eff',
-        desc:"Hub créatif et administratif METTEC. Trois pôles d'expertise pour accompagner vos projets de la conception à la livraison. Bureau d'études, studio design et équipe commerciale.",
-        stats:[{v:'10',l:'Collaborateurs'},{v:'3',l:'Pôles métiers'},{v:'24h',l:'Délai devis'},{v:'360°',l:'Service client'}],
-        floors:[
-          {floor:'RDC — Pôle Commercial',name:'Commerce & Ventes',desc:"Gestion devis, suivi clients, prospection B2B/B2C, appels d'offres et contrats. Interface unique pour tous vos projets.",color:'#4a9eff'},
-          {floor:"1er Étage — Bureau d'Architecture",name:'Architecture Métallique',desc:'Conception BIM/CAO, calculs de structure Eurocode 3, plans d\'exécution et livrables techniques pour tous types de bâtiments.',color:'#f5da1a'},
-          {floor:'2e Étage — Studio Design Intérieur',name:'Design & Aménagement',desc:'Cuisines préfabriquées inox, salles de bain complètes, aménagements modulaires et mobilier industriel sur mesure.',color:'#ff8c00'}
-        ]}
-    ];
-    ateliers.forEach(function(d){ makeBuilding(d); });
-
-    // ── SPARKS ────────────────────────────────────────────
-    var SC=350, sPos=new Float32Array(SC*3), sDat=[];
-    var sOri=new THREE.Vector3(-1,3.8,-10);
-    for(var i=0;i<SC;i++){
-      sDat.push({life:Math.random(),ml:.35+Math.random()*.55,x:sOri.x,y:sOri.y,z:sOri.z,vx:(Math.random()-.5)*.15,vy:Math.random()*.2+.06,vz:(Math.random()-.5)*.15});
-      sPos[i*3]=sOri.x; sPos[i*3+1]=sOri.y; sPos[i*3+2]=sOri.z;
-    }
-    var sparkGeo=new THREE.BufferGeometry(); sparkGeo.setAttribute('position',new THREE.BufferAttribute(sPos,3));
-    var sparkMesh=new THREE.Points(sparkGeo,new THREE.PointsMaterial({color:0xffa500,size:.11,transparent:true,opacity:.9,sizeAttenuation:true})); scene.add(sparkMesh);
-
-    var SC2=150, sPos2=new Float32Array(SC2*3), sDat2=[];
-    for(var i2=0;i2<SC2;i2++){
-      sDat2.push({life:Math.random(),ml:.2+Math.random()*.3,x:sOri.x+1.5,y:sOri.y-.5,z:sOri.z,vx:(Math.random()-.5)*.08,vy:Math.random()*.1+.04,vz:(Math.random()-.5)*.08});
-      sPos2[i2*3]=sOri.x+1.5; sPos2[i2*3+1]=sOri.y-.5; sPos2[i2*3+2]=sOri.z;
-    }
-    var sg2=new THREE.BufferGeometry(); sg2.setAttribute('position',new THREE.BufferAttribute(sPos2,3));
-    var spark2=new THREE.Points(sg2,new THREE.PointsMaterial({color:0x88ccff,size:.07,transparent:true,opacity:.8})); scene.add(spark2);
-
-    // ── SMOKE ─────────────────────────────────────────────
-    var SMOKECOUNT=100, smokePos=new Float32Array(SMOKECOUNT*3), smokeDat=[];
-    var smokeOri=new THREE.Vector3(-8,8.5,-7.5);
-    for(var si=0;si<SMOKECOUNT;si++){
-      smokeDat.push({life:Math.random(),ml:1.2+Math.random()*1.8,x:smokeOri.x+(Math.random()-.5)*.3,y:smokeOri.y,z:smokeOri.z+(Math.random()-.5)*.3});
-      smokePos[si*3]=smokeDat[si].x; smokePos[si*3+1]=smokeDat[si].y; smokePos[si*3+2]=smokeDat[si].z;
-    }
-    var smokeGeo=new THREE.BufferGeometry(); smokeGeo.setAttribute('position',new THREE.BufferAttribute(smokePos,3));
-    var smokeMesh=new THREE.Points(smokeGeo,new THREE.PointsMaterial({color:0x4a6a8a,size:1.1,transparent:true,opacity:.14,sizeAttenuation:true})); scene.add(smokeMesh);
-
-    // ── WORKERS ───────────────────────────────────────────
-    var workers=[];
-    var wpaths=[
-      {path:[[-9,0],[0,0],[0,-6]],color:0xf5da1a,speed:.004},
-      {path:[[0,-5],[0,5],[0,8],[-1,8]],color:0xff8c00,speed:.003},
-      {path:[[-8,6],[-8,0],[-13,0],[-13,5]],color:0x00cc88,speed:.0035},
-      {path:[[-13,3],[0,3],[8,3],[9,0]],color:0x4a9eff,speed:.005},
-      {path:[[-1,0],[7,0],[9,0]],color:0xe5c20d,speed:.003},
-      {path:[[-9,-3],[0,-3],[0,-9]],color:0xf5da1a,speed:.0045},
-      {path:[[0,4],[0,0],[-9,0]],color:0xff8c00,speed:.0038},
-      {path:[[9,-2],[0,-2],[0,4]],color:0x4a9eff,speed:.004}
-    ];
-    wpaths.forEach(function(wp){
-      var g=new THREE.Group();
-      var body=new THREE.Mesh(new THREE.CylinderGeometry(.14,.14,.55,8),new THREE.MeshLambertMaterial({color:wp.color}));
-      body.position.y=.55; g.add(body);
-      var head=new THREE.Mesh(new THREE.SphereGeometry(.17,8,8),new THREE.MeshLambertMaterial({color:0xffccaa}));
-      head.position.y=1.1; g.add(head);
-      var hat=new THREE.Mesh(new THREE.CylinderGeometry(.2,.22,.12,8),new THREE.MeshLambertMaterial({color:wp.color}));
-      hat.position.y=1.28; g.add(hat);
-      g.position.set(wp.path[0][0],.02,wp.path[0][1]); g.castShadow=true; scene.add(g);
-      workers.push({mesh:g,path:wp.path,pi:0,t:Math.random(),speed:wp.speed});
-    });
-
-    // ── RAYCASTING ────────────────────────────────────────
-    var raycaster=new THREE.Raycaster(), mouse=new THREE.Vector2(), hovered=null;
-    canvas.addEventListener('mousemove',function(e){
-      mouse.set((e.clientX/window.innerWidth)*2-1,-(e.clientY/window.innerHeight)*2+1);
-      raycaster.setFromCamera(mouse,cam);
-      var hits=raycaster.intersectObjects(clickables);
-      var newH=hits.length?hits[0].object.userData.bid:null;
-      if(newH!==hovered){
-        hovered=newH;
-        document.querySelectorAll('.blname').forEach(function(el){ el.classList.toggle('hl',el.dataset.id===hovered); });
-      }
-    });
-    canvas.addEventListener('click',function(e){
-      mouse.set((e.clientX/window.innerWidth)*2-1,-(e.clientY/window.innerHeight)*2+1);
-      raycaster.setFromCamera(mouse,cam);
-      var hits=raycaster.intersectObjects(clickables);
-      if(hits.length) openPanel(hits[0].object.userData.bid);
-    });
-
-    // ── LABELS ────────────────────────────────────────────
-    var lblContainer=document.getElementById('lbls'), lblEls={};
-    ateliers.forEach(function(d){
-      var el=document.createElement('div'); el.className='blabel';
-      el.innerHTML='<div class="bldot" style="background:'+d.color+';color:'+d.color+'"></div><div class="blname" data-id="'+d.id+'">'+d.emoji+' '+d.name+'</div>';
-      el.querySelector('.blname').addEventListener('click',function(){ focusOn(d.id); });
-      lblContainer.appendChild(el); lblEls[d.id]=el;
-    });
-    var v3=new THREE.Vector3();
-    function updateLabels(){
-      ateliers.forEach(function(d){
-        var g=buildingIndex[d.id]; if(!g) return;
-        v3.set(d.pos[0],d.pos[1]+d.size[1]+1.8,d.pos[2]); v3.project(cam);
-        var x=(v3.x*.5+.5)*window.innerWidth, y=(-(v3.y*.5)+.5)*window.innerHeight;
-        var el=lblEls[d.id];
-        if(v3.z<1&&v3.z>-1){ el.style.left=x+'px'; el.style.top=y+'px'; el.style.opacity='1'; }
-        else { el.style.opacity='0'; }
-      });
-    }
-
-    // ── PANEL ─────────────────────────────────────────────
-    window.openPanel=function(id){
-      var d=ateliers.find(function(a){return a.id===id;});
-      if(!d) return;
-      var html='<div class="p-emoji">'+d.emoji+'</div><div class="p-tag">'+d.sub+'</div><div class="p-title">'+d.name+'</div><div class="p-sub">Groupe Bayoudh Métal — Monastir</div><div class="p-div"></div><p class="p-desc">'+d.desc+'</p><div class="p-stats">'+d.stats.map(function(s){return '<div class="pstat"><div class="pstat-v">'+s.v+'</div><div class="pstat-l">'+s.l+'</div></div>';}).join('')+'</div><div class="p-div"></div>';
-      if(d.floors){
-        html+='<div class="p-sect">Départements</div>';
-        d.floors.forEach(function(f){ html+='<div class="p-floor" style="border-left-color:'+f.color+'"><div class="pf-floor" style="color:'+f.color+'">'+f.floor+'</div><div class="pf-name">'+f.name+'</div><div class="pf-desc">'+f.desc+'</div></div>'; });
-      } else if(d.rows){
-        html+='<div class="p-sect">Productions</div>';
-        d.rows.forEach(function(r){ html+='<div class="p-row"><div class="p-row-dot" style="background:'+r.c+'"></div><span class="p-row-n">'+r.n+'</span></div>'; });
-      }
-      html+='<a href="#" class="p-cta">📞 Nous contacter pour un devis</a>';
-      document.getElementById('pcontent').innerHTML=html;
-      document.getElementById('panel').classList.add('open');
-    };
-    window.closePanel=function(){ document.getElementById('panel').classList.remove('open'); };
-    window.focusOn=function(id){
-      var d=ateliers.find(function(a){return a.id===id;});
-      if(!d) return;
-      tgt.theta=Math.atan2(d.pos[0],d.pos[2])+Math.PI*.35;
-      tgt.phi=.85; tgt.r=22; autoRot=false;
-      document.getElementById('btnAuto').classList.remove('on');
-      setTimeout(function(){ openPanel(id); }, 500);
-    };
-
-    // ── TIME ──────────────────────────────────────────────
-    function updateTime(){
-      try{ document.getElementById('timedisp').textContent=new Date().toLocaleTimeString('fr-TN',{timeZone:'Africa/Tunis',hour:'2-digit',minute:'2-digit'}); }
-      catch(e){ document.getElementById('timedisp').textContent=new Date().toTimeString().slice(0,5); }
-    }
-    setInterval(updateTime,1000); updateTime();
-
-    // ── ANIMATE ───────────────────────────────────────────
-    var tick=0;
-    function animate(){
-      requestAnimationFrame(animate);
-      tick+=.012;
-      if(autoRot) tgt.theta+=.004;
-      sph.theta+=(tgt.theta-sph.theta)*.055;
-      sph.phi+=(tgt.phi-sph.phi)*.055;
-      sph.r+=(tgt.r-sph.r)*.055;
-      cam.position.set(sph.r*Math.sin(sph.phi)*Math.sin(sph.theta),sph.r*Math.cos(sph.phi),sph.r*Math.sin(sph.phi)*Math.cos(sph.theta));
-      cam.lookAt(0,1,0);
-
-      for(var i=0;i<SC;i++){
-        var s=sDat[i]; s.life+=.02+Math.random()*.01;
-        if(s.life>s.ml){ s.life=0; s.x=sOri.x+(Math.random()-.5)*.6; s.y=sOri.y; s.z=sOri.z+(Math.random()-.5)*.6; s.vx=(Math.random()-.5)*.15; s.vy=Math.random()*.2+.06; s.vz=(Math.random()-.5)*.15; }
-        s.x+=s.vx; s.y+=s.vy; s.vy-=.007; s.vx*=.97; s.vz*=.97; s.z+=s.vz;
-        sPos[i*3]=s.x; sPos[i*3+1]=s.y; sPos[i*3+2]=s.z;
-      }
-      sparkGeo.attributes.position.needsUpdate=true;
-      sparkMesh.material.opacity=.7+Math.sin(tick*8)*.2;
-
-      for(var i3=0;i3<SC2;i3++){
-        var s2=sDat2[i3]; s2.life+=.025;
-        if(s2.life>s2.ml){ s2.life=0; s2.x=sOri.x+1.5+(Math.random()-.5)*.4; s2.y=sOri.y-.5; s2.z=sOri.z+(Math.random()-.5)*.4; s2.vx=(Math.random()-.5)*.08; s2.vy=Math.random()*.1+.04; s2.vz=(Math.random()-.5)*.08; }
-        s2.x+=s2.vx; s2.y+=s2.vy; s2.z+=s2.vz;
-        sPos2[i3*3]=s2.x; sPos2[i3*3+1]=s2.y; sPos2[i3*3+2]=s2.z;
-      }
-      sg2.attributes.position.needsUpdate=true;
-
-      for(var ki=0;ki<SMOKECOUNT;ki++){
-        var sm=smokeDat[ki]; sm.life+=.006;
-        if(sm.life>sm.ml){ sm.life=0; sm.x=smokeOri.x+(Math.random()-.5)*.4; sm.y=smokeOri.y; sm.z=smokeOri.z+(Math.random()-.5)*.4; }
-        sm.x+=(Math.random()-.5)*.02+.006; sm.y+=.025*(1-sm.life/sm.ml*.4); sm.z+=(Math.random()-.5)*.02;
-        smokePos[ki*3]=sm.x; smokePos[ki*3+1]=sm.y; smokePos[ki*3+2]=sm.z;
-      }
-      smokeGeo.attributes.position.needsUpdate=true;
-      smokeMesh.material.size=.8+Math.sin(tick*.3)*0.4;
-
-      workers.forEach(function(w){
-        w.t+=w.speed;
-        if(w.t>=1){ w.t=0; w.pi=(w.pi+1)%(w.path.length-1); }
-        var ax=w.path[w.pi][0], az=w.path[w.pi][1];
-        var nx=Math.min(w.pi+1,w.path.length-1);
-        var bx=w.path[nx][0], bz=w.path[nx][1];
-        w.mesh.position.x=ax+(bx-ax)*w.t;
-        w.mesh.position.z=az+(bz-az)*w.t;
-        var dx=bx-ax, dz=bz-az;
-        if(Math.abs(dx)+Math.abs(dz)>.01) w.mesh.rotation.y=Math.atan2(dx,dz);
-        w.mesh.position.y=Math.abs(Math.sin(w.t*Math.PI*6))*.06;
-      });
-
-      allBuildings.forEach(function(g,idx){
-        g.traverse(function(c){ if(c.isPointLight) c.intensity=.5+Math.sin(tick*.8+idx)*.12; });
-      });
-      var adminG=buildingIndex['admin'];
-      if(adminG) adminG.traverse(function(c){
-        if(c.isMesh&&c.material&&c.material.emissive&&c.material.emissive.r>.5)
-          c.material.emissiveIntensity=(Math.sin(tick*4)>.6)?3:0.1;
-      });
-
-      updateLabels();
-      renderer.render(scene,cam);
-    }
-    animate();
-
-  } // fin startApp
-
+  }
+  requestAnimationFrame(parallaxLoop);
 })();
+
+/* ══════════════════════════════════════════
+   SCROLL DRIVER
+══════════════════════════════════════════ */
+let lastY=-1,raf=null;
+
+function onScroll(){
+  const sy=window.scrollY;
+  if(sy===lastY) return;lastY=sy;
+
+  document.getElementById('nav').classList.toggle('on',sy>50);
+
+  const pintr=document.getElementById('pintr');
+  const show=sy+window.innerHeight*.4>pintr.offsetTop+pintr.offsetHeight;
+  pgbEl.classList.toggle('vis',show);
+  fnavEl.classList.toggle('vis',show);
+  compassEl.classList.toggle('vis',show);
+  jhudEl.classList.toggle('vis',show);
+
+  const filmTop=filmEl.offsetTop;
+  const filmH=filmEl.offsetHeight-window.innerHeight;
+  const rel=sy-filmTop;
+
+  if(rel>=0&&rel<=filmH){
+    filmActive=true;
+    const idx=Math.min(TOTAL-1,Math.floor(rel/SLIDE_SCROLL));
+    if(idx!==cur&&!transitioning) showSlide(idx,idx>cur?1:-1);
+  } else {
+    filmActive=false;
+    // Reset parallax
+    const asl=document.getElementById(`sl${cur}`);
+    if(asl){
+      ['s-img-col','s-inner','s-ghost','s-location'].forEach(cls=>{
+        const el=asl.querySelector('.'+cls)||asl.querySelector('#'+cls.replace('s-',''));
+        if(el) el.style.transform='';
+      });
+    }
+  }
+}
+
+window.addEventListener('scroll',()=>{
+  if(raf) cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(onScroll);
+},{passive:true});
+
+/* ── BUTTONS ── */
+document.getElementById('fn-prev').onclick=()=>{if(cur>0)goToStep(cur-1)};
+document.getElementById('fn-next').onclick=()=>{if(cur<TOTAL-1)goToStep(cur+1)};
+
+/* ── KEYBOARD ── */
+document.addEventListener('keydown',e=>{
+  if(!filmActive) return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){if(cur<TOTAL-1)goToStep(cur+1)}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){if(cur>0)goToStep(cur-1)}
+});
+
+/* ── TOUCH ── */
+let tx=0,ty=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(!filmActive) return;
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>40){
+    if(dy<0&&cur<TOTAL-1)goToStep(cur+1);
+    if(dy>0&&cur>0)goToStep(cur-1);
+  }
+},{passive:true});
+
+/* ── CURSOR ── */
+const curEl=document.getElementById('cur'),ringEl=document.getElementById('cur-ring');
+let mx=0,my=0,crx=0,cry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function cl(){
+  curEl.style.left=mx+'px';curEl.style.top=my+'px';
+  crx+=(mx-crx)*.12;cry+=(my-cry)*.12;
+  ringEl.style.left=crx+'px';ringEl.style.top=cry+'px';
+  requestAnimationFrame(cl);
+})();
+
+/* ── BURGER ── */
+const burg=document.getElementById('burg'),mob=document.getElementById('mob');
+burg.onclick=()=>{burg.classList.toggle('open');mob.classList.toggle('open')};
+mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burg.classList.remove('open');mob.classList.remove('open')}));
+
+/* ── INIT ── */
+window.addEventListener('load',()=>{
+  applyEnv(0);
+  const first=document.getElementById('sl0');
+  first.style.transition='none';
+  first.classList.add('s-active');
+  updateUI();
+  onScroll();
+  // Ensure doors are open on load
+  doorL.style.transform='rotateY(-92deg)';
+  doorR.style.transform='rotateY(92deg)';
+});
+
+window.addEventListener('resize',()=>{
+  filmEl.style.height=(SLIDE_SCROLL*TOTAL+window.innerHeight)+'px';
+  resizeCanvas();
+},{passive:true});
 </script>
 </body>
 </html>
