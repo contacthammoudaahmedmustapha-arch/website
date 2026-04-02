@@ -2,110 +2,84 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>METTEC — Cabines Modulaires</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>METTEC — Cabines Modulaires Premium | EN 1090 | Monastir, Tunisie</title>
+<meta name="description" content="METTEC fabrique des cabines modulaires à ossature métallique certifiées EN 1090. Sur mesure, livrées clé en main. Smart Cabin, Autonomous, S+1/S+2. 500+ projets. Monastir, Tunisie."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Serif+Display:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
 :root{
-  --ink:   #0f0e0a;
-  --ink2:  #1c1a14;
-  --ink3:  #2e2b22;
-  --mist:  #6b6550;
-  --sand:  #a8996e;
-  --linen: #e8e0c8;
-  --paper: #f4eedc;
-  --cream: #faf6ec;
-  --gold:  #f5da1a;
-  --gd:    #c4ad00;
-  --gl:    #fef48a;
-  --line:  rgba(15,14,10,.1);
-  --lineg: rgba(245,218,26,.25);
-
-  --t2xs: clamp(.56rem,.38vw + .36rem,.7rem);
-  --txs:  clamp(.66rem,.48vw + .42rem,.8rem);
-  --tsm:  clamp(.78rem,.6vw + .48rem,.95rem);
-  --tmd:  clamp(.9rem,.7vw + .56rem,1.1rem);
-  --tlg:  clamp(1.4rem,2.2vw + .5rem,2.6rem);
-  --txl:  clamp(2rem,4vw + .4rem,5rem);
-  --t2xl: clamp(2.6rem,5.8vw + .6rem,7.2rem);
-  --t3xl: clamp(3.2rem,8vw + .5rem,11rem);
-
-  --sxs: clamp(.5rem,.8vw,.8rem);
-  --ssm: clamp(.8rem,1.4vw,1.2rem);
-  --smd: clamp(1.2rem,2.4vw,2rem);
-  --slg: clamp(2rem,4vw,4rem);
-  --sxl: clamp(3rem,6vw,6rem);
-  --nav: clamp(54px,7.5vw,68px);
+  --ink:#0f0e0a; --ink2:#1c1a14; --ink3:#2e2b22;
+  --mist:#6b6550; --sand:#a8996e;
+  --linen:#e8e0c8; --paper:#f4eedc; --cream:#faf6ec;
+  --gold:#f5da1a; --gd:#c4ad00; --gl:#fef48a;
+  --line:rgba(15,14,10,.1); --lineg:rgba(245,218,26,.22);
+  --t2xs:clamp(.56rem,.38vw + .36rem,.7rem);
+  --txs:clamp(.66rem,.48vw + .42rem,.8rem);
+  --tsm:clamp(.78rem,.6vw + .48rem,.95rem);
+  --tmd:clamp(.9rem,.7vw + .56rem,1.1rem);
+  --tlg:clamp(1.4rem,2.2vw + .5rem,2.6rem);
+  --txl:clamp(2rem,4vw + .4rem,5rem);
+  --t2xl:clamp(2.6rem,5.8vw + .6rem,7.2rem);
+  --t3xl:clamp(3.2rem,8vw + .5rem,11rem);
+  --sxs:clamp(.5rem,.8vw,.8rem); --ssm:clamp(.8rem,1.4vw,1.2rem);
+  --smd:clamp(1.2rem,2.4vw,2rem); --slg:clamp(2rem,4vw,4rem);
+  --sxl:clamp(3rem,6vw,6rem); --nav:clamp(54px,7.5vw,68px);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 body{background:var(--cream);color:var(--ink);font-family:'Space Mono',monospace;overflow-x:hidden;cursor:none}
 
 /* ── CURSOR ── */
-#cur,#curR{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);will-change:left,top}
+#cur,#curR{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);will-change:left,top;transition:opacity .3s}
 #cur{width:7px;height:7px;background:var(--ink);transition:transform .15s,background .2s}
-#curR{width:26px;height:26px;border:1.5px solid rgba(15,14,10,.3);z-index:9998;transition:width .2s,height .2s,border-color .2s}
-body:has(a:hover,button:hover) #cur{transform:translate(-50%,-50%) scale(0);background:var(--gold)}
-body:has(a:hover,button:hover) #curR{width:40px;height:40px;background:var(--gold);border-color:var(--gold)}
-@media(hover:none){#cur,#curR{display:none}}
+#curR{width:26px;height:26px;border:1.5px solid rgba(15,14,10,.3);z-index:9998;transition:width .2s,height .2s,border-color .2s,background .2s}
+body:has(a:hover,button:hover,.btn:hover) #cur{transform:translate(-50%,-50%) scale(0)}
+body:has(a:hover,button:hover,.btn:hover) #curR{width:44px;height:44px;background:var(--gold);border-color:var(--gold);opacity:.7}
+@media(hover:none){#cur,#curR{display:none}body{cursor:auto}}
 
 /* ── GRAIN ── */
-#grain{position:fixed;inset:0;z-index:8000;pointer-events:none;opacity:.28;mix-blend-mode:multiply}
+#grain{position:fixed;inset:0;z-index:8000;pointer-events:none;opacity:.22;mix-blend-mode:multiply}
 
-/* ── TOP BAR ── */
+/* ── PROGRESS BAR ── */
 #tpb{position:fixed;top:0;left:0;right:0;height:3px;z-index:1001;pointer-events:none;background:var(--linen)}
-#tpbF{height:100%;background:var(--gold);width:0%;transition:width .7s cubic-bezier(.4,0,.2,1)}
+#tpbF{height:100%;background:var(--gold);width:0%;transition:width .6s cubic-bezier(.4,0,.2,1)}
 
 /* ── BACK TO TOP ── */
-#btt{
-  position:fixed;bottom:clamp(16px,2.5vw,28px);right:clamp(16px,2.5vw,28px);
-  z-index:950;width:50px;height:50px;
-  background:var(--ink);color:var(--gold);
-  border:none;cursor:pointer;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 20px rgba(15,14,10,.2);
-  opacity:0;transform:translateY(10px);
-  transition:opacity .35s,transform .35s,background .2s;pointer-events:none;
-}
+#btt{position:fixed;bottom:clamp(16px,2.5vw,28px);right:clamp(16px,2.5vw,28px);z-index:950;width:50px;height:50px;background:var(--ink);color:var(--gold);border:none;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(15,14,10,.2);opacity:0;transform:translateY(10px);transition:opacity .35s,transform .35s,background .2s;pointer-events:none}
 #btt.show{opacity:1;transform:translateY(0);pointer-events:all}
-#btt:hover{background:var(--gold);color:var(--ink);transform:translateY(-3px)}
+#btt:hover{background:var(--gold);color:var(--ink)}
 #btt svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.5}
 
-/* ════════════════════════════════
-   NAV
-════════════════════════════════ */
-nav#nav{
-  position:fixed;top:0;left:0;right:0;z-index:900;
-  height:var(--nav);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 clamp(1rem,4vw,4rem);
-  background:var(--cream);
-  border-bottom:2px solid var(--ink);
-  transition:box-shadow .3s;
-}
-nav#nav.on{box-shadow:0 4px 32px rgba(15,14,10,.12)}
+/* ── WHATSAPP ── */
+#wa{position:fixed;bottom:clamp(76px,10vw,96px);right:clamp(16px,2.5vw,28px);z-index:950;width:50px;height:50px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);text-decoration:none;transition:transform .25s,box-shadow .25s;animation:waPulse 2.5s ease infinite}
+#wa:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,.5)}
+#wa svg{width:26px;height:26px;fill:white}
+@keyframes waPulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.35)}50%{box-shadow:0 4px 32px rgba(37,211,102,.6)}}
+
+/* ══════════════ NAV ══════════════ */
+nav#nav{position:fixed;top:0;left:0;right:0;z-index:900;height:var(--nav);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1rem,4vw,4rem);background:rgba(250,246,236,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:2px solid var(--ink);transition:box-shadow .3s}
+nav#nav.on{box-shadow:0 4px 32px rgba(15,14,10,.1)}
 .logo{display:flex;align-items:center;gap:var(--ssm);text-decoration:none}
-.lhex{
-  width:clamp(26px,3.5vw,38px);height:clamp(26px,3.5vw,38px);
-  background:var(--gold);
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
+.lhex{width:clamp(26px,3.5vw,38px);height:clamp(26px,3.5vw,38px);background:var(--gold);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .3s}
+.logo:hover .lhex{transform:rotate(30deg)}
 .lhex span{font-family:'Syne';font-weight:800;font-size:clamp(7px,1vw,11px);color:var(--ink)}
 .ltxt{display:flex;flex-direction:column;line-height:1}
 .lname{font-family:'Syne';font-weight:800;font-size:clamp(15px,1.8vw,22px);letter-spacing:-.02em;color:var(--ink)}
 .lname em{color:var(--gd);font-style:normal}
 .lsub{font-size:var(--t2xs);letter-spacing:.16em;color:var(--mist);text-transform:uppercase;margin-top:2px}
 .navL{display:flex;align-items:center;gap:clamp(12px,2vw,26px);list-style:none}
-.navL a{font-family:'Space Mono';font-size:var(--txs);letter-spacing:.08em;color:var(--mist);text-decoration:none;text-transform:uppercase;transition:color .2s}
+.navL a{font-family:'Space Mono';font-size:var(--txs);letter-spacing:.08em;color:var(--mist);text-decoration:none;text-transform:uppercase;transition:color .2s;position:relative}
+.navL a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1.5px;background:var(--gold);transform:scaleX(0);transition:transform .25s;transform-origin:left}
 .navL a:hover{color:var(--ink)}
-.nCta{
-  background:var(--gold)!important;color:var(--ink)!important;
-  padding:clamp(7px,.9vw,10px) clamp(14px,1.8vw,22px)!important;
-  font-family:'Syne'!important;font-weight:800!important;font-size:var(--txs)!important;
-  border-radius:2px!important;letter-spacing:.04em!important;
-}
-.nCta:hover{background:var(--gd)!important;color:var(--cream)!important}
+.navL a:hover::after{transform:scaleX(1)}
+.nCta{background:var(--gold)!important;color:var(--ink)!important;padding:clamp(7px,.9vw,10px) clamp(14px,1.8vw,22px)!important;font-family:'Syne'!important;font-weight:800!important;font-size:var(--txs)!important;border-radius:2px!important;letter-spacing:.04em!important;transition:background .2s,transform .2s!important}
+.nCta:hover{background:var(--gd)!important;transform:translateY(-2px)!important}
+.nCta::after{display:none!important}
 .burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}
 .burger span{display:block;width:22px;height:1.5px;background:var(--ink);transition:.3s}
 .burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
@@ -115,128 +89,10 @@ nav#nav.on{box-shadow:0 4px 32px rgba(15,14,10,.12)}
 .mob.open{display:flex}
 .mob a{font-family:'Syne';font-weight:800;font-size:clamp(24px,6vw,48px);color:var(--ink);text-decoration:none;transition:color .2s}
 .mob a:hover{color:var(--gd)}
-.mob .mCta{background:var(--gold);color:var(--ink);padding:12px 40px;border-radius:2px}
+.mob .mCta{background:var(--gold);padding:12px 40px;border-radius:2px}
 @media(max-width:768px){.navL{display:none}.burger{display:flex}}
 
-/* ════════════════════════════════
-   HERO
-════════════════════════════════ */
-#hero{
-  position:relative;width:100%;height:100svh;
-  background:var(--cream);
-  overflow:hidden;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  border-bottom:2px solid var(--ink);
-}
-.hero-l{
-  display:flex;flex-direction:column;justify-content:flex-end;
-  padding:var(--nav) clamp(1.5rem,5vw,5rem) clamp(2.5rem,5vw,5rem);
-  position:relative;z-index:2;border-right:2px solid var(--ink);
-}
-.h-tag{
-  display:flex;align-items:center;gap:8px;
-  font-size:var(--t2xs);letter-spacing:.28em;text-transform:uppercase;color:var(--mist);
-  margin-bottom:var(--ssm);
-}
-.h-tag .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pl 2s ease infinite;flex-shrink:0}
-@keyframes pl{0%,100%{opacity:1}50%{opacity:.2}}
-
-h1.hero-h1{
-  font-family:'Syne';font-weight:800;
-  font-size:var(--t3xl);
-  line-height:.84;letter-spacing:-.055em;
-  color:var(--ink);
-  margin-bottom:var(--smd);
-}
-h1.hero-h1 em{
-  font-family:'DM Serif Display';font-style:italic;font-weight:400;
-  color:var(--gd);display:block;
-}
-h1.hero-h1 .str{
-  -webkit-text-stroke:2px var(--ink);color:transparent;
-  display:inline;
-}
-.hero-desc{font-size:var(--tsm);line-height:2;color:var(--mist);max-width:400px;margin-bottom:var(--slg)}
-.hero-desc strong{color:var(--ink);font-weight:700}
-.hero-btns{display:flex;gap:var(--ssm);flex-wrap:wrap}
-.hero-r{
-  position:relative;overflow:hidden;
-  background:var(--ink);
-  display:flex;align-items:center;justify-content:center;
-}
-.hero-r::before{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background-image:linear-gradient(rgba(245,218,26,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(245,218,26,.04) 1px,transparent 1px);
-  background-size:40px 40px;
-}
-.hero-ghost{
-  position:absolute;font-family:'Syne';font-weight:800;
-  font-size:clamp(80px,14vw,200px);
-  color:transparent;-webkit-text-stroke:1px rgba(245,218,26,.07);
-  pointer-events:none;user-select:none;letter-spacing:-.06em;
-  top:50%;left:50%;transform:translate(-50%,-50%);
-  white-space:nowrap;
-}
-.stage3d{
-  position:relative;z-index:2;
-  perspective:clamp(500px,60vw,900px);
-  perspective-origin:50% 48%;
-}
-.carousel3d{
-  --cw:clamp(180px,24vw,340px);
-  --ch:clamp(240px,32vw,460px);
-  width:var(--cw);height:var(--ch);
-  position:relative;transform-style:preserve-3d;
-  will-change:transform;transition:transform .9s cubic-bezier(.34,1.08,.64,1);
-}
-.csl{
-  position:absolute;inset:0;border-radius:4px;overflow:hidden;
-  backface-visibility:hidden;cursor:pointer;
-  background:var(--ink3);
-  border:1px solid rgba(245,218,26,.15);
-  box-shadow:0 20px 60px rgba(0,0,0,.6);
-}
-.csl img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.8) contrast(1.1)}
-.csl-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Syne';font-weight:800;font-size:clamp(36px,7vw,90px);color:rgba(245,218,26,.07)}
-.csl-cap{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:clamp(12px,2vw,20px);background:linear-gradient(transparent,rgba(10,8,4,.92))}
-.csl-cap b{display:block;font-family:'Syne';font-weight:800;font-size:var(--txs);color:var(--gold);margin-bottom:2px}
-.csl-cap span{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.12em;text-transform:uppercase;color:rgba(240,232,204,.45)}
-.csl::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,218,26,.06),transparent 55%);opacity:0;transition:opacity .4s}
-.csl:hover::after{opacity:1}
-.hsl-ctrl{position:absolute;bottom:clamp(20px,3.5vw,40px);left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:8px}
-.hsl-dot{width:clamp(16px,2vw,24px);height:3px;border-radius:2px;background:rgba(245,218,26,.2);border:none;cursor:pointer;transition:all .3s;padding:0}
-.hsl-dot.on{background:var(--gold);width:clamp(26px,3.5vw,38px)}
-.hsl-arr{
-  position:absolute;top:50%;z-index:6;transform:translateY(-50%);
-  width:clamp(34px,4vw,44px);height:clamp(34px,4vw,44px);
-  background:rgba(245,218,26,.1);backdrop-filter:blur(6px);
-  border:1px solid rgba(245,218,26,.2);border-radius:2px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--gold);transition:all .25s;
-}
-.hsl-arr:hover{background:var(--gold);color:var(--ink)}
-.hsl-arr svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2}
-#slP{left:12px}#slN{right:12px}
-.hero-count{
-  position:absolute;top:clamp(80px,12vw,130px);right:clamp(1rem,3vw,3rem);
-  font-family:'Syne';font-weight:800;font-size:clamp(28px,4vw,56px);
-  color:var(--gold);line-height:1;z-index:6;
-  display:flex;flex-direction:column;align-items:flex-end;gap:2px;
-}
-.hero-count small{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.18em;color:rgba(245,218,26,.4)}
-@media(max-width:768px){
-  #hero{grid-template-columns:1fr;grid-template-rows:auto 55svh}
-  .hero-l{border-right:none;border-bottom:2px solid var(--ink);padding:calc(var(--nav) + var(--smd)) var(--smd) var(--smd)}
-  h1.hero-h1{font-size:clamp(28px,10vw,64px)}
-  .hero-desc{display:none}
-  .hero-r{min-height:55svh}
-  .hsl-arr{display:none}
-}
-
-/* ════════════════════════════════
-   BUTTONS
-════════════════════════════════ */
+/* ══════════════ BUTTONS ══════════════ */
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Syne';font-weight:800;font-size:var(--txs);letter-spacing:.05em;text-transform:uppercase;padding:clamp(10px,1.3vw,14px) clamp(18px,2.5vw,32px);border-radius:2px;border:none;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap}
 .btn-ink{background:var(--ink);color:var(--gold)}
 .btn-ink:hover{background:var(--ink3);transform:translateY(-2px);box-shadow:0 8px 28px rgba(15,14,10,.2)}
@@ -244,452 +100,344 @@ h1.hero-h1 .str{
 .btn-gold:hover{background:var(--gl);transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,218,26,.3)}
 .btn-out{background:transparent;color:var(--ink);border:2px solid var(--ink)}
 .btn-out:hover{background:var(--ink);color:var(--gold);transform:translateY(-2px)}
+.btn-out-w{background:transparent;color:var(--cream);border:2px solid rgba(245,218,26,.3)}
+.btn-out-w:hover{background:rgba(245,218,26,.1);border-color:var(--gold);color:var(--gold)}
 
-/* ════════════════════════════════
-   MARQUEE (brand)
-════════════════════════════════ */
+/* ══════════════ HERO ══════════════ */
+#hero{position:relative;width:100%;height:100svh;background:var(--cream);overflow:hidden;display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid var(--ink)}
+.hero-l{display:flex;flex-direction:column;justify-content:flex-end;padding:var(--nav) clamp(1.5rem,5vw,5rem) clamp(2.5rem,5vw,5rem);position:relative;z-index:2;border-right:2px solid var(--ink)}
+.h-tag{display:flex;align-items:center;gap:8px;font-size:var(--t2xs);letter-spacing:.28em;text-transform:uppercase;color:var(--mist);margin-bottom:var(--ssm)}
+.h-tag .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pl 2s ease infinite;flex-shrink:0}
+@keyframes pl{0%,100%{opacity:1}50%{opacity:.2}}
+h1.hero-h1{font-family:'Syne';font-weight:800;font-size:var(--t3xl);line-height:.84;letter-spacing:-.055em;color:var(--ink);margin-bottom:var(--smd)}
+h1.hero-h1 em{font-family:'DM Serif Display';font-style:italic;font-weight:400;color:var(--gd);display:block}
+h1.hero-h1 .str{-webkit-text-stroke:2px var(--ink);color:transparent;display:inline}
+.hero-desc{font-size:var(--tsm);line-height:2;color:var(--mist);max-width:400px;margin-bottom:var(--slg)}
+.hero-desc strong{color:var(--ink);font-weight:700}
+.hero-btns{display:flex;gap:var(--ssm);flex-wrap:wrap}
+/* badge EN1090 */
+.hero-cert{display:flex;gap:var(--sxs);margin-top:var(--ssm);flex-wrap:wrap}
+.cert-chip{display:flex;align-items:center;gap:5px;background:var(--linen);border:1px solid var(--line);border-radius:2px;padding:4px 10px;font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.1em;color:var(--mist)}
+.cert-chip b{color:var(--ink)}
+.hero-r{position:relative;overflow:hidden;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.hero-r::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(245,218,26,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(245,218,26,.04) 1px,transparent 1px);background-size:44px 44px}
+.hero-ghost{position:absolute;font-family:'Syne';font-weight:800;font-size:clamp(80px,14vw,200px);color:transparent;-webkit-text-stroke:1px rgba(245,218,26,.06);pointer-events:none;user-select:none;letter-spacing:-.06em;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap}
+/* 3D Canvas in hero */
+#heroCanvas{position:relative;z-index:3;width:100%;height:70%;cursor:grab}
+#heroCanvas:active{cursor:grabbing}
+.hero-canvas-hint{position:absolute;bottom:clamp(52px,8vw,80px);left:50%;transform:translateX(-50%);z-index:6;font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.18em;text-transform:uppercase;color:rgba(245,218,26,.4);display:flex;align-items:center;gap:8px;animation:fadeHint 4s ease 2s forwards;opacity:1}
+@keyframes fadeHint{0%{opacity:1}80%{opacity:1}100%{opacity:0}}
+.hero-canvas-hint::before,.hero-canvas-hint::after{content:'';width:16px;height:1px;background:rgba(245,218,26,.3)}
+.hero-count{position:absolute;top:clamp(80px,12vw,130px);right:clamp(1rem,3vw,3rem);font-family:'Syne';font-weight:800;font-size:clamp(28px,4vw,56px);color:var(--gold);line-height:1;z-index:6;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.hero-count small{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.18em;color:rgba(245,218,26,.4)}
+/* PRICE TAG in hero */
+.hero-price{position:absolute;bottom:clamp(14px,3vw,32px);left:clamp(14px,3vw,32px);z-index:6;background:var(--gold);border-radius:2px;padding:clamp(8px,1.2vw,14px) clamp(12px,2vw,24px);display:flex;flex-direction:column}
+.hero-price-label{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);opacity:.7}
+.hero-price-val{font-family:'Syne';font-weight:800;font-size:clamp(18px,2.8vw,36px);color:var(--ink);letter-spacing:-.03em;line-height:1}
+.hero-price-sub{font-family:'Space Mono';font-size:var(--t2xs);color:var(--ink3);opacity:.6}
+@media(max-width:768px){#hero{grid-template-columns:1fr;grid-template-rows:auto 50svh}.hero-l{border-right:none;border-bottom:2px solid var(--ink);padding:calc(var(--nav) + var(--smd)) var(--smd) var(--smd)}.hero-desc{display:none}.hero-r{min-height:50svh}#heroCanvas{height:80%}}
+
+/* ══════════════ MARQUEE ══════════════ */
 .mq{background:var(--ink);height:clamp(38px,4.5vw,50px);overflow:hidden;display:flex;align-items:center;border-bottom:2px solid var(--ink)}
-.mqi{display:flex;align-items:center;white-space:nowrap;animation:mqs 30s linear infinite}
+.mqi{display:flex;align-items:center;white-space:nowrap;animation:mqs 28s linear infinite}
+.mqi:nth-child(2){animation-delay:-14s}
 .mqi span{font-family:'Syne';font-weight:800;font-size:clamp(10px,1.3vw,14px);letter-spacing:.06em;text-transform:uppercase;color:var(--gold);padding:0 clamp(16px,2.5vw,32px);display:flex;align-items:center;gap:12px}
 .mqi span::after{content:'◆';font-size:.55em;opacity:.4}
 @keyframes mqs{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* ════════════════════════════════
-   SECTION LABEL
-════════════════════════════════ */
-.s-label{
-  display:flex;align-items:center;gap:10px;
-  font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.28em;text-transform:uppercase;
-  margin-bottom:var(--ssm);
-}
+/* ══════════════ SECTION LABEL ══════════════ */
+.s-label{display:flex;align-items:center;gap:10px;font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.28em;text-transform:uppercase;margin-bottom:var(--ssm)}
 .s-label::before{content:'';width:18px;height:1.5px;background:currentColor}
 
-/* ════════════════════════════════
-   STATS BAND
-════════════════════════════════ */
-.stats-band{
-  background:var(--gold);
-  display:grid;grid-template-columns:repeat(4,1fr);
-  border-bottom:2px solid var(--ink);
-}
-.stat-item{
-  padding:clamp(20px,3.5vw,44px) clamp(16px,3vw,40px);
-  border-right:2px solid var(--ink);
-  display:flex;flex-direction:column;gap:4px;
-}
+/* ══════════════ STATS BAND ══════════════ */
+.stats-band{background:var(--gold);display:grid;grid-template-columns:repeat(4,1fr);border-bottom:2px solid var(--ink)}
+.stat-item{padding:clamp(20px,3.5vw,44px) clamp(16px,3vw,40px);border-right:2px solid var(--ink);display:flex;flex-direction:column;gap:4px;transition:background .2s}
 .stat-item:last-child{border-right:none}
+.stat-item:hover{background:var(--gl)}
 .stat-n{font-family:'Syne';font-weight:800;font-size:clamp(28px,4.5vw,64px);color:var(--ink);line-height:1;letter-spacing:-.04em}
-.stat-n sub{font-size:.5em;font-family:'Space Mono'}
 .stat-l{font-family:'Space Mono';font-size:var(--txs);color:var(--ink3);letter-spacing:.04em}
 .stat-s{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.06em;color:rgba(15,14,10,.5)}
 @media(max-width:640px){.stats-band{grid-template-columns:1fr 1fr}.stat-item:nth-child(2){border-right:none}.stat-item:nth-child(3){border-top:2px solid var(--ink)}.stat-item:nth-child(4){border-top:2px solid var(--ink);border-right:none}}
 
-/* ════════════════════════════════
-   STEPS ACCORDION TIMELINE
-════════════════════════════════ */
+/* ══════════════ 3D VIEWER SECTION ══════════════ */
+#viewer3d{background:var(--ink);border-bottom:2px solid var(--ink);display:grid;grid-template-columns:1fr 1fr;min-height:100svh}
+.v3d-l{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--sxl) clamp(1rem,4vw,3rem);border-right:1px solid rgba(245,218,26,.12)}
+#cabinCanvas{width:100%;height:clamp(340px,55vw,620px);border-radius:4px;cursor:grab;display:block}
+#cabinCanvas:active{cursor:grabbing}
+.v3d-controls{display:flex;gap:10px;margin-top:var(--ssm);justify-content:center;flex-wrap:wrap}
+.v3d-btn{background:rgba(245,218,26,.08);border:1px solid rgba(245,218,26,.2);color:var(--gold);font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.12em;padding:6px 14px;border-radius:2px;cursor:pointer;transition:all .2s}
+.v3d-btn:hover,.v3d-btn.active{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.v3d-hint{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.15em;text-transform:uppercase;color:rgba(245,218,26,.3);text-align:center;margin-top:10px}
+.v3d-axes{position:absolute;bottom:clamp(60px,10vw,100px);right:clamp(12px,2vw,24px);display:flex;flex-direction:column;gap:6px;z-index:4}
+.v3d-axis{display:flex;align-items:center;gap:6px;font-family:'Space Mono';font-size:var(--t2xs);color:rgba(245,218,26,.4)}
+.v3d-axis span{width:20px;height:2px;border-radius:2px}
+.ax-x{background:#E85454}
+.ax-y{background:#54E854}
+.ax-z{background:#5454E8}
+
+.v3d-r{padding:var(--sxl) clamp(1.5rem,5vw,5rem);display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.v3d-r::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(245,218,26,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(245,218,26,.03) 1px,transparent 1px);background-size:32px 32px}
+.v3d-eyebrow{display:flex;align-items:center;gap:10px;font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.28em;text-transform:uppercase;color:var(--sand);margin-bottom:var(--smd);position:relative;z-index:1}
+.v3d-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--sand)}
+h2.v3d-title{font-family:'Syne';font-weight:800;font-size:var(--t2xl);line-height:.84;letter-spacing:-.05em;color:var(--cream);margin-bottom:var(--smd);position:relative;z-index:1}
+h2.v3d-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400;color:var(--gold);display:block}
+.v3d-desc{font-family:'Space Mono';font-size:var(--tsm);line-height:1.9;color:var(--mist);max-width:380px;margin-bottom:var(--slg);position:relative;z-index:1}
+/* Specs grid */
+.specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:var(--slg);position:relative;z-index:1}
+.spec-item{background:rgba(255,255,255,.03);border:1px solid rgba(245,218,26,.1);padding:clamp(12px,2vw,20px);display:flex;flex-direction:column;gap:4px;transition:background .25s,border-color .25s}
+.spec-item:hover{background:rgba(245,218,26,.06);border-color:rgba(245,218,26,.25)}
+.spec-key{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--sand)}
+.spec-val{font-family:'Syne';font-weight:800;font-size:clamp(13px,1.8vw,20px);color:var(--cream);letter-spacing:-.02em}
+.spec-note{font-family:'Space Mono';font-size:var(--t2xs);color:rgba(168,153,110,.5);letter-spacing:.06em}
+/* Price box */
+.price-box{background:rgba(245,218,26,.07);border:1.5px solid rgba(245,218,26,.25);border-radius:4px;padding:clamp(16px,2.5vw,28px) clamp(20px,3vw,36px);position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:var(--ssm);flex-wrap:wrap}
+.price-box-label{font-family:'Space Mono';font-size:var(--txs);letter-spacing:.1em;color:var(--mist)}
+.price-box-val{font-family:'Syne';font-weight:800;font-size:clamp(28px,4vw,52px);color:var(--gold);letter-spacing:-.04em;line-height:1}
+.price-box-sub{font-family:'Space Mono';font-size:var(--t2xs);color:rgba(168,153,110,.5);letter-spacing:.08em}
+.price-box-cta{flex-shrink:0}
+@media(max-width:900px){#viewer3d{grid-template-columns:1fr}.v3d-l{border-right:none;border-bottom:1px solid rgba(245,218,26,.1)}.v3d-r{padding:var(--slg) var(--smd)}}
+
+/* ══════════════ CONFIGURATOR ══════════════ */
+#configurator{background:var(--paper);border-bottom:2px solid var(--ink)}
+.cfg-header{padding:var(--sxl) clamp(1.5rem,5vw,5rem) var(--slg);display:grid;grid-template-columns:1fr 1fr;gap:var(--slg);border-bottom:2px solid var(--ink)}
+h2.cfg-title{font-family:'Syne';font-weight:800;font-size:var(--t2xl);line-height:.84;letter-spacing:-.05em;color:var(--ink)}
+h2.cfg-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400;color:var(--gd);display:block}
+.cfg-intro{font-size:var(--tsm);line-height:2;color:var(--mist);max-width:420px;display:flex;flex-direction:column;justify-content:flex-end}
+.cfg-body{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:2px solid var(--ink)}
+.cfg-form{padding:var(--slg) clamp(1.5rem,5vw,5rem);border-right:2px solid var(--ink);display:flex;flex-direction:column;gap:var(--smd)}
+.cfg-result{padding:var(--slg) clamp(1.5rem,5vw,5rem);background:var(--ink);display:flex;flex-direction:column;gap:var(--smd);position:sticky;top:var(--nav)}
+.cfg-label{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.2em;text-transform:uppercase;color:var(--mist);margin-bottom:6px}
+.cfg-slider-wrap{display:flex;flex-direction:column;gap:6px}
+.cfg-slider-row{display:flex;align-items:center;gap:var(--ssm)}
+.cfg-slider{flex:1;-webkit-appearance:none;appearance:none;height:3px;background:var(--linen);border-radius:2px;outline:none;cursor:pointer}
+.cfg-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--gold);border:3px solid var(--ink);border-radius:50%;cursor:pointer;transition:transform .15s}
+.cfg-slider::-webkit-slider-thumb:hover{transform:scale(1.25)}
+.cfg-val{font-family:'Syne';font-weight:800;font-size:var(--tlg);color:var(--ink);min-width:4ch;text-align:right;letter-spacing:-.03em}
+.cfg-val span{font-size:.5em;font-family:'Space Mono';color:var(--mist);font-weight:400}
+.cfg-options{display:flex;flex-direction:column;gap:8px}
+.cfg-opt{display:flex;align-items:center;gap:12px;padding:clamp(10px,1.5vw,16px) clamp(14px,2vw,20px);background:var(--cream);border:2px solid var(--linen);border-radius:2px;cursor:pointer;transition:all .2s;position:relative}
+.cfg-opt:hover{border-color:var(--sand);background:var(--linen)}
+.cfg-opt.sel{border-color:var(--gd);background:rgba(196,173,0,.08)}
+.cfg-opt.sel::after{content:'✓';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:'Syne';font-weight:800;color:var(--gd);font-size:var(--tsm)}
+.cfg-opt-icon{width:32px;height:32px;background:var(--linen);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.cfg-opt-text{}
+.cfg-opt-name{font-family:'Syne';font-weight:800;font-size:var(--tsm);color:var(--ink)}
+.cfg-opt-sub{font-family:'Space Mono';font-size:var(--t2xs);color:var(--mist)}
+.cfg-opt-price{font-family:'Space Mono';font-size:var(--txs);color:var(--gd);font-weight:700}
+.cfg-checkboxes{display:flex;flex-direction:column;gap:6px}
+.cfg-check{display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 0}
+.cfg-check input{-webkit-appearance:none;appearance:none;width:16px;height:16px;border:2px solid var(--linen);border-radius:2px;cursor:pointer;flex-shrink:0;transition:all .2s;position:relative}
+.cfg-check input:checked{background:var(--gd);border-color:var(--gd)}
+.cfg-check input:checked::after{content:'';position:absolute;left:3px;top:1px;width:6px;height:9px;border:2px solid var(--ink);border-top:none;border-left:none;transform:rotate(45deg)}
+.cfg-check-label{font-family:'Space Mono';font-size:var(--txs);color:var(--mist)}
+.cfg-check-price{margin-left:auto;font-family:'Space Mono';font-size:var(--txs);color:var(--gd);font-weight:700}
+/* Result panel */
+.cfg-result-title{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.2em;text-transform:uppercase;color:var(--sand)}
+.cfg-result-summary{display:flex;flex-direction:column;gap:8px;padding:var(--ssm) 0;border-top:1px solid rgba(245,218,26,.12);border-bottom:1px solid rgba(245,218,26,.12)}
+.cfg-line{display:flex;justify-content:space-between;align-items:center;font-family:'Space Mono';font-size:var(--txs);color:var(--mist)}
+.cfg-line b{color:var(--cream)}
+.cfg-total{display:flex;justify-content:space-between;align-items:flex-end;padding-top:var(--ssm)}
+.cfg-total-label{font-family:'Space Mono';font-size:var(--txs);letter-spacing:.12em;color:var(--sand)}
+.cfg-total-val{font-family:'Syne';font-weight:800;font-size:clamp(32px,5vw,60px);color:var(--gold);letter-spacing:-.04em;line-height:1}
+.cfg-ttc{font-family:'Space Mono';font-size:var(--t2xs);color:var(--mist)}
+.cfg-disclaimer{font-family:'Space Mono';font-size:var(--t2xs);color:rgba(168,153,110,.5);line-height:1.6;margin-top:var(--ssm)}
+@media(max-width:900px){.cfg-header{grid-template-columns:1fr}.cfg-body{grid-template-columns:1fr}.cfg-form{border-right:none;border-bottom:2px solid var(--ink)}.cfg-result{position:static;background:var(--ink3)}}
+
+/* ══════════════ GAMMES ══════════════ */
+#gammes{background:var(--cream);border-bottom:2px solid var(--ink)}
+.gammes-header{padding:var(--sxl) clamp(1.5rem,5vw,5rem) var(--slg);border-bottom:2px solid var(--ink)}
+h2.gammes-title{font-family:'Syne';font-weight:800;font-size:var(--t2xl);line-height:.84;letter-spacing:-.05em;color:var(--ink);margin-top:var(--ssm)}
+h2.gammes-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400;color:var(--gd);display:block}
+.gammes-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:none}
+.gamme-card{border-right:2px solid var(--ink);position:relative;overflow:hidden;transition:background .3s}
+.gamme-card:last-child{border-right:none}
+.gamme-card-top{padding:clamp(24px,4vw,48px) clamp(16px,3vw,36px) clamp(20px,3.5vw,40px);border-bottom:2px solid var(--ink);position:relative}
+.gamme-card:hover .gamme-card-top{background:var(--gold)}
+.gamme-accent{position:absolute;top:0;left:0;right:0;height:4px}
+.gamme-icon{width:clamp(44px,6vw,64px);height:clamp(44px,6vw,64px);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:var(--smd);font-size:clamp(22px,3vw,32px);transition:transform .3s}
+.gamme-card:hover .gamme-icon{transform:scale(1.1) rotate(-5deg)}
+.gamme-name{font-family:'Syne';font-weight:800;font-size:clamp(18px,2.5vw,28px);letter-spacing:-.03em;color:var(--ink);margin-bottom:6px}
+.gamme-tag{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.16em;text-transform:uppercase;color:var(--mist)}
+.gamme-card-body{padding:clamp(20px,3vw,36px) clamp(16px,3vw,36px) clamp(16px,2.5vw,28px)}
+.gamme-feat{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:var(--smd)}
+.gamme-feat li{font-family:'Space Mono';font-size:var(--txs);color:var(--mist);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.gamme-feat li::before{content:'▸';color:var(--gd);flex-shrink:0;margin-top:1px}
+.gamme-price{font-family:'Syne';font-weight:800;font-size:clamp(14px,1.8vw,20px);color:var(--ink);margin-bottom:var(--ssm)}
+.gamme-price em{font-style:normal;color:var(--gd);font-size:clamp(18px,2.5vw,28px)}
+@media(max-width:900px){.gammes-grid{grid-template-columns:1fr 1fr}.gamme-card:nth-child(2){border-right:none}.gamme-card:nth-child(3){border-top:2px solid var(--ink)}.gamme-card:nth-child(4){border-right:none;border-top:2px solid var(--ink)}}
+@media(max-width:560px){.gammes-grid{grid-template-columns:1fr}.gamme-card{border-right:none;border-bottom:2px solid var(--ink)}.gamme-card:last-child{border-bottom:none}}
+
+/* ══════════════ SMART CABIN ══════════════ */
+#smart{background:var(--ink);border-bottom:2px solid var(--ink);display:grid;grid-template-columns:1fr 1fr;min-height:90svh;overflow:hidden}
+.smart-l{padding:var(--sxl) clamp(1.5rem,5vw,5rem);display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(245,218,26,.1);position:relative;overflow:hidden}
+.smart-l::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(245,218,26,.04) 1px,transparent 1px);background-size:28px 28px}
+.smart-eyebrow{display:flex;align-items:center;gap:10px;font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.28em;text-transform:uppercase;color:var(--sand);margin-bottom:var(--smd);position:relative;z-index:1}
+.smart-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--sand)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#00E676;animation:livePulse 1.5s ease infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+h2.smart-title{font-family:'Syne';font-weight:800;font-size:var(--t2xl);line-height:.84;letter-spacing:-.05em;color:var(--cream);margin-bottom:var(--smd);position:relative;z-index:1}
+h2.smart-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400;color:var(--gold);display:block}
+.smart-desc{font-family:'Space Mono';font-size:var(--tsm);line-height:1.9;color:var(--mist);max-width:380px;margin-bottom:var(--slg);position:relative;z-index:1}
+.smart-features{display:flex;flex-direction:column;gap:10px;margin-bottom:var(--slg);position:relative;z-index:1}
+.smart-feat{display:flex;align-items:center;gap:14px;padding:clamp(12px,1.8vw,18px) clamp(16px,2.5vw,24px);background:rgba(255,255,255,.03);border:1px solid rgba(245,218,26,.1);border-radius:2px;transition:all .25s;cursor:default}
+.smart-feat:hover{background:rgba(245,218,26,.06);border-color:rgba(245,218,26,.25);transform:translateX(6px)}
+.smart-feat-icon{width:36px;height:36px;background:rgba(245,218,26,.08);border:1px solid rgba(245,218,26,.18);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.smart-feat-body{}
+.smart-feat-name{font-family:'Syne';font-weight:800;font-size:var(--tsm);color:var(--cream);letter-spacing:-.01em}
+.smart-feat-desc{font-family:'Space Mono';font-size:var(--t2xs);color:var(--mist)}
+/* Phone mockup */
+.smart-r{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--sxl) clamp(1rem,4vw,3rem);position:relative}
+.phone-frame{width:clamp(200px,28vw,300px);background:var(--ink2);border-radius:32px;border:3px solid rgba(245,218,26,.2);box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 0 1px rgba(245,218,26,.08);overflow:hidden;position:relative;z-index:2}
+.phone-notch{width:100px;height:28px;background:var(--ink2);border-radius:0 0 16px 16px;margin:0 auto;position:relative;z-index:3;border:3px solid rgba(245,218,26,.15);border-top:none}
+.phone-screen{padding:8px 16px 24px;background:linear-gradient(160deg,#0a0f1a 0%,#0f1520 100%);min-height:clamp(320px,45vw,520px)}
+.phone-status{display:flex;justify-content:space-between;padding:6px 0 8px;font-family:'Space Mono';font-size:9px;color:rgba(245,218,26,.5)}
+.phone-app-title{font-family:'Syne';font-weight:800;font-size:14px;color:var(--cream);margin-bottom:12px;letter-spacing:-.02em}
+.phone-app-title span{color:var(--gold)}
+.phone-room{background:rgba(255,255,255,.04);border:1px solid rgba(245,218,26,.12);border-radius:10px;padding:12px;margin-bottom:8px}
+.phone-room-label{font-family:'Space Mono';font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,218,26,.4);margin-bottom:6px}
+.phone-sensors{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.phone-sensor{background:rgba(0,0,0,.3);border-radius:6px;padding:8px;display:flex;flex-direction:column;gap:2px}
+.phone-sensor-val{font-family:'Syne';font-weight:800;font-size:16px;color:var(--cream)}
+.phone-sensor-lbl{font-family:'Space Mono';font-size:7px;color:rgba(245,218,26,.4)}
+.phone-controls{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.phone-ctrl{background:rgba(0,0,0,.3);border:1px solid rgba(245,218,26,.1);border-radius:8px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:all .2s}
+.phone-ctrl.on{background:rgba(245,218,26,.1);border-color:rgba(245,218,26,.4)}
+.phone-ctrl-icon{font-size:18px}
+.phone-ctrl-name{font-family:'Space Mono';font-size:7px;color:rgba(245,218,26,.5);text-align:center}
+.phone-ctrl-state{font-family:'Syne';font-weight:800;font-size:9px;letter-spacing:.1em}
+.phone-ctrl.on .phone-ctrl-state{color:#00E676}
+.phone-ctrl:not(.on) .phone-ctrl-state{color:rgba(255,255,255,.3)}
+@media(max-width:900px){#smart{grid-template-columns:1fr}.smart-l{border-right:none;border-bottom:1px solid rgba(245,218,26,.1)}.smart-r{padding:var(--slg) var(--smd)}}
+
+/* ══════════════ STEPS ══════════════ */
 #steps{background:var(--paper);border-bottom:2px solid var(--ink)}
-.steps-header{
-  padding:var(--sxl) clamp(1.5rem,5vw,5rem) var(--slg);
-  display:grid;grid-template-columns:1fr 1fr;gap:var(--slg);
-  border-bottom:2px solid var(--ink);
-}
+.steps-header{padding:var(--sxl) clamp(1.5rem,5vw,5rem) var(--slg);display:grid;grid-template-columns:1fr 1fr;gap:var(--slg);border-bottom:2px solid var(--ink)}
 .steps-header-l .s-label{color:var(--mist)}
-h2.steps-title{
-  font-family:'Syne';font-weight:800;
-  font-size:var(--t2xl);line-height:.84;letter-spacing:-.05em;color:var(--ink);
-}
+h2.steps-title{font-family:'Syne';font-weight:800;font-size:var(--t2xl);line-height:.84;letter-spacing:-.05em;color:var(--ink)}
 h2.steps-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400;color:var(--gd);display:block}
 .steps-header-r{display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:4px}
 .steps-intro{font-size:var(--tsm);line-height:2;color:var(--mist);max-width:420px}
 .steps-intro strong{color:var(--ink)}
+.steps-progress-bar{height:3px;background:var(--linen);border-radius:2px;overflow:hidden}
+.steps-progress-fill{height:100%;background:var(--gd);width:0%;transition:width .5s cubic-bezier(.4,0,.2,1);border-radius:2px}
+.steps-prog-label{font-family:'Space Mono';font-size:var(--t2xs);color:var(--mist);margin-top:6px}
 @media(max-width:768px){.steps-header{grid-template-columns:1fr}}
 .steps-list{display:flex;flex-direction:column}
-.step-row{
-  display:grid;
-  grid-template-columns:clamp(60px,8vw,100px) 1fr;
-  border-bottom:2px solid var(--ink);
-  cursor:pointer;
-  transition:background .2s;
-  position:relative;
-}
-.step-row:hover{background:var(--linen)}
-.step-row.open{background:var(--gold);cursor:default}
-.step-row.open:hover{background:var(--gold)}
-.step-num-col{
-  border-right:2px solid var(--ink);
-  display:flex;align-items:flex-start;justify-content:center;
-  padding:clamp(18px,2.5vw,32px) 0 clamp(18px,2.5vw,32px);
-  position:relative;
-}
-.step-num{
-  font-family:'Syne';font-weight:800;
-  font-size:clamp(20px,2.8vw,38px);
-  color:var(--mist);line-height:1;
-  transition:color .2s,transform .2s;
-}
-.step-row.open .step-num{color:var(--ink);transform:scale(1.1)}
-.step-num-col::after{
-  content:'';position:absolute;
-  bottom:-2px;left:50%;transform:translateX(-50%);
-  width:2px;height:2px;background:var(--gold);
-}
-.step-content-col{
-  padding:clamp(18px,2.5vw,32px) clamp(1.2rem,3.5vw,4rem);
-  display:flex;flex-direction:column;gap:0;
-}
-.step-head{display:flex;align-items:center;justify-content:space-between;gap:var(--smd)}
-.step-phase{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.22em;text-transform:uppercase;color:var(--mist);transition:color .2s}
-.step-row.open .step-phase{color:var(--ink3)}
-.step-title-row{display:flex;align-items:baseline;gap:var(--ssm);flex:1}
-h3.step-title{
-  font-family:'Syne';font-weight:800;
-  font-size:clamp(16px,2.2vw,28px);
-  letter-spacing:-.03em;color:var(--ink);line-height:1;
-  transition:color .2s;
-}
-.step-row.open h3.step-title{color:var(--ink)}
-.step-arrow{
-  width:clamp(28px,3vw,36px);height:clamp(28px,3vw,36px);
-  border-radius:50%;border:2px solid var(--line);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:all .3s;
-}
-.step-arrow svg{width:12px;height:12px;fill:none;stroke:var(--mist);stroke-width:2.5;transition:transform .35s,stroke .2s}
-.step-row.open .step-arrow{background:var(--ink);border-color:var(--ink)}
-.step-row.open .step-arrow svg{stroke:var(--gold);transform:rotate(45deg)}
-.step-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1),opacity .35s;opacity:0}
-.step-row.open .step-body{max-height:400px;opacity:1}
-.step-body-inner{
-  padding:var(--smd) 0 clamp(22px,3vw,38px);
-  display:grid;grid-template-columns:1fr 1fr 1fr;
-  gap:var(--ssm);
-}
-.step-detail{
-  background:rgba(15,14,10,.06);
-  padding:clamp(10px,1.4vw,16px) clamp(12px,1.8vw,20px);
-  border-left:3px solid var(--ink);
-  display:flex;flex-direction:column;gap:4px;
-}
-.step-row.open .step-detail{background:rgba(15,14,10,.08);border-left-color:var(--ink)}
-.step-detail-icon{color:var(--ink3);margin-bottom:4px}
-.step-detail b{font-family:'Syne';font-weight:700;font-size:var(--tsm);color:var(--ink);line-height:1.2}
-.step-detail span{font-family:'Space Mono';font-size:var(--t2xs);color:var(--ink3);letter-spacing:.04em;line-height:1.6}
-.step-img{
-  position:relative;overflow:hidden;border-radius:3px;
-  background:var(--ink3);
-  min-height:clamp(80px,12vw,160px);
-  border:1px solid rgba(15,14,10,.12);
-}
-.step-img img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85}
-.step-body-inner.has-img{grid-template-columns:1fr 1fr 1fr 1.2fr}
-@media(max-width:900px){.step-body-inner,.step-body-inner.has-img{grid-template-columns:1fr 1fr}}
-@media(max-width:560px){.step-body-inner,.step-body-inner.has-img{grid-template-columns:1fr}}
-.steps-progress{height:4px;background:var(--linen);border-bottom:2px solid var(--ink);position:relative}
-.steps-progress-fill{height:100%;background:var(--gold);width:0%;transition:width .5s cubic-bezier(.4,0,.2,1)}
-.steps-progress-label{position:absolute;right:var(--smd);top:-22px;font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.12em;color:var(--mist)}
+.step-row{display:grid;grid-template-columns:clamp(60px,8vw,100px) 1fr;border-bottom:2px solid var(--ink);cursor:pointer;transition:background .2s}
+.step-row:hover{background:rgba(196,173,0,.04)}
+.step-row.open{background:var(--cream)}
+.step-num-col{border-right:2px solid var(--ink);padding:clamp(16px,2.5vw,28px) clamp(10px,1.5vw,20px);display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(20px,3vw,32px)}
+.step-num{font-family:'Syne';font-weight:800;font-size:clamp(13px,1.8vw,20px);color:var(--linen);letter-spacing:.04em;transition:color .2s}
+.step-row.open .step-num,.step-row:hover .step-num{color:var(--gd)}
+.step-content-col{display:flex;flex-direction:column;min-width:0}
+.step-head{display:flex;align-items:center;justify-content:space-between;gap:var(--ssm);padding:clamp(16px,2.5vw,28px) clamp(16px,3vw,40px)}
+.step-title-row{display:flex;flex-direction:column;gap:3px}
+.step-phase{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.2em;text-transform:uppercase;color:var(--mist)}
+.step-title{font-family:'Syne';font-weight:800;font-size:clamp(14px,2vw,24px);color:var(--ink);letter-spacing:-.03em}
+.step-arrow{width:clamp(28px,3.5vw,40px);height:clamp(28px,3.5vw,40px);border:1.5px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s}
+.step-arrow svg{width:14px;height:14px;color:var(--mist);transition:transform .4s cubic-bezier(.34,1.08,.64,1)}
+.step-row.open .step-arrow{background:var(--gd);border-color:var(--gd)}
+.step-row.open .step-arrow svg{transform:rotate(180deg);color:var(--ink)}
+.step-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.4,0,.2,1)}
+.step-row.open .step-body{grid-template-rows:1fr}
+.step-body-inner{overflow:hidden;padding:0;display:flex;gap:clamp(16px,3vw,36px);flex-wrap:wrap}
+.step-row.open .step-body-inner{padding:0 clamp(16px,3vw,40px) clamp(16px,2.5vw,28px)}
+.step-detail{flex:1;min-width:160px;display:flex;flex-direction:column;gap:4px}
+.step-detail-icon{width:28px;height:28px;background:var(--linen);border-radius:2px;display:flex;align-items:center;justify-content:center;color:var(--mist);margin-bottom:4px}
+.step-detail b{font-family:'Syne';font-weight:800;font-size:var(--tsm);color:var(--ink);letter-spacing:-.02em}
+.step-detail span{font-family:'Space Mono';font-size:var(--txs);color:var(--mist);line-height:1.5}
+.step-img{width:clamp(120px,18vw,200px);border-radius:2px;overflow:hidden;background:var(--linen);flex-shrink:0}
+.step-img img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* ════════════════════════════════
-   GALLERY BAND
-════════════════════════════════ */
-.gallery-band{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  border-bottom:2px solid var(--ink);overflow:hidden;
-}
-.gb-item{position:relative;aspect-ratio:3/4;overflow:hidden;border-right:2px solid var(--ink);cursor:pointer}
-.gb-item:last-child{border-right:none}
-.gb-item img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.3);transition:filter .5s,transform .6s}
-.gb-item:hover img{filter:grayscale(0);transform:scale(1.04)}
-.gb-item-over{
-  position:absolute;inset:0;
-  background:linear-gradient(transparent 40%,rgba(15,14,10,.8));
-  display:flex;flex-direction:column;justify-content:flex-end;
-  padding:var(--smd);
-  opacity:0;transition:opacity .4s;
-}
-.gb-item:hover .gb-item-over{opacity:1}
-.gb-item-over b{font-family:'Syne';font-weight:800;font-size:var(--tsm);color:var(--cream)}
-.gb-item-over span{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
-@media(max-width:640px){.gallery-band{grid-template-columns:1fr 1fr}.gb-item:nth-child(2n){border-right:none}.gb-item:nth-child(n+3){border-top:2px solid var(--ink)}}
-
-/* ════════════════════════════════
-   ★ PARTNERS MARQUEE — NEW
-════════════════════════════════ */
-#partners{
-  background:var(--cream);
-  border-bottom:2px solid var(--ink);
-  overflow:hidden;
-  position:relative;
-}
-/* fade edges */
-#partners::before,#partners::after{
-  content:'';position:absolute;top:0;bottom:0;z-index:2;width:clamp(60px,8vw,120px);pointer-events:none;
-}
-#partners::before{left:0;background:linear-gradient(to right,var(--cream),transparent)}
-#partners::after{right:0;background:linear-gradient(to left,var(--cream),transparent)}
-
-.partners-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:clamp(20px,3vw,36px) clamp(1.5rem,5vw,5rem) clamp(14px,2vw,24px);
-  border-bottom:1px solid var(--linen);
-}
-.partners-label{
-  display:flex;align-items:center;gap:10px;
-  font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.28em;text-transform:uppercase;color:var(--mist);
-}
-.partners-label::before{content:'';width:18px;height:1.5px;background:var(--mist)}
-.partners-count{
-  font-family:'Syne';font-weight:800;font-size:var(--txs);
-  color:var(--mist);letter-spacing:.04em;
-}
-
-/* track */
-.partners-track{
-  padding:clamp(20px,3vw,40px) 0;
-  display:flex;align-items:center;
-  overflow:hidden;
-  position:relative;
-}
-.partners-belt{
-  display:flex;align-items:center;gap:0;
-  white-space:nowrap;
-  animation:partnerScroll 22s linear infinite;
-  flex-shrink:0;
-}
-.partners-belt:hover{animation-play-state:paused}
-@keyframes partnerScroll{
-  from{transform:translateX(0)}
-  to{transform:translateX(-50%)}
-}
-
-.partner-item{
-  display:flex;align-items:center;justify-content:center;
-  padding:0 clamp(32px,5vw,70px);
-  border-right:1px solid var(--linen);
-  flex-shrink:0;
-  transition:opacity .3s;
-}
+/* ══════════════ PARTNERS ══════════════ */
+#partners{background:var(--ink);border-bottom:2px solid var(--ink)}
+.partners-header{padding:var(--sxl) clamp(1.5rem,5vw,5rem) var(--slg);border-bottom:1px solid rgba(245,218,26,.1)}
+.partners-label{display:flex;align-items:center;gap:10px;font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.28em;text-transform:uppercase;color:var(--sand);margin-bottom:var(--ssm)}
+.partners-label::before{content:'';width:18px;height:1.5px;background:var(--sand)}
+h2.partners-title{font-family:'Syne';font-weight:800;font-size:var(--txl);line-height:.88;letter-spacing:-.05em;color:var(--cream)}
+h2.partners-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400;color:var(--gold)}
+.partners-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(245,218,26,.08)}
+.partner-item{border-right:1px solid rgba(245,218,26,.08);padding:clamp(28px,5vw,56px) clamp(20px,4vw,48px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--ssm);transition:background .3s;position:relative}
 .partner-item:last-child{border-right:none}
-.partner-item:hover{opacity:.7}
+.partner-item:hover{background:rgba(245,218,26,.04)}
+.partner-logo{font-family:'Syne';font-weight:800;font-size:clamp(14px,2vw,22px);color:var(--cream);letter-spacing:-.02em;text-align:center}
+.partner-sector{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.16em;text-transform:uppercase;color:var(--sand)}
+@media(max-width:600px){.partners-grid{grid-template-columns:1fr 1fr}.partner-item:nth-child(2){border-right:none}.partner-item:nth-child(3){border-top:1px solid rgba(245,218,26,.08)}.partner-item:nth-child(4){border-right:none;border-top:1px solid rgba(245,218,26,.08)}}
 
-.partner-logo{
-  height:clamp(28px,4vw,52px);
-  width:auto;
-  max-width:clamp(80px,12vw,160px);
-  object-fit:contain;
-  filter:grayscale(1) opacity(.5);
-  transition:filter .4s,transform .3s;
-  display:block;
-}
-.partner-item:hover .partner-logo{
-  filter:grayscale(0) opacity(1);
-  transform:scale(1.05);
-}
+/* ══════════════ TESTIMONIALS ══════════════ */
+#testimonials{background:var(--gold);border-bottom:2px solid var(--ink);overflow:hidden}
+.testi-inner{padding:var(--sxl) clamp(1.5rem,5vw,5rem)}
+.testi-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--slg);flex-wrap:wrap;gap:var(--ssm)}
+h2.testi-title{font-family:'Syne';font-weight:800;font-size:var(--txl);line-height:.88;letter-spacing:-.05em;color:var(--ink)}
+h2.testi-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400}
+.testi-nav{display:flex;gap:8px}
+.testi-nav-btn{width:40px;height:40px;background:rgba(15,14,10,.08);border:2px solid rgba(15,14,10,.15);border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.testi-nav-btn:hover{background:var(--ink);color:var(--gold)}
+.testi-nav-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2}
+.testi-track{overflow:hidden}
+.testi-slider{display:flex;gap:2px;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.testi-card{flex:0 0 calc(50% - 1px);min-width:0;background:var(--gl);border:2px solid rgba(15,14,10,.1);border-radius:2px;padding:clamp(24px,4vw,48px);display:flex;flex-direction:column;gap:var(--smd)}
+.testi-quote{font-family:'DM Serif Display';font-style:italic;font-size:clamp(16px,2.2vw,24px);color:var(--ink);line-height:1.5}
+.testi-quote::before{content:'"';font-size:2em;line-height:.5;display:block;margin-bottom:8px;color:var(--gd)}
+.testi-author{display:flex;flex-direction:column;gap:2px;margin-top:auto}
+.testi-name{font-family:'Syne';font-weight:800;font-size:var(--tsm);color:var(--ink)}
+.testi-role{font-family:'Space Mono';font-size:var(--txs);color:var(--ink3);opacity:.6}
+.testi-stars{display:flex;gap:3px;margin-bottom:6px}
+.testi-star{color:var(--gd);font-size:14px}
+@media(max-width:640px){.testi-card{flex:0 0 100%}}
 
-/* Fallback placeholder when image missing */
-.partner-placeholder{
-  height:clamp(28px,4vw,52px);
-  display:flex;align-items:center;gap:10px;
-  filter:grayscale(1) opacity(.45);
-  transition:filter .4s;
-}
-.partner-item:hover .partner-placeholder{filter:grayscale(0) opacity(1)}
-.partner-placeholder-hex{
-  width:clamp(22px,3vw,32px);height:clamp(22px,3vw,32px);
-  background:var(--gold);
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  flex-shrink:0;
-}
-.partner-placeholder-name{
-  font-family:'Syne';font-weight:800;
-  font-size:clamp(10px,1.2vw,16px);
-  letter-spacing:-.01em;color:var(--ink);
-  white-space:nowrap;
-}
-
-/* ════════════════════════════════
-   ★ SAV & GARANTIE — NEW
-   Split: left = dark bold statement
-          right = 3 service cards
-════════════════════════════════ */
-#sav{
-  background:var(--ink);
-  border-bottom:2px solid var(--ink);
-  display:grid;
-  grid-template-columns:1fr 1fr;
-}
-
-/* Left panel — anchor statement */
-.sav-l{
-  padding:var(--sxl) clamp(1.5rem,5vw,5rem);
-  display:flex;flex-direction:column;justify-content:center;
-  border-right:2px solid rgba(245,218,26,.12);
-  position:relative;overflow:hidden;
-}
-/* decorative grid */
-.sav-l::before{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background-image:linear-gradient(rgba(245,218,26,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(245,218,26,.03) 1px,transparent 1px);
-  background-size:32px 32px;
-}
-.sav-eyebrow{
-  display:flex;align-items:center;gap:10px;
-  font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.28em;text-transform:uppercase;
-  color:var(--sand);margin-bottom:var(--smd);position:relative;z-index:1;
-}
+/* ══════════════ SAV ══════════════ */
+#sav{background:var(--ink);border-bottom:2px solid var(--ink);display:grid;grid-template-columns:1fr 1fr}
+.sav-l{padding:var(--sxl) clamp(1.5rem,5vw,5rem);display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(245,218,26,.12);position:relative;overflow:hidden}
+.sav-l::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(245,218,26,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(245,218,26,.03) 1px,transparent 1px);background-size:32px 32px}
+.sav-eyebrow{display:flex;align-items:center;gap:10px;font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.28em;text-transform:uppercase;color:var(--sand);margin-bottom:var(--smd);position:relative;z-index:1}
 .sav-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--sand)}
-.sav-eyebrow .live-dot{
-  width:6px;height:6px;border-radius:50%;background:var(--gold);
-  margin-left:4px;animation:pl 1.8s ease infinite;
-}
-h2.sav-title{
-  font-family:'Syne';font-weight:800;
-  font-size:var(--t2xl);line-height:.84;letter-spacing:-.05em;
-  color:var(--cream);margin-bottom:var(--smd);
-  position:relative;z-index:1;
-}
-h2.sav-title em{
-  font-family:'DM Serif Display';font-style:italic;font-weight:400;
-  color:var(--gold);display:block;
-}
-h2.sav-title .ghost{
-  -webkit-text-stroke:1px rgba(245,218,26,.18);
-  color:transparent;
-}
-.sav-desc{
-  font-family:'Space Mono';font-size:var(--tsm);line-height:1.9;
-  color:var(--mist);max-width:380px;margin-bottom:var(--slg);
-  position:relative;z-index:1;
-}
-.sav-desc strong{color:var(--sand)}
-
-/* guarantee badge */
-.sav-badge{
-  display:inline-flex;align-items:center;gap:var(--ssm);
-  background:rgba(245,218,26,.07);
-  border:1.5px solid rgba(245,218,26,.2);
-  border-radius:4px;
-  padding:clamp(12px,1.8vw,20px) clamp(16px,2.5vw,28px);
-  position:relative;z-index:1;
-  width:fit-content;
-}
-.sav-badge-icon{
-  width:clamp(40px,5.5vw,60px);height:clamp(40px,5.5vw,60px);
-  background:var(--gold);
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.sav-badge-icon svg{width:clamp(18px,2.5vw,26px);height:clamp(18px,2.5vw,26px);fill:none;stroke:var(--ink);stroke-width:2.5}
-.sav-badge-body{}
-.sav-badge-num{
-  font-family:'Syne';font-weight:800;
-  font-size:clamp(28px,4vw,52px);
-  color:var(--gold);line-height:1;letter-spacing:-.04em;
-}
+h2.sav-title{font-family:'Syne';font-weight:800;font-size:var(--t2xl);line-height:.84;letter-spacing:-.05em;color:var(--cream);margin-bottom:var(--smd);position:relative;z-index:1}
+h2.sav-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400;color:var(--gold);display:block}
+.sav-desc{font-family:'Space Mono';font-size:var(--tsm);line-height:1.9;color:var(--mist);max-width:380px;margin-bottom:var(--slg);position:relative;z-index:1}
+.sav-badge{display:inline-flex;align-items:center;gap:var(--ssm);background:rgba(245,218,26,.07);border:1.5px solid rgba(245,218,26,.2);border-radius:4px;padding:clamp(12px,1.8vw,20px) clamp(16px,2.5vw,28px);position:relative;z-index:1;width:fit-content}
+.sav-badge-icon{width:clamp(40px,5.5vw,60px);height:clamp(40px,5.5vw,60px);background:var(--gold);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sav-badge-icon svg{width:26px;height:26px;fill:none;stroke:var(--ink);stroke-width:2.5}
+.sav-badge-num{font-family:'Syne';font-weight:800;font-size:clamp(28px,4vw,52px);color:var(--gold);line-height:1;letter-spacing:-.04em}
 .sav-badge-num sub{font-size:.45em;font-family:'Space Mono';color:var(--sand)}
-.sav-badge-label{
-  font-family:'Space Mono';font-size:var(--txs);
-  color:var(--sand);letter-spacing:.06em;
-}
-.sav-badge-sub{
-  font-family:'Space Mono';font-size:var(--t2xs);
-  color:rgba(168,153,110,.5);letter-spacing:.06em;margin-top:2px;
-}
-
-/* Right panel — 3 service cards stacked */
-.sav-r{
-  display:flex;flex-direction:column;
-}
-.sav-card{
-  flex:1;
-  padding:clamp(20px,3vw,40px) clamp(1.5rem,4vw,4rem);
-  border-bottom:1px solid rgba(245,218,26,.08);
-  display:flex;gap:clamp(16px,2.5vw,32px);
-  align-items:flex-start;
-  transition:background .25s;
-  cursor:default;
-  position:relative;
-}
+.sav-badge-label{font-family:'Space Mono';font-size:var(--txs);color:var(--sand);letter-spacing:.06em}
+.sav-badge-sub{font-family:'Space Mono';font-size:var(--t2xs);color:rgba(168,153,110,.5);letter-spacing:.06em;margin-top:2px}
+.sav-r{display:flex;flex-direction:column}
+.sav-card{flex:1;padding:clamp(20px,3vw,40px) clamp(1.5rem,4vw,4rem);border-bottom:1px solid rgba(245,218,26,.08);display:flex;gap:clamp(16px,2.5vw,32px);align-items:flex-start;transition:background .25s;position:relative}
 .sav-card:last-child{border-bottom:none}
 .sav-card:hover{background:rgba(245,218,26,.04)}
-/* accent line on hover */
-.sav-card::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;
-  width:3px;background:var(--gold);
-  transform:scaleY(0);transform-origin:bottom;
-  transition:transform .35s cubic-bezier(.4,0,.2,1);
-}
+.sav-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);transform:scaleY(0);transform-origin:bottom;transition:transform .35s cubic-bezier(.4,0,.2,1)}
 .sav-card:hover::before{transform:scaleY(1)}
-
-.sav-card-num{
-  font-family:'Syne';font-weight:800;
-  font-size:clamp(28px,4vw,52px);
-  color:rgba(245,218,26,.12);line-height:1;letter-spacing:-.04em;
-  flex-shrink:0;min-width:clamp(36px,5vw,64px);
-}
+.sav-card-num{font-family:'Syne';font-weight:800;font-size:clamp(28px,4vw,52px);color:rgba(245,218,26,.12);line-height:1;letter-spacing:-.04em;flex-shrink:0;min-width:clamp(36px,5vw,64px)}
 .sav-card-body{display:flex;flex-direction:column;gap:6px;padding-top:4px}
-.sav-card-icon{
-  width:clamp(30px,3.5vw,42px);height:clamp(30px,3.5vw,42px);
-  background:rgba(245,218,26,.08);border:1px solid rgba(245,218,26,.18);
-  border-radius:2px;
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:6px;flex-shrink:0;
-  transition:background .25s;
-}
+.sav-card-icon{width:clamp(30px,3.5vw,42px);height:clamp(30px,3.5vw,42px);background:rgba(245,218,26,.08);border:1px solid rgba(245,218,26,.18);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;flex-shrink:0;transition:background .25s}
 .sav-card:hover .sav-card-icon{background:rgba(245,218,26,.14)}
-.sav-card-icon svg{width:clamp(14px,1.8vw,20px);height:clamp(14px,1.8vw,20px);fill:none;stroke:var(--gold);stroke-width:2}
-.sav-card-title{
-  font-family:'Syne';font-weight:800;
-  font-size:clamp(14px,1.8vw,22px);
-  color:var(--cream);letter-spacing:-.02em;line-height:1.1;
-}
-.sav-card-desc{
-  font-family:'Space Mono';font-size:var(--txs);
-  color:var(--mist);line-height:1.7;
-}
+.sav-card-icon svg{width:20px;height:20px;fill:none;stroke:var(--gold);stroke-width:2}
+.sav-card-title{font-family:'Syne';font-weight:800;font-size:clamp(14px,1.8vw,22px);color:var(--cream);letter-spacing:-.02em;line-height:1.1}
+.sav-card-desc{font-family:'Space Mono';font-size:var(--txs);color:var(--mist);line-height:1.7}
 .sav-card-desc strong{color:var(--sand)}
-.sav-card-tag{
-  display:inline-flex;align-items:center;gap:6px;
-  margin-top:8px;
-  background:rgba(245,218,26,.06);border:1px solid rgba(245,218,26,.15);
-  border-radius:2px;padding:4px 10px;
-  font-family:'Space Mono';font-size:var(--t2xs);
-  letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
-  width:fit-content;
-}
+.sav-card-tag{display:inline-flex;align-items:center;gap:6px;margin-top:8px;background:rgba(245,218,26,.06);border:1px solid rgba(245,218,26,.15);border-radius:2px;padding:4px 10px;font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--gold);width:fit-content}
 .sav-card-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pl 2s ease infinite}
+@media(max-width:768px){#sav{grid-template-columns:1fr}.sav-l{border-right:none;border-bottom:1px solid rgba(245,218,26,.1)}}
 
-@media(max-width:768px){
-  #sav{grid-template-columns:1fr}
-  .sav-l{border-right:none;border-bottom:1px solid rgba(245,218,26,.1)}
-}
+/* ══════════════ CERTS ══════════════ */
+#certs{background:var(--paper);border-bottom:2px solid var(--ink)}
+.certs-inner{padding:var(--slg) clamp(1.5rem,5vw,5rem)}
+.certs-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-top:var(--slg)}
+.cert-card{background:var(--cream);border:1.5px solid var(--linen);border-radius:2px;padding:clamp(16px,2.5vw,28px) clamp(12px,2vw,20px);display:flex;flex-direction:column;gap:6px;transition:all .25s;cursor:default}
+.cert-card:hover{border-color:var(--sand);transform:translateY(-4px);box-shadow:0 12px 36px rgba(15,14,10,.08)}
+.cert-badge{font-family:'Syne';font-weight:800;font-size:clamp(14px,1.8vw,20px);color:var(--ink);letter-spacing:-.02em}
+.cert-norm{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.14em;color:var(--gd);text-transform:uppercase}
+.cert-desc{font-family:'Space Mono';font-size:var(--txs);color:var(--mist);line-height:1.5}
+@media(max-width:900px){.certs-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.certs-grid{grid-template-columns:1fr 1fr}}
 
-/* ════════════════════════════════
-   CTA
-════════════════════════════════ */
+/* ══════════════ CTA / CONTACT ══════════════ */
 #cta{display:grid;grid-template-columns:1fr 1fr;min-height:100svh;border-bottom:2px solid var(--ink)}
-.cta-l{
-  background:var(--ink);color:var(--cream);
-  display:flex;flex-direction:column;justify-content:center;
-  padding:var(--sxl) clamp(1.5rem,5vw,5rem);
-  border-right:2px solid var(--ink);
-  position:relative;overflow:hidden;
-}
-.cta-l::before{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background-image:linear-gradient(rgba(245,218,26,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(245,218,26,.03) 1px,transparent 1px);
-  background-size:32px 32px;
-}
-.cta-ghost{
-  position:absolute;right:-2vw;bottom:-4vh;
-  font-family:'Syne';font-weight:800;font-size:clamp(120px,20vw,280px);
-  color:transparent;-webkit-text-stroke:1px rgba(245,218,26,.05);
-  pointer-events:none;user-select:none;line-height:1;
-}
-h2.cta-title{
-  font-family:'Syne';font-weight:800;
-  font-size:var(--t2xl);line-height:.84;letter-spacing:-.05em;
-  color:var(--cream);margin-bottom:var(--smd);position:relative;z-index:1;
-}
+.cta-l{background:var(--ink);color:var(--cream);display:flex;flex-direction:column;justify-content:center;padding:var(--sxl) clamp(1.5rem,5vw,5rem);border-right:2px solid var(--ink);position:relative;overflow:hidden}
+.cta-l::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(245,218,26,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(245,218,26,.03) 1px,transparent 1px);background-size:32px 32px}
+.cta-ghost{position:absolute;right:-2vw;bottom:-4vh;font-family:'Syne';font-weight:800;font-size:clamp(120px,20vw,280px);color:transparent;-webkit-text-stroke:1px rgba(245,218,26,.04);pointer-events:none;user-select:none;line-height:1}
+h2.cta-title{font-family:'Syne';font-weight:800;font-size:var(--t2xl);line-height:.84;letter-spacing:-.05em;color:var(--cream);margin-bottom:var(--smd);position:relative;z-index:1}
 h2.cta-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400;color:var(--gold);display:block}
 .cta-sub{font-size:var(--tsm);line-height:2;color:var(--mist);margin-bottom:var(--slg);max-width:380px;position:relative;z-index:1}
 .cta-sub strong{color:var(--sand)}
@@ -697,116 +445,154 @@ h2.cta-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:var(--ssm)}
 .fd{display:flex;flex-direction:column;gap:5px}
 .fd label{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.16em;text-transform:uppercase;color:var(--mist)}
-.fd input,.fd select,.fd textarea{
-  background:rgba(245,218,26,.05);border:1px solid rgba(245,218,26,.12);
-  color:var(--cream);font-family:'Space Mono';font-size:var(--txs);
-  padding:clamp(9px,1.1vw,13px) clamp(11px,1.4vw,15px);
-  outline:none;border-radius:1px;transition:border-color .2s;appearance:none;width:100%;
-}
-.fd input:focus,.fd select:focus,.fd textarea:focus{border-color:var(--gold);background:rgba(245,218,26,.08)}
-.fd input::placeholder,.fd textarea::placeholder{color:rgba(168,153,110,.5)}
-.fd select option{background:var(--ink2);color:var(--cream)}
-.fd textarea{resize:vertical;min-height:80px}
-.cta-r{
-  background:var(--paper);
-  display:flex;flex-direction:column;justify-content:center;
-  padding:var(--sxl) clamp(1.5rem,5vw,5rem);
-}
-.cta-r .s-label{color:var(--mist);margin-bottom:var(--slg)}
-.cert-list{display:flex;flex-direction:column;gap:0;margin-bottom:var(--slg)}
-.cert-item{
-  display:flex;align-items:center;gap:var(--smd);
-  padding:clamp(14px,2vw,22px) 0;
-  border-bottom:1px solid var(--linen);
-}
-.cert-item:first-child{border-top:1px solid var(--linen)}
-.cert-tag{
-  font-family:'Syne';font-weight:800;font-size:var(--tlg);
-  color:var(--ink);line-height:1;letter-spacing:-.03em;flex-shrink:0;
-  min-width:clamp(100px,12vw,160px);
-}
-.cert-desc{font-family:'Space Mono';font-size:var(--txs);color:var(--mist);line-height:1.6}
-.cta-strip{
-  background:var(--gold);border-top:2px solid var(--ink);
-  padding:clamp(28px,4.5vw,56px) clamp(1.5rem,5vw,5rem);
-  display:flex;align-items:center;justify-content:space-between;gap:var(--smd);flex-wrap:wrap;
-  grid-column:1/-1;
-}
-.cta-strip-txt{font-family:'Syne';font-weight:800;font-size:var(--tlg);color:var(--ink);letter-spacing:-.03em}
-.cta-strip-txt em{font-family:'DM Serif Display';font-style:italic}
-.cta-strip-btns{display:flex;gap:var(--ssm);flex-wrap:wrap;flex-shrink:0}
-@media(max-width:768px){#cta{grid-template-columns:1fr}.cta-l,.cta-r{padding:var(--slg) var(--smd)}.f2{grid-template-columns:1fr}.cta-strip{grid-column:1}}
+.fd input,.fd select,.fd textarea{font-family:'Space Mono';font-size:var(--tsm);color:var(--cream);background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:2px;padding:clamp(10px,1.5vw,16px) clamp(12px,2vw,18px);outline:none;transition:border-color .2s,background .2s;width:100%}
+.fd input::placeholder,.fd textarea::placeholder{color:rgba(168,153,110,.35)}
+.fd input:focus,.fd select:focus,.fd textarea:focus{border-color:rgba(245,218,26,.5);background:rgba(245,218,26,.04)}
+.fd select option{background:var(--ink);color:var(--cream)}
+.fd textarea{resize:vertical;min-height:100px}
+.form-send{margin-top:4px}
+.form-success{display:none;background:rgba(245,218,26,.1);border:1.5px solid rgba(245,218,26,.3);border-radius:4px;padding:16px 20px;font-family:'Space Mono';font-size:var(--tsm);color:var(--gold);text-align:center}
+/* Info panel */
+.cta-r{background:var(--cream);display:flex;flex-direction:column}
+.cta-r-top{padding:var(--sxl) clamp(1.5rem,5vw,5rem) var(--slg);border-bottom:2px solid var(--ink);flex:1;display:flex;flex-direction:column;justify-content:center}
+h2.cta-r-title{font-family:'Syne';font-weight:800;font-size:var(--txl);line-height:.88;letter-spacing:-.05em;color:var(--ink);margin-bottom:var(--smd)}
+h2.cta-r-title em{font-family:'DM Serif Display';font-style:italic;font-weight:400;color:var(--gd);display:block}
+.contact-items{display:flex;flex-direction:column;gap:var(--smd);margin-bottom:var(--slg)}
+.contact-item{display:flex;gap:var(--smd);align-items:flex-start}
+.contact-item-icon{width:44px;height:44px;background:var(--linen);border:1.5px solid var(--line);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.contact-item-icon svg{width:20px;height:20px;fill:none;stroke:var(--ink);stroke-width:2}
+.contact-item-title{font-family:'Syne';font-weight:800;font-size:var(--tmd);color:var(--ink)}
+.contact-item-val{font-family:'Space Mono';font-size:var(--tsm);color:var(--mist)}
+/* Map placeholder */
+.cta-map{height:clamp(180px,25vw,320px);background:var(--linen);border-top:2px solid var(--ink);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.cta-map::before{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:30px 30px}
+.map-pin{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px}
+.map-pin svg{width:36px;height:36px;fill:var(--gd)}
+.map-pin span{font-family:'Syne';font-weight:800;font-size:var(--tsm);color:var(--ink);background:var(--gold);padding:4px 12px;border-radius:2px}
+@media(max-width:900px){#cta{grid-template-columns:1fr}.cta-l{border-right:none;border-bottom:2px solid var(--ink)}}
 
-/* FOOTER */
-footer{
-  background:var(--ink);color:var(--cream);
-  padding:clamp(20px,3vw,40px) clamp(1.5rem,4vw,4rem);
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
-}
-.f-logo .lname{color:var(--cream)}
-.f-logo .lhex{background:var(--gold)}
-.fcp{font-family:'Space Mono';font-size:var(--t2xs);letter-spacing:.08em;color:rgba(168,153,110,.6)}
-.fcp a{color:var(--gold);text-decoration:none}
+/* ══════════════ FOOTER ══════════════ */
+footer{background:var(--ink2);border-top:2px solid var(--ink);padding:var(--slg) clamp(1.5rem,5vw,5rem);display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:var(--slg)}
+.footer-brand{}
+.footer-logo{display:flex;align-items:center;gap:var(--ssm);text-decoration:none;margin-bottom:var(--smd)}
+.footer-logo-hex{width:32px;height:32px;background:var(--gold);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center}
+.footer-logo-hex span{font-family:'Syne';font-weight:800;font-size:9px;color:var(--ink)}
+.footer-logo-name{font-family:'Syne';font-weight:800;font-size:18px;color:var(--cream)}
+.footer-tagline{font-family:'Space Mono';font-size:var(--txs);color:var(--mist);line-height:1.7;max-width:240px;margin-bottom:var(--smd)}
+.footer-socials{display:flex;gap:8px}
+.footer-social{width:36px;height:36px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;text-decoration:none}
+.footer-social:hover{background:var(--gold);border-color:var(--gold)}
+.footer-social svg{width:16px;height:16px;fill:var(--cream)}
+.footer-social:hover svg{fill:var(--ink)}
+.footer-col-title{font-family:'Syne';font-weight:800;font-size:var(--tsm);color:var(--cream);margin-bottom:var(--smd);letter-spacing:-.02em}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-family:'Space Mono';font-size:var(--txs);color:var(--mist);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.06);padding-top:var(--ssm);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.footer-copy{font-family:'Space Mono';font-size:var(--t2xs);color:rgba(107,101,80,.6)}
+.footer-legal{display:flex;gap:var(--smd)}
+.footer-legal a{font-family:'Space Mono';font-size:var(--t2xs);color:rgba(107,101,80,.6);text-decoration:none}
+.footer-legal a:hover{color:var(--gold)}
+@media(max-width:900px){footer{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){footer{grid-template-columns:1fr}}
+
+/* ══════════════ REVEAL ANIMATIONS ══════════════ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal-l{opacity:0;transform:translateX(-28px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.reveal-l.in{opacity:1;transform:translateX(0)}
+.reveal-r{opacity:0;transform:translateX(28px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.reveal-r.in{opacity:1;transform:translateX(0)}
 </style>
 </head>
 <body>
 
-<div id="cur"></div><div id="curR"></div>
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="curR"></div>
+<!-- GRAIN -->
 <canvas id="grain"></canvas>
+<!-- PROGRESS -->
 <div id="tpb"><div id="tpbF"></div></div>
-
-<button id="btt" aria-label="Retour en haut" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+<!-- BTT -->
+<button id="btt" onclick="scrollTo({top:0,behavior:'smooth'})" aria-label="Haut de page">
+  <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
 </button>
+<!-- WHATSAPP -->
+<a id="wa" href="https://wa.me/21600000000?text=Bonjour%20METTEC,%20je%20souhaite%20un%20devis" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#" class="logo">
+  <a class="logo" href="#">
     <div class="lhex"><span>MT</span></div>
-    <div class="ltxt"><div class="lname">MET<em>TEC</em></div><div class="lsub">Cabines Modulaires</div></div>
+    <div class="ltxt">
+      <span class="lname">MET<em>TEC</em></span>
+      <span class="lsub">Cabines Modulaires</span>
+    </div>
   </a>
   <ul class="navL">
-    <li><a href="#hero">Accueil</a></li>
+    <li><a href="#viewer3d">Cabine 3D</a></li>
+    <li><a href="#configurator">Configurateur</a></li>
+    <li><a href="#gammes">Gammes</a></li>
+    <li><a href="#smart">Smart</a></li>
     <li><a href="#steps">Processus</a></li>
     <li><a href="#sav">SAV</a></li>
-    <li><a href="#cta">Contact</a></li>
     <li><a href="#cta" class="nCta">Devis Gratuit</a></li>
   </ul>
-  <button class="burger" id="burg"><span></span><span></span><span></span></button>
+  <button class="burger" id="burg" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 <div class="mob" id="mob">
-  <a href="#hero">Accueil</a>
-  <a href="#steps">Processus</a>
-  <a href="#sav">SAV</a>
-  <a href="#cta">Contact</a>
-  <a href="#cta" class="mCta">Devis Gratuit</a>
+  <a href="#viewer3d" onclick="closeMob()">Cabine 3D</a>
+  <a href="#configurator" onclick="closeMob()">Configurateur</a>
+  <a href="#gammes" onclick="closeMob()">Gammes</a>
+  <a href="#smart" onclick="closeMob()">Smart Cabin</a>
+  <a href="#steps" onclick="closeMob()">Processus</a>
+  <a href="#sav" onclick="closeMob()">SAV</a>
+  <a href="#cta" class="mCta" onclick="closeMob()">Devis Gratuit</a>
 </div>
 
-<!-- ══ HERO ══ -->
+<!-- ══════════════ HERO ══════════════ -->
 <section id="hero">
-  <div class="hero-l">
-    <div class="h-tag"><div class="dot"></div>Monastir, Tunisie — EN 1090 Certifié</div>
+  <div class="hero-l reveal-l">
+    <div class="h-tag"><span class="dot"></span>Monastir, Tunisie — EN 1090 Certifié</div>
     <h1 class="hero-h1">
-      BÂTI<br>
+      <span class="str">BÂTI</span><br>
       <em>pour</em>
-      <span class="str">L'</span>ÉTERNITÉ
+      L'ÉTERNITÉ
     </h1>
-    <p class="hero-desc">Cabines modulaires acier <strong>S355 galvanisé</strong>. PU 100mm — λ=0.022 W/m·K. <strong>11 étapes</strong> — zéro compromis.</p>
+    <p class="hero-desc">
+      Structures métalliques à ossature acier <strong>S355</strong>, parois et toiture en panneaux sandwich <strong>PU 100mm</strong>. Dimensions sur mesure. Livraison clé en main avec <strong>garantie décennale</strong>.
+    </p>
     <div class="hero-btns">
-      <button class="btn btn-ink" onclick="document.getElementById('steps').scrollIntoView({behavior:'smooth'})">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Voir le processus
-      </button>
-      <a href="#cta" class="btn btn-out">Devis gratuit</a>
+      <a href="#viewer3d" class="btn btn-ink">Voir en 3D
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#cta" class="btn btn-out">Devis Gratuit</a>
+    </div>
+    <div class="hero-cert">
+      <span class="cert-chip"><b>EN 1090</b> Certifié</span>
+      <span class="cert-chip"><b>ISO 9001</b> Qualité</span>
+      <span class="cert-chip"><b>CND</b> Ultrason</span>
+      <span class="cert-chip"><b>10 ans</b> Garantie</span>
     </div>
   </div>
   <div class="hero-r">
-    <div class="hero-ghost">MT</div>
-    <div class="stage3d"><div class="carousel3d" id="car3d"></div></div>
-    <button class="hsl-arr" id="slP"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
-    <button class="hsl-arr" id="slN"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
-    <div class="hsl-ctrl" id="slDots"></div>
-    <div class="hero-count"><div id="slCn">01</div><small>/ 08</small></div>
+    <div class="hero-ghost">ACIER</div>
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-canvas-hint">Faites glisser pour tourner</div>
+    <div class="hero-count">
+      <span>500<small>+</small></span>
+      <small>PROJETS</small>
+    </div>
+    <div class="hero-price">
+      <span class="hero-price-label">Cabine standard 6×3×2.5m</span>
+      <span class="hero-price-val">13 000 TND</span>
+      <span class="hero-price-sub">TTC • Clé en main</span>
+    </div>
   </div>
 </section>
 
@@ -814,334 +600,1201 @@ footer{
 <div class="mq" aria-hidden="true">
   <div class="mqi">
     <span>Acier S355</span><span>EN 1090 Certifié</span><span>ISO 9001</span><span>CND Ultrason</span>
-    <span>PU 100mm — λ=0.022</span><span>Galvanisation 87μm</span><span>Monastir, Tunisie</span><span>Garantie Décennale</span>
+    <span>Galvanisation 87μm</span><span>Garantie Décennale</span><span>500+ Projets</span>
+    <span>Panneaux Sandwich PU</span><span>Sur Mesure</span><span>Smart Cabin</span>
     <span>Acier S355</span><span>EN 1090 Certifié</span><span>ISO 9001</span><span>CND Ultrason</span>
-    <span>PU 100mm — λ=0.022</span><span>Galvanisation 87μm</span><span>Monastir, Tunisie</span><span>Garantie Décennale</span>
+    <span>Galvanisation 87μm</span><span>Garantie Décennale</span><span>500+ Projets</span>
+    <span>Panneaux Sandwich PU</span><span>Sur Mesure</span><span>Smart Cabin</span>
   </div>
 </div>
 
-<!-- STATS BAND -->
+<!-- STATS -->
 <div class="stats-band">
-  <div class="stat-item"><div class="stat-n">200<sub>+</sub></div><div class="stat-l">Cabines livrées</div><div class="stat-s">Afrique du Nord & Europe</div></div>
-  <div class="stat-item"><div class="stat-n">15<sub>ans</sub></div><div class="stat-l">D'expertise</div><div class="stat-s">Fabrication certifiée EN 1090</div></div>
-  <div class="stat-item"><div class="stat-n">10<sub>ans</sub></div><div class="stat-l">Garantie décennale</div><div class="stat-s">Tous risques chantier</div></div>
-  <div class="stat-item"><div class="stat-n">48<sub>h</sub></div><div class="stat-l">Délai de réponse</div><div class="stat-s">Devis technique gratuit</div></div>
+  <div class="stat-item reveal">
+    <span class="stat-n" data-count="500">0</span>
+    <span class="stat-l">Projets livrés</span>
+    <span class="stat-s">Afrique du Nord & Europe</span>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:.1s">
+    <span class="stat-n">15<sub>ans</sub></span>
+    <span class="stat-l">D'expertise</span>
+    <span class="stat-s">Fabrication certifiée EN 1090</span>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:.2s">
+    <span class="stat-n">10<sub>ans</sub></span>
+    <span class="stat-l">Garantie décennale</span>
+    <span class="stat-s">Tous risques chantier</span>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:.3s">
+    <span class="stat-n">48<sub>h</sub></span>
+    <span class="stat-l">Délai de réponse</span>
+    <span class="stat-s">Devis technique gratuit</span>
+  </div>
 </div>
 
-<!-- ══ STEPS — ACCORDION ══ -->
+<!-- ══════════════ 3D VIEWER ══════════════ -->
+<section id="viewer3d">
+  <div class="v3d-l">
+    <canvas id="cabinCanvas"></canvas>
+    <div class="v3d-controls">
+      <button class="v3d-btn active" onclick="setCabinView('perspective')">Vue 3/4</button>
+      <button class="v3d-btn" onclick="setCabinView('front')">Façade</button>
+      <button class="v3d-btn" onclick="setCabinView('side')">Côté</button>
+      <button class="v3d-btn" onclick="setCabinView('top')">Dessus</button>
+      <button class="v3d-btn" onclick="toggleWireframe()">Filaire</button>
+    </div>
+    <p class="v3d-hint">🖱 Cliquer + glisser pour tourner • Scroll pour zoomer</p>
+  </div>
+  <div class="v3d-r">
+    <div class="v3d-eyebrow">La Cabine Standard</div>
+    <h2 class="v3d-title reveal-r">
+      Explorez<br>
+      <em>en 3D</em>
+    </h2>
+    <p class="v3d-desc reveal-r" style="transition-delay:.1s">
+      Faites pivoter la cabine standard <strong style="color:var(--cream)">6m × 3m × 2.5m</strong> selon tous les axes. Observez la structure métallique, les panneaux sandwich, les menuiseries et finitions.
+    </p>
+    <div class="specs-grid reveal-r" style="transition-delay:.2s">
+      <div class="spec-item">
+        <span class="spec-key">Longueur</span>
+        <span class="spec-val">6.00 m</span>
+        <span class="spec-note">Sur mesure possible</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-key">Largeur</span>
+        <span class="spec-val">3.00 m</span>
+        <span class="spec-note">Sur mesure possible</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-key">Hauteur</span>
+        <span class="spec-val">2.50 m</span>
+        <span class="spec-note">Sur mesure possible</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-key">Structure</span>
+        <span class="spec-val">Acier S355</span>
+        <span class="spec-note">42 000 N résistance</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-key">Isolation</span>
+        <span class="spec-val">PU 100mm</span>
+        <span class="spec-note">λ=0.022 W/m·K</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-key">Protection</span>
+        <span class="spec-val">87 μm</span>
+        <span class="spec-note">Galvanisation à chaud</span>
+      </div>
+    </div>
+    <div class="price-box reveal-r" style="transition-delay:.3s">
+      <div>
+        <div class="price-box-label">Cabine standard 6×3×2.5m</div>
+        <div class="price-box-val">13 000 TND</div>
+        <div class="price-box-sub">TTC • Livraison & pose incluses</div>
+      </div>
+      <div class="price-box-cta">
+        <a href="#cta" class="btn btn-gold">Devis sur mesure</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CONFIGURATEUR ══════════════ -->
+<section id="configurator">
+  <div class="cfg-header">
+    <div>
+      <div class="s-label" style="color:var(--mist)">Configurateur de Prix</div>
+      <h2 class="cfg-title reveal">
+        Votre cabine,<br>
+        <em>votre budget</em>
+      </h2>
+    </div>
+    <div class="cfg-intro reveal" style="transition-delay:.1s">
+      Estimez instantanément le prix de votre cabine sur mesure. Ajustez les dimensions, choisissez votre configuration et vos équipements — le prix se calcule en temps réel. Une estimation indicative ; notre équipe vous enverra un devis précis sous 48h.
+    </div>
+  </div>
+  <div class="cfg-body">
+    <div class="cfg-form">
+      <div>
+        <div class="cfg-label">Longueur (m)</div>
+        <div class="cfg-slider-wrap">
+          <div class="cfg-slider-row">
+            <input type="range" class="cfg-slider" id="sL" min="2" max="20" value="6" step="0.5">
+            <div class="cfg-val"><span id="vL">6</span> <span>m</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="cfg-label">Largeur (m)</div>
+        <div class="cfg-slider-wrap">
+          <div class="cfg-slider-row">
+            <input type="range" class="cfg-slider" id="sW" min="2" max="10" value="3" step="0.5">
+            <div class="cfg-val"><span id="vW">3</span> <span>m</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="cfg-label">Hauteur (m)</div>
+        <div class="cfg-slider-wrap">
+          <div class="cfg-slider-row">
+            <input type="range" class="cfg-slider" id="sH" min="2.2" max="4.5" value="2.5" step="0.1">
+            <div class="cfg-val"><span id="vH">2.5</span> <span>m</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="cfg-label">Configuration</div>
+        <div class="cfg-options" id="cfgConfig">
+          <label class="cfg-opt sel">
+            <input type="radio" name="config" value="0" checked hidden>
+            <div class="cfg-opt-icon">🏗️</div>
+            <div class="cfg-opt-text">
+              <div class="cfg-opt-name">Plain-pied</div>
+              <div class="cfg-opt-sub">Bureau, technique, gardiennage</div>
+            </div>
+            <div class="cfg-opt-price">Base</div>
+          </label>
+          <label class="cfg-opt">
+            <input type="radio" name="config" value="4500" hidden>
+            <div class="cfg-opt-icon">🏠</div>
+            <div class="cfg-opt-text">
+              <div class="cfg-opt-name">S+1 — Étage</div>
+              <div class="cfg-opt-sub">Résidentiel, bureaux double niveau</div>
+            </div>
+            <div class="cfg-opt-price">+4 500 TND</div>
+          </label>
+          <label class="cfg-opt">
+            <input type="radio" name="config" value="9000" hidden>
+            <div class="cfg-opt-icon">🏢</div>
+            <div class="cfg-opt-text">
+              <div class="cfg-opt-name">S+2 — Double étage</div>
+              <div class="cfg-opt-sub">Immeuble modulaire résidentiel</div>
+            </div>
+            <div class="cfg-opt-price">+9 000 TND</div>
+          </label>
+        </div>
+      </div>
+      <div>
+        <div class="cfg-label">Équipements</div>
+        <div class="cfg-checkboxes">
+          <label class="cfg-check"><input type="checkbox" data-price="1800" onchange="calcPrice()"><span class="cfg-check-label">🍳 Cuisine équipée</span><span class="cfg-check-price">+1 800 TND</span></label>
+          <label class="cfg-check"><input type="checkbox" data-price="1500" onchange="calcPrice()"><span class="cfg-check-label">🚿 Salle de bain / douche</span><span class="cfg-check-price">+1 500 TND</span></label>
+          <label class="cfg-check"><input type="checkbox" data-price="1200" onchange="calcPrice()"><span class="cfg-check-label">⚡ Installation électrique complète</span><span class="cfg-check-price">+1 200 TND</span></label>
+          <label class="cfg-check"><input type="checkbox" data-price="800" onchange="calcPrice()"><span class="cfg-check-label">❄️ Climatisation / VMC</span><span class="cfg-check-price">+800 TND</span></label>
+          <label class="cfg-check"><input type="checkbox" data-price="3500" onchange="calcPrice()"><span class="cfg-check-label">📡 Smart Cabin (domotique)</span><span class="cfg-check-price">+3 500 TND</span></label>
+          <label class="cfg-check"><input type="checkbox" data-price="4500" onchange="calcPrice()"><span class="cfg-check-label">☀️ Panneaux photovoltaïques (off-grid)</span><span class="cfg-check-price">+4 500 TND</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="cfg-result">
+      <div class="cfg-result-title">Votre estimation</div>
+      <div class="cfg-result-summary" id="cfgSummary">
+        <div class="cfg-line"><span>Surface</span><b id="cfgSurface">18 m²</b></div>
+        <div class="cfg-line"><span>Cabine de base</span><b id="cfgBase">13 000 TND</b></div>
+        <div class="cfg-line" id="cfgConfigLine" style="display:none"><span>Configuration</span><b id="cfgConfigVal">—</b></div>
+        <div class="cfg-line" id="cfgExtrasLine" style="display:none"><span>Équipements</span><b id="cfgExtrasVal">—</b></div>
+      </div>
+      <div class="cfg-total">
+        <div>
+          <div class="cfg-total-label">Total estimé</div>
+          <div class="cfg-ttc">TTC · hors transport</div>
+        </div>
+        <div class="cfg-total-val" id="cfgTotal">13 000</div>
+      </div>
+      <a href="#cta" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:var(--smd)">
+        Obtenir un devis précis →
+      </a>
+      <p class="cfg-disclaimer">* Estimation indicative. Prix définitif établi après étude technique du cahier des charges. Livraison et pose selon localisation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ GAMMES ══════════════ -->
+<section id="gammes">
+  <div class="gammes-header">
+    <div class="s-label" style="color:var(--mist)">Nos Gammes</div>
+    <h2 class="gammes-title reveal">
+      4 gammes,<br>
+      <em>une seule exigence</em>
+    </h2>
+  </div>
+  <div class="gammes-grid">
+    <div class="gamme-card reveal">
+      <div class="gamme-accent" style="background:var(--ink)"></div>
+      <div class="gamme-card-top">
+        <div class="gamme-icon" style="background:var(--linen)">🏗️</div>
+        <div class="gamme-name">Classic</div>
+        <div class="gamme-tag">Industriel · Technique · Sécurité</div>
+      </div>
+      <div class="gamme-card-body">
+        <ul class="gamme-feat">
+          <li>Dimensions 100% sur mesure</li>
+          <li>Ossature acier S355 galvanisée</li>
+          <li>Panneaux PU 100mm λ=0.022</li>
+          <li>Portes & fenêtres personnalisées</li>
+          <li>Peinture & finition au choix</li>
+          <li>Livraison + pose incluses</li>
+        </ul>
+        <div class="gamme-price">Dès <em>722 TND/m²</em></div>
+        <a href="#cta" class="btn btn-out" style="width:100%;justify-content:center;font-size:var(--t2xs)">Demander un devis</a>
+      </div>
+    </div>
+    <div class="gamme-card reveal" style="transition-delay:.1s">
+      <div class="gamme-accent" style="background:var(--gold)"></div>
+      <div class="gamme-card-top">
+        <div class="gamme-icon" style="background:#FFF9D6">🏠</div>
+        <div class="gamme-name">Comfort</div>
+        <div class="gamme-tag">Résidentiel · S+1 · S+2</div>
+      </div>
+      <div class="gamme-card-body">
+        <ul class="gamme-feat">
+          <li>Plain-pied, S+1 ou S+2</li>
+          <li>Cuisine équipée intégrée</li>
+          <li>Salle de bain complète</li>
+          <li>Cloisonnement personnalisé</li>
+          <li>Électricité & plomberie</li>
+          <li>Tableau + éclairage LED</li>
+        </ul>
+        <div class="gamme-price">Dès <em>950 TND/m²</em></div>
+        <a href="#cta" class="btn btn-gold" style="width:100%;justify-content:center;font-size:var(--t2xs)">Demander un devis</a>
+      </div>
+    </div>
+    <div class="gamme-card reveal" style="transition-delay:.2s">
+      <div class="gamme-accent" style="background:#1565C0"></div>
+      <div class="gamme-card-top">
+        <div class="gamme-icon" style="background:#E3F2FD">📡</div>
+        <div class="gamme-name">Smart</div>
+        <div class="gamme-tag">Domotique · Connectée · IoT</div>
+      </div>
+      <div class="gamme-card-body">
+        <ul class="gamme-feat">
+          <li>Contrôle smartphone (portes, fenêtres)</li>
+          <li>Monitoring température & humidité</li>
+          <li>Alertes push temps réel</li>
+          <li>Accès multi-utilisateurs</li>
+          <li>Caméras IP & alarme</li>
+          <li>Contrôle badge / biométrique</li>
+        </ul>
+        <div class="gamme-price">Dès <em>1 100 TND/m²</em></div>
+        <a href="#cta" class="btn btn-ink" style="width:100%;justify-content:center;font-size:var(--t2xs)">Demander un devis</a>
+      </div>
+    </div>
+    <div class="gamme-card reveal" style="transition-delay:.3s">
+      <div class="gamme-accent" style="background:#2E7D32"></div>
+      <div class="gamme-card-top">
+        <div class="gamme-icon" style="background:#E8F5E9">☀️</div>
+        <div class="gamme-name">Autonomous</div>
+        <div class="gamme-tag">Off-grid · Solaire · Nature</div>
+      </div>
+      <div class="gamme-card-body">
+        <ul class="gamme-feat">
+          <li>Panneaux photovoltaïques intégrés</li>
+          <li>Batteries de stockage jour/nuit</li>
+          <li>Zéro raccordement réseau</li>
+          <li>Récupération eau de pluie</li>
+          <li>Désert, forêt, montagne, chantier</li>
+          <li>100% autonome & durable</li>
+        </ul>
+        <div class="gamme-price">Dès <em>1 350 TND/m²</em></div>
+        <a href="#cta" class="btn btn-ink" style="background:#2E7D32;color:#fff;width:100%;justify-content:center;font-size:var(--t2xs)">Demander un devis</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ SMART CABIN ══════════════ -->
+<section id="smart">
+  <div class="smart-l">
+    <div class="smart-eyebrow"><div class="live-dot"></div> Nouvelle Gamme Smart</div>
+    <h2 class="smart-title reveal-l">
+      La cabine qui<br>
+      <em>vous obéit</em>
+    </h2>
+    <p class="smart-desc reveal-l" style="transition-delay:.1s">
+      Pilotez votre cabine depuis votre smartphone, où que vous soyez. Portes, fenêtres, température, humidité, sécurité — tout dans votre poche. Aucun concurrent en Tunisie ne propose ce niveau d'intégration.
+    </p>
+    <div class="smart-features reveal-l" style="transition-delay:.2s">
+      <div class="smart-feat">
+        <div class="smart-feat-icon">🔓</div>
+        <div class="smart-feat-body">
+          <div class="smart-feat-name">Contrôle des accès</div>
+          <div class="smart-feat-desc">Ouvrez/fermez portes et fenêtres à distance</div>
+        </div>
+      </div>
+      <div class="smart-feat">
+        <div class="smart-feat-icon">🌡️</div>
+        <div class="smart-feat-body">
+          <div class="smart-feat-name">Monitoring en temps réel</div>
+          <div class="smart-feat-desc">Température, humidité, alertes automatiques</div>
+        </div>
+      </div>
+      <div class="smart-feat">
+        <div class="smart-feat-icon">📹</div>
+        <div class="smart-feat-body">
+          <div class="smart-feat-name">Sécurité connectée</div>
+          <div class="smart-feat-desc">Caméras IP, alarme, historique d'accès</div>
+        </div>
+      </div>
+      <div class="smart-feat">
+        <div class="smart-feat-icon">💡</div>
+        <div class="smart-feat-body">
+          <div class="smart-feat-name">Éclairage intelligent</div>
+          <div class="smart-feat-desc">Scènes lumineuses, programmation, détection</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal-l" style="transition-delay:.3s">
+      <a href="#cta" class="btn btn-gold">Découvrir la Smart Cabin →</a>
+    </div>
+  </div>
+  <div class="smart-r">
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="phone-status"><span>09:41</span><span>● ● ●</span></div>
+        <div class="phone-app-title">METTEC <span>Smart</span></div>
+        <div class="phone-room">
+          <div class="phone-room-label">Cabine Principale · En ligne</div>
+          <div class="phone-sensors">
+            <div class="phone-sensor">
+              <div class="phone-sensor-val" id="pTemp">24°C</div>
+              <div class="phone-sensor-lbl">Température</div>
+            </div>
+            <div class="phone-sensor">
+              <div class="phone-sensor-val" id="pHum">58%</div>
+              <div class="phone-sensor-lbl">Humidité</div>
+            </div>
+          </div>
+          <div class="phone-controls">
+            <div class="phone-ctrl on" onclick="togglePhoneCtrl(this)">
+              <div class="phone-ctrl-icon">🚪</div>
+              <div class="phone-ctrl-name">Porte principale</div>
+              <div class="phone-ctrl-state">OUVERT</div>
+            </div>
+            <div class="phone-ctrl" onclick="togglePhoneCtrl(this)">
+              <div class="phone-ctrl-icon">🪟</div>
+              <div class="phone-ctrl-name">Fenêtre Nord</div>
+              <div class="phone-ctrl-state">FERMÉ</div>
+            </div>
+            <div class="phone-ctrl on" onclick="togglePhoneCtrl(this)">
+              <div class="phone-ctrl-icon">💡</div>
+              <div class="phone-ctrl-name">Éclairage</div>
+              <div class="phone-ctrl-state">ALLUMÉ</div>
+            </div>
+            <div class="phone-ctrl on" onclick="togglePhoneCtrl(this)">
+              <div class="phone-ctrl-icon">❄️</div>
+              <div class="phone-ctrl-name">Clim</div>
+              <div class="phone-ctrl-state">ACTIF</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ STEPS ══════════════ -->
 <section id="steps">
   <div class="steps-header">
     <div class="steps-header-l">
-      <div class="s-label" style="color:var(--mist)">// Notre méthode</div>
-      <h2 class="steps-title">11 ÉTAPES<br><span style="-webkit-text-stroke:2px var(--ink);color:transparent">VERS</span><br><em>l'indestructible</em></h2>
+      <div class="s-label" style="color:var(--mist)">Notre méthode</div>
+      <h2 class="steps-title reveal">
+        11 étapes<br>
+        <em>vers l'indestructible</em>
+      </h2>
     </div>
-    <div class="steps-header-r">
-      <p class="steps-intro">Chaque cabine METTEC suit un chemin rigoureux et transparent. Cliquez sur chaque étape pour découvrir le détail de notre savoir-faire. <strong>De l'analyse au trousseau de clés</strong>, vous êtes aux commandes.</p>
+    <div class="steps-header-r reveal" style="transition-delay:.15s">
+      <p class="steps-intro">Chaque cabine METTEC suit un chemin rigoureux et transparent. Cliquez sur chaque étape pour découvrir le détail de notre savoir-faire. De l'analyse au trousseau de clés, vous êtes aux commandes.</p>
+      <div style="margin-top:var(--smd)">
+        <div class="steps-progress-bar"><div class="steps-progress-fill" id="stProg"></div></div>
+        <div class="steps-prog-label">Progression : <span id="stProgLbl">0 / 11</span></div>
+      </div>
     </div>
-  </div>
-  <div class="steps-progress">
-    <div class="steps-progress-fill" id="stProg"></div>
-    <span class="steps-progress-label" id="stProgLbl">0 / 11</span>
   </div>
   <div class="steps-list" id="stepsList"></div>
 </section>
 
-<!-- GALLERY BAND -->
-<div class="gallery-band" id="galleryBand"></div>
-
-<!-- ══════════════════════════════════════════
-     ★ PARTNERS MARQUEE
-══════════════════════════════════════════ -->
+<!-- ══════════════ PARTNERS ══════════════ -->
 <section id="partners">
   <div class="partners-header">
-    <div class="partners-label">// Ils nous font confiance</div>
-    <div class="partners-count">4 partenaires de référence</div>
+    <div class="partners-label">Ils nous font confiance</div>
+    <h2 class="partners-title reveal">4 partenaires <em>de référence</em></h2>
   </div>
-  <div class="partners-track">
-    <div class="partners-belt" id="partnersBelt">
-      <!-- Injected by JS × 2 for seamless loop -->
+  <div class="partners-grid">
+    <div class="partner-item reveal">
+      <div class="partner-logo">Aéroport Monastir</div>
+      <div class="partner-sector">Infrastructure Aéroportuaire</div>
+    </div>
+    <div class="partner-item reveal" style="transition-delay:.1s">
+      <div class="partner-logo">Nouvelair</div>
+      <div class="partner-sector">Aviation Commerciale</div>
+    </div>
+    <div class="partner-item reveal" style="transition-delay:.2s">
+      <div class="partner-logo">Ambassade du Japon</div>
+      <div class="partner-sector">Diplomatique & Institutionnel</div>
+    </div>
+    <div class="partner-item reveal" style="transition-delay:.3s">
+      <div class="partner-logo">Azurex</div>
+      <div class="partner-sector">Industrie</div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     ★ SAV & GARANTIE
-══════════════════════════════════════════ -->
-<section id="sav">
-  <!-- LEFT: statement -->
-  <div class="sav-l">
-    <div class="sav-eyebrow">
-      // Après-vente & Garantie
-      <span class="live-dot"></span>
+<!-- ══════════════ TESTIMONIALS ══════════════ -->
+<section id="testimonials">
+  <div class="testi-inner">
+    <div class="testi-header">
+      <h2 class="testi-title reveal">Ce que disent <em>nos clients</em></h2>
+      <div class="testi-nav">
+        <button class="testi-nav-btn" id="testiPrev" aria-label="Précédent">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="testi-nav-btn" id="testiNext" aria-label="Suivant">
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
     </div>
-    <h2 class="sav-title">
+    <div class="testi-track">
+      <div class="testi-slider" id="testiSlider">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-quote">METTEC a livré notre poste de contrôle en un temps record avec une qualité irréprochable. La certification EN 1090 a été déterminante dans notre choix — c'est une exigence que peu de fabricants en Tunisie peuvent satisfaire.</div>
+          <div class="testi-author">
+            <div class="testi-name">Direction Technique</div>
+            <div class="testi-role">Aéroport International Monastir</div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-quote">Nous avons commandé deux cabines administratives. Le processus en 11 étapes nous a donné une visibilité totale sur l'avancement. Le rendu final dépasse nos attentes — structure solide, finitions soignées, délais respectés.</div>
+          <div class="testi-author">
+            <div class="testi-name">Directeur Général</div>
+            <div class="testi-role">TransMetal Tunisie</div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-quote">Notre villa modulaire S+1 est exactement ce que nous avions imaginé. L'équipe METTEC a su transformer nos exigences les plus précises en réalité. La garantie décennale nous a définitivement convaincus.</div>
+          <div class="testi-author">
+            <div class="testi-name">Famille Benhassen</div>
+            <div class="testi-role">Villa Bekalta, Monastir</div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-quote">La Smart Cabin installée dans notre resort est devenue une attraction à part entière. Les clients sont fascinés par la technologie de contrôle à distance. METTEC a inventé quelque chose de nouveau ici.</div>
+          <div class="testi-author">
+            <div class="testi-name">Directeur Hébergement</div>
+            <div class="testi-role">Resort Azurex, Hammamet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ SAV ══════════════ -->
+<section id="sav">
+  <div class="sav-l">
+    <div class="sav-eyebrow">Après-vente & Garantie <span class="live-dot" style="margin-left:4px"></span></div>
+    <h2 class="sav-title reveal-l">
       TOUJOURS<br>
       <em>à vos côtés</em><br>
       <span class="ghost">APRÈS</span>
     </h2>
-    <p class="sav-desc">
-      Chez METTEC, la livraison n'est pas une fin — c'est le début d'un <strong>engagement durable</strong>. Notre équipe technique reste mobilisée pour assurer la pérennité de votre investissement.
-    </p>
-    <!-- Guarantee badge -->
-    <div class="sav-badge">
+    <p class="sav-desc reveal-l" style="transition-delay:.1s">Chez METTEC, la livraison n'est pas une fin — c'est le début d'un engagement durable. Notre équipe technique reste mobilisée pour assurer la pérennité de votre investissement.</p>
+    <div class="sav-badge reveal-l" style="transition-delay:.2s">
       <div class="sav-badge-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
       <div class="sav-badge-body">
         <div class="sav-badge-num">3<sub>ans</sub></div>
         <div class="sav-badge-label">Garantie structure</div>
-        <div class="sav-badge-sub">Couvrant ossature, soudures & enveloppe</div>
+        <div class="sav-badge-sub">Ossature · Soudures · Enveloppe</div>
       </div>
     </div>
   </div>
-
-  <!-- RIGHT: 3 service cards -->
   <div class="sav-r">
-    <!-- Card 1 -->
     <div class="sav-card">
       <div class="sav-card-num">01</div>
       <div class="sav-card-body">
-        <div class="sav-card-icon">
-          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 011.18 1.18 2 2 0 013.18 0h3a2 2 0 012 1.72c.128.96.341 1.905.63 2.82a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.46-.46a2 2 0 012.11-.45c.916.29 1.86.502 2.82.63A2 2 0 0122 16.92z"/></svg>
-        </div>
+        <div class="sav-card-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.83a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/></svg></div>
         <div class="sav-card-title">Hotline Technique 48h</div>
-        <div class="sav-card-desc">
-          Un ingénieur METTEC répond à votre appel ou email sous <strong>48 heures ouvrées</strong>. Diagnostic à distance, conseils d'entretien, orientation vers notre équipe terrain.
-        </div>
+        <div class="sav-card-desc">Un ingénieur METTEC répond sous <strong>48h ouvrées</strong>. Diagnostic à distance, conseils d'entretien, orientation terrain.</div>
         <div class="sav-card-tag">Inclus — 12 mois</div>
       </div>
     </div>
-
-    <!-- Card 2 -->
     <div class="sav-card">
       <div class="sav-card-num">02</div>
       <div class="sav-card-body">
-        <div class="sav-card-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </div>
+        <div class="sav-card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
         <div class="sav-card-title">Visite de Contrôle Annuelle</div>
-        <div class="sav-card-desc">
-          Notre technicien se déplace sur site chaque année pour inspecter <strong>l'état de l'ossature, des soudures, de l'étanchéité</strong> et des équipements électriques. Un rapport écrit vous est remis.
-        </div>
+        <div class="sav-card-desc">Notre technicien inspecte sur site l'ossature, soudures, étanchéité et équipements. <strong>Rapport écrit remis.</strong></div>
         <div class="sav-card-tag">Sur option — Contrat maintenance</div>
       </div>
     </div>
-
-    <!-- Card 3 -->
     <div class="sav-card">
       <div class="sav-card-num">03</div>
       <div class="sav-card-body">
-        <div class="sav-card-icon">
-          <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
-        </div>
-        <div class="sav-card-title">Intervention & Réparation</div>
-        <div class="sav-card-desc">
-          Toute anomalie structurelle couverte par la garantie est prise en charge <strong>sans frais</strong> dans un délai de 7 jours. Pièces de rechange METTEC disponibles en stock permanent.
-        </div>
+        <div class="sav-card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="sav-card-title">Intervention sous 7 jours</div>
+        <div class="sav-card-desc">Toute anomalie structurelle couverte par garantie prise en charge <strong>sans frais en 7 jours</strong>. Pièces METTEC en stock.</div>
         <div class="sav-card-tag">Garantie 3 ans — structure</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ CTA ══ -->
-<section id="cta" style="display:grid">
-  <div class="cta-l">
-    <div class="cta-ghost">M</div>
-    <div class="s-label" style="color:var(--mist)">// Démarrer votre projet</div>
-    <h2 class="cta-title">VOTRE<br><span style="-webkit-text-stroke:1.5px var(--cream);color:transparent">CABINE</span><br><em>vous attend</em></h2>
-    <p class="cta-sub">Vous avez parcouru les 11 étapes. Entrons dans le concret — votre cahier des charges, <strong>notre expertise</strong>.</p>
-    <div class="form">
-      <div class="f2">
-        <div class="fd"><label>Nom</label><input type="text" placeholder="Ahmed Ben Salah"/></div>
-        <div class="fd"><label>Société</label><input type="text" placeholder="Votre entreprise"/></div>
+<!-- ══════════════ CERTIFICATIONS ══════════════ -->
+<section id="certs">
+  <div class="certs-inner">
+    <div class="s-label" style="color:var(--mist)">Certifications & Normes</div>
+    <div class="certs-grid">
+      <div class="cert-card reveal">
+        <div class="cert-badge">EN 1090</div>
+        <div class="cert-norm">EXC2 — Structures acier</div>
+        <div class="cert-desc">Résistance 42 000N. Standard européen le plus exigeant pour les structures métalliques.</div>
       </div>
-      <div class="f2">
-        <div class="fd"><label>Email</label><input type="email" placeholder="contact@entreprise.tn"/></div>
-        <div class="fd"><label>Téléphone</label><input type="tel" placeholder="+216 XX XXX XXX"/></div>
+      <div class="cert-card reveal" style="transition-delay:.08s">
+        <div class="cert-badge">ISO 1461</div>
+        <div class="cert-norm">Galvanisation — 87μm</div>
+        <div class="cert-desc">Protection anticorrosion à chaud. Résistance UV garantie sur 25 ans.</div>
       </div>
-      <div class="fd"><label>Type de cabine</label>
-        <select><option>Cabine de gardiennage</option><option>Cabine de contrôle</option><option>Poste de péage</option><option>Sur mesure</option><option>Autre</option></select>
+      <div class="cert-card reveal" style="transition-delay:.16s">
+        <div class="cert-badge">ISO 9606</div>
+        <div class="cert-norm">Soudeurs MIG/MAG TIG</div>
+        <div class="cert-desc">Qualification soudeurs certifiés. CND Ultrason 100% des cordons.</div>
       </div>
-      <div class="fd"><label>Description</label><textarea placeholder="Dimensions, contraintes, délais..."></textarea></div>
-      <button class="btn btn-gold">Envoyer ma demande <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22 11 13 2 9 22 2"/></svg></button>
-    </div>
-  </div>
-
-  <div class="cta-r">
-    <div class="s-label" style="color:var(--mist)">// Certifications & normes</div>
-    <div class="cert-list">
-      <div class="cert-item"><div class="cert-tag">EN 1090</div><div class="cert-desc">Exécution structures acier — EXC2<br>Résistance 42 000N</div></div>
-      <div class="cert-item"><div class="cert-tag">ISO 1461</div><div class="cert-desc">Galvanisation à chaud — 87μm<br>Protection corrosion & UV</div></div>
-      <div class="cert-item"><div class="cert-tag">ISO 9606</div><div class="cert-desc">Qualification soudeurs MIG/MAG TIG<br>CND Ultrason 100%</div></div>
-      <div class="cert-item"><div class="cert-tag">RT 2020</div><div class="cert-desc">Étanchéité à l'air<br>Performance thermique</div></div>
-      <div class="cert-item"><div class="cert-tag">ISO 9001</div><div class="cert-desc">Management qualité<br>Traçabilité totale</div></div>
-    </div>
-    <a href="#cta" class="btn btn-ink" style="align-self:flex-start">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 0119.73 2a2 2 0 012 1.72 12.84 12.84 0 01.07 2 2 0 01-2 2Z"/></svg>
-      +216 XX XXX XXX
-    </a>
-  </div>
-
-  <div class="cta-strip">
-    <div class="cta-strip-txt">Prêt à construire <em>ensemble</em> ?</div>
-    <div class="cta-strip-btns">
-      <a href="mailto:mettec@gbm.tn" class="btn btn-ink">mettec@gbm.tn</a>
-      <a href="tel:+21600000000" class="btn btn-out" style="border-color:var(--ink)">+216 XX XXX XXX</a>
+      <div class="cert-card reveal" style="transition-delay:.24s">
+        <div class="cert-badge">RT 2020</div>
+        <div class="cert-norm">Thermique & Étanchéité</div>
+        <div class="cert-desc">Performance thermique conforme. Étanchéité à l'air garantie.</div>
+      </div>
+      <div class="cert-card reveal" style="transition-delay:.32s">
+        <div class="cert-badge">ISO 9001</div>
+        <div class="cert-norm">Management Qualité</div>
+        <div class="cert-desc">Traçabilité totale de chaque composant. Processus qualité documentés.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<footer>
-  <div class="logo f-logo">
-    <div class="lhex"><span>MT</span></div>
-    <div class="ltxt"><div class="lname">MET<em>TEC</em></div><div class="lsub">Cabines Modulaires</div></div>
+<!-- ══════════════ CTA ══════════════ -->
+<section id="cta">
+  <div class="cta-l">
+    <div class="cta-ghost">MT</div>
+    <div class="s-label" style="color:var(--sand)">Démarrer votre projet</div>
+    <h2 class="cta-title reveal-l">
+      VOTRE<br>
+      <em>CABINE</em><br>
+      vous attend
+    </h2>
+    <p class="cta-sub reveal-l" style="transition-delay:.1s">Vous avez exploré les <strong>11 étapes</strong>. Entrons dans le concret — votre cahier des charges, notre expertise. Réponse sous <strong>48h ouvrées</strong>, devis technique gratuit.</p>
+    <form class="form" id="mainForm" onsubmit="submitForm(event)">
+      <div class="f2">
+        <div class="fd"><label>Nom complet</label><input type="text" placeholder="Ahmed Ben Salah" required></div>
+        <div class="fd"><label>Société</label><input type="text" placeholder="Votre entreprise"></div>
+      </div>
+      <div class="f2">
+        <div class="fd"><label>Email</label><input type="email" placeholder="contact@entreprise.tn" required></div>
+        <div class="fd"><label>Téléphone</label><input type="tel" placeholder="+216 XX XXX XXX"></div>
+      </div>
+      <div class="fd">
+        <label>Type de cabine</label>
+        <select>
+          <option>Classic — Technique / Industriel</option>
+          <option>Comfort — Résidentiel S+1 / S+2</option>
+          <option>Smart — Cabine connectée domotique</option>
+          <option>Autonomous — Off-grid solaire</option>
+          <option>Sur mesure — Cahier des charges spécifique</option>
+        </select>
+      </div>
+      <div class="fd">
+        <label>Description du projet</label>
+        <textarea placeholder="Dimensions souhaitées, contraintes de site, délais, équipements particuliers..."></textarea>
+      </div>
+      <div class="form-send">
+        <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center">
+          Envoyer ma demande
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+      <div class="form-success" id="formSuccess">✅ Votre demande a bien été envoyée ! Nous vous répondrons sous 48h ouvrées.</div>
+    </form>
   </div>
-  <div class="fcp">METTEC — Zone industrielle, Manzel Harb, Monastir</div>
-  <div class="fcp"><a href="https://www.linkedin.com/in/hammouda-ahmed-mustapha-a55270195/">© 2026 — Designed by AMH</a></div>
+  <div class="cta-r">
+    <div class="cta-r-top">
+      <h2 class="cta-r-title reveal-r">Nous<br><em>contacter</em></h2>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.83a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/></svg></div>
+          <div>
+            <div class="contact-item-title">+216 XX XXX XXX</div>
+            <div class="contact-item-val">Lun–Ven 8h–18h</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div>
+            <div class="contact-item-title">mettec@gbm.tn</div>
+            <div class="contact-item-val">Réponse sous 48h ouvrées</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div>
+            <div class="contact-item-title">Zone Ind. Manzel Harb</div>
+            <div class="contact-item-val">Monastir, Tunisie</div>
+          </div>
+        </div>
+      </div>
+      <a href="#cta" class="btn btn-ink" style="width:fit-content">Visite usine sur RDV →</a>
+    </div>
+    <div class="cta-map">
+      <div class="map-pin">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>METTEC — Monastir</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="footer-brand">
+    <a class="footer-logo" href="#">
+      <div class="footer-logo-hex"><span>MT</span></div>
+      <div class="footer-logo-name">METTEC</div>
+    </a>
+    <p class="footer-tagline">Cabines modulaires à ossature métallique. Sur mesure, certifiées EN 1090, livrées clé en main.</p>
+    <div class="footer-socials">
+      <a href="#" class="footer-social" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+      <a href="#" class="footer-social" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+      </a>
+      <a href="#" class="footer-social" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+    </div>
+  </div>
+  <div>
+    <div class="footer-col-title">Gammes</div>
+    <ul class="footer-links">
+      <li><a href="#gammes">Classic</a></li>
+      <li><a href="#gammes">Comfort S+1/S+2</a></li>
+      <li><a href="#smart">Smart Cabin</a></li>
+      <li><a href="#gammes">Autonomous</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-col-title">Société</div>
+    <ul class="footer-links">
+      <li><a href="#steps">Notre processus</a></li>
+      <li><a href="#certs">Certifications</a></li>
+      <li><a href="#partners">Références</a></li>
+      <li><a href="#sav">SAV & Garantie</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-col-title">Contact</div>
+    <ul class="footer-links">
+      <li><a href="tel:+21600000000">+216 XX XXX XXX</a></li>
+      <li><a href="mailto:mettec@gbm.tn">mettec@gbm.tn</a></li>
+      <li><a href="#">Monastir, Tunisie</a></li>
+      <li><a href="#cta">Devis gratuit</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 METTEC — Zone Industrielle, Manzel Harb, Monastir</span>
+    <div class="footer-legal">
+      <a href="#">Mentions légales</a>
+      <a href="#">Confidentialité</a>
+    </div>
+  </div>
 </footer>
 
 <script>
-/* ════════════════════════════════
-   3D CAROUSEL
-════════════════════════════════ */
-const SLIDES=[
-  {img:'slide1.webp',title:'Villa Bekalta',   tag:'Habitation'},
-  {img:'slide2.webp',title:'Admin TransMetal',tag:'Bureautique'},
-  {img:'slide3.webp',title:'Admin METTEC',    tag:'Bureautique'},
-  {img:'slide4.webp',title:'Aéroport Monastir',tag:'Industriel'},
-  {img:'slide5.webp',title:'Villa Ben Arous', tag:'Habitation'},
-  {img:'slide6.webp',title:'Maisonette',       tag:'Habitation'},
-  {img:'slide7.webp',title:'Cabine Technique', tag:'Industriel'},
-  {img:'slide8.webp',title:'Poste de Garde',   tag:'Sécurité'},
-];
-const SN=SLIDES.length;
-const carEl=document.getElementById('car3d');
-const dotsEl=document.getElementById('slDots');
-const cnEl=document.getElementById('slCn');
-let slIdx=0,slAuto=null;
+/* ════════════════════════════════════
+   HERO MINI 3D (Three.js)
+════════════════════════════════════ */
+(function initHero3D(){
+  const canvas = document.getElementById('heroCanvas');
+  if(!canvas || !window.THREE) return;
+  const R = canvas.parentElement;
+  const W = () => R.offsetWidth, H = () => R.offsetHeight * .7;
 
-SLIDES.forEach((s,i)=>{
-  const c=document.createElement('div');
-  c.className='csl';
-  c.innerHTML=`<div class="csl-num">${String(i+1).padStart(2,'0')}</div>
-    <img src="${s.img}" alt="${s.title}" loading="${i<2?'eager':'lazy'}" onerror="this.style.display='none'"/>
-    <div class="csl-cap"><b>${s.title}</b><span>${s.tag}</span></div>`;
-  c.addEventListener('click',()=>jumpTo(i));
-  carEl.appendChild(c);
-  const d=document.createElement('button');
-  d.className='hsl-dot'+(i===0?' on':'');
-  d.addEventListener('click',()=>jumpTo(i));
-  dotsEl.appendChild(d);
-});
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setClearColor(0x000000, 0);
 
-function getR(){return Math.round((carEl.getBoundingClientRect().width||220)/(2*Math.tan(Math.PI/SN)))}
-function layout(){const r=getR();Array.from(carEl.children).forEach((c,i)=>c.style.transform=`rotateY(${(360/SN)*i}deg) translateZ(${r}px)`)}
-layout();
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+  camera.position.set(5, 3.5, 5);
+  camera.lookAt(0, 0.5, 0);
 
-let spin=0;
-function jumpTo(idx){
-  clearTimeout(slAuto);
-  idx=((idx%SN)+SN)%SN;
-  let d=((idx-slIdx)*(360/SN));
-  if(d>180)d-=360;if(d<-180)d+=360;
-  spin-=d;slIdx=idx;
-  carEl.style.transform=`rotateY(${spin}deg)`;
-  cnEl.textContent=String(slIdx+1).padStart(2,'0');
-  document.querySelectorAll('.hsl-dot').forEach((d,i)=>d.classList.toggle('on',i===slIdx));
-  slAuto=setTimeout(()=>jumpTo(slIdx+1),5000);
+  function resize(){
+    renderer.setSize(W(), H());
+    camera.aspect = W() / H();
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Lights
+  scene.add(new THREE.AmbientLight(0xffeebb, 0.6));
+  const sun = new THREE.DirectionalLight(0xfff5cc, 1.2);
+  sun.position.set(5, 8, 4); sun.castShadow = true;
+  scene.add(sun);
+  const fill = new THREE.DirectionalLight(0x8899bb, 0.4);
+  fill.position.set(-4, 2, -3); scene.add(fill);
+
+  // Materials
+  const steelMat = new THREE.MeshStandardMaterial({color:0x444444,metalness:.7,roughness:.3});
+  const wallMat  = new THREE.MeshStandardMaterial({color:0xd4c9a8,roughness:.8});
+  const roofMat  = new THREE.MeshStandardMaterial({color:0x555555,metalness:.5,roughness:.4});
+  const glassMat = new THREE.MeshStandardMaterial({color:0x88ccff,metalness:.1,roughness:.1,transparent:true,opacity:.45});
+  const doorMat  = new THREE.MeshStandardMaterial({color:0x222222,metalness:.6,roughness:.4});
+  const goldMat  = new THREE.MeshStandardMaterial({color:0xf5da1a,metalness:.8,roughness:.2});
+
+  const cabin = new THREE.Group();
+  scene.add(cabin);
+
+  // Floor
+  const floor = new THREE.Mesh(new THREE.BoxGeometry(2.2,.04,1.2), steelMat);
+  floor.position.y = -0.02; floor.receiveShadow = true; cabin.add(floor);
+
+  // Walls
+  const walls = [
+    {s:[2.2,.05,1.2],p:[0,.025,0]}, // base
+    {s:[.06,1,.02],p:[-1.07,.52,.58]},{s:[.06,1,.02],p:[1.07,.52,.58]}, // front cols
+    {s:[.06,1,.02],p:[-1.07,.52,-.58]},{s:[.06,1,.02],p:[1.07,.52,-.58]}, // back cols
+    {s:[2.2,.06,.02],p:[0,.04,.58]},{s:[2.2,.06,.02],p:[0,.04,-.58]}, // base beams front/back
+    {s:[.02,.06,1.2],p:[-1.07,.04,0]},{s:[.02,.06,1.2],p:[1.07,.04,0]}, // base beams sides
+    {s:[2.2,.06,.02],p:[0,1.02,.58]},{s:[2.2,.06,.02],p:[0,1.02,-.58]}, // top beams
+    {s:[.02,.06,1.2],p:[-1.07,1.02,0]},{s:[.02,.06,1.2],p:[1.07,1.02,0]},
+  ];
+  walls.forEach(w=>{
+    const m = new THREE.Mesh(new THREE.BoxGeometry(...w.s), steelMat);
+    m.position.set(...w.p); m.castShadow = true; cabin.add(m);
+  });
+
+  // Wall panels
+  const panels = [
+    {s:[2.1,.9,.04],p:[0,.52,-.58]}, // back
+    {s:[.9,.9,.04],p:[-0.55,.52,.58]}, // front left
+    {s:[.4,.9,.04],p:[0.8,.52,.58]},  // front right (small)
+  ];
+  panels.forEach(p=>{
+    const m = new THREE.Mesh(new THREE.BoxGeometry(...p.s), wallMat);
+    m.position.set(...p.p); m.castShadow = true; cabin.add(m);
+  });
+  // Side panels
+  [{p:[-1.07,.52,0]},{p:[1.07,.52,0]}].forEach(d=>{
+    const m = new THREE.Mesh(new THREE.BoxGeometry(.04,.9,1.1), wallMat);
+    m.position.set(...Object.values(d)); m.castShadow = true; cabin.add(m);
+  });
+
+  // Door
+  const door = new THREE.Mesh(new THREE.BoxGeometry(.35,.82,.06), doorMat);
+  door.position.set(0.2,.44,.61); door.castShadow = true; cabin.add(door);
+  const handle = new THREE.Mesh(new THREE.SphereGeometry(.025,8,8), goldMat);
+  handle.position.set(0.07,.44,.645); cabin.add(handle);
+
+  // Window
+  const win = new THREE.Mesh(new THREE.BoxGeometry(.38,.32,.03), glassMat);
+  win.position.set(-0.55,.6,.61); cabin.add(win);
+  const winFrame = new THREE.Mesh(new THREE.BoxGeometry(.44,.38,.04), steelMat);
+  winFrame.position.set(-0.55,.6,.595); cabin.add(winFrame);
+  const win2 = new THREE.Mesh(new THREE.BoxGeometry(.36,.30,.03), glassMat);
+  win2.position.set(-0.55,.6,.597); cabin.add(win2);
+
+  // Roof
+  const roof = new THREE.Mesh(new THREE.BoxGeometry(2.28,.06,1.28), roofMat);
+  roof.position.set(0,1.08,0); roof.castShadow = true; cabin.add(roof);
+
+  // Ground shadow plane
+  const gnd = new THREE.Mesh(new THREE.PlaneGeometry(8,8), new THREE.MeshStandardMaterial({color:0x1a1a0d,roughness:1}));
+  gnd.rotation.x = -Math.PI/2; gnd.position.y = -0.05; gnd.receiveShadow = true; scene.add(gnd);
+
+  // Auto rotate
+  let isDragging = false, lastX = 0, lastY = 0;
+  let rotY = Math.PI/6, rotX = .2, autoRot = true;
+
+  canvas.addEventListener('mousedown', e=>{isDragging=true;lastX=e.clientX;lastY=e.clientY;autoRot=false});
+  window.addEventListener('mouseup', ()=>isDragging=false);
+  window.addEventListener('mousemove', e=>{
+    if(!isDragging) return;
+    rotY += (e.clientX-lastX)*.012;
+    rotX += (e.clientY-lastY)*.008;
+    rotX = Math.max(-.4,Math.min(.6,rotX));
+    lastX=e.clientX; lastY=e.clientY;
+  });
+  canvas.addEventListener('touchstart', e=>{isDragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;autoRot=false},{passive:true});
+  window.addEventListener('touchend', ()=>isDragging=false);
+  window.addEventListener('touchmove', e=>{
+    if(!isDragging) return;
+    rotY += (e.touches[0].clientX-lastX)*.012;
+    rotX += (e.touches[0].clientY-lastY)*.008;
+    lastX=e.touches[0].clientX; lastY=e.touches[0].clientY;
+  },{passive:true});
+
+  let t = 0;
+  (function loop(){
+    requestAnimationFrame(loop);
+    t += .007;
+    if(autoRot) rotY += .007;
+    cabin.rotation.y = rotY;
+    cabin.rotation.x = rotX;
+    cabin.position.y = Math.sin(t) * 0.06;
+    renderer.render(scene, camera);
+  })();
+})();
+
+/* ════════════════════════════════════
+   MAIN CABIN 3D VIEWER (Three.js)
+════════════════════════════════════ */
+(function initCabin3D(){
+  const canvas = document.getElementById('cabinCanvas');
+  if(!canvas || !window.THREE) return;
+  const cw = ()=>canvas.parentElement.clientWidth;
+  const ch = ()=>Math.min(canvas.parentElement.clientWidth*.75, 620);
+
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setClearColor(0x0d1520, 1);
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0d1520);
+  scene.fog = new THREE.Fog(0x0d1520, 12, 30);
+
+  const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
+  camera.position.set(9, 5.5, 9);
+  camera.lookAt(0, 1, 0);
+
+  function resize(){
+    const w = cw(), h = ch();
+    renderer.setSize(w, h);
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Lights
+  scene.add(new THREE.AmbientLight(0x334466, 0.8));
+  const sun = new THREE.DirectionalLight(0xfff8e0, 1.8);
+  sun.position.set(8,12,6); sun.castShadow=true;
+  sun.shadow.mapSize.width=2048; sun.shadow.mapSize.height=2048;
+  scene.add(sun);
+  const fill = new THREE.DirectionalLight(0x4466ff, 0.3);
+  fill.position.set(-6,4,-4); scene.add(fill);
+  const goldLight = new THREE.PointLight(0xf5da1a, 0.6, 8);
+  goldLight.position.set(0,3,0); scene.add(goldLight);
+
+  // Materials
+  const steelMat  = new THREE.MeshStandardMaterial({color:0x888a90,metalness:.85,roughness:.25});
+  const steelDark = new THREE.MeshStandardMaterial({color:0x3a3d45,metalness:.9,roughness:.3});
+  const panelMat  = new THREE.MeshStandardMaterial({color:0xc8c0a0,roughness:.7,metalness:.05});
+  const roofMat   = new THREE.MeshStandardMaterial({color:0x555566,metalness:.6,roughness:.35});
+  const glassMat  = new THREE.MeshStandardMaterial({color:0x88ccff,metalness:.1,roughness:.05,transparent:true,opacity:.4,side:THREE.DoubleSide});
+  const doorMat   = new THREE.MeshStandardMaterial({color:0x1a1a1a,metalness:.8,roughness:.3});
+  const goldMat   = new THREE.MeshStandardMaterial({color:0xf5da1a,metalness:.9,roughness:.1,emissive:0xaa8800,emissiveIntensity:.2});
+  const floorMat  = new THREE.MeshStandardMaterial({color:0x15202e,roughness:.9});
+
+  const cabin = new THREE.Group();
+  scene.add(cabin);
+
+  // ── Ground ──
+  const gnd = new THREE.Mesh(new THREE.PlaneGeometry(20,20), floorMat);
+  gnd.rotation.x=-Math.PI/2; gnd.position.y=-.01; gnd.receiveShadow=true; scene.add(gnd);
+  // Grid
+  const grid = new THREE.GridHelper(20,20,0x1a2e40,0x1a2e40);
+  grid.position.y=.001; scene.add(grid);
+
+  // ── Foundation ──
+  const found = new THREE.Mesh(new THREE.BoxGeometry(6.4,.12,3.4),steelDark);
+  found.position.y=.06; found.receiveShadow=true; cabin.add(found);
+
+  // ── Frame columns ──
+  const cols = [[-3,1.35,-1.5],[-3,1.35,1.5],[3,1.35,-1.5],[3,1.35,1.5]];
+  cols.forEach(p=>{
+    const c=new THREE.Mesh(new THREE.BoxGeometry(.12,2.7,.12),steelMat);
+    c.position.set(...p); c.castShadow=true; cabin.add(c);
+    // Base plate
+    const bp=new THREE.Mesh(new THREE.BoxGeometry(.22,.06,.22),steelDark);
+    bp.position.set(p[0],.03,p[2]); cabin.add(bp);
+  });
+  // Mid columns
+  [[0,1.35,-1.5],[0,1.35,1.5]].forEach(p=>{
+    const c=new THREE.Mesh(new THREE.BoxGeometry(.1,2.7,.1),steelMat);
+    c.position.set(...p); c.castShadow=true; cabin.add(c);
+  });
+
+  // ── Top beams ──
+  const tbeams=[
+    [0,2.76,-1.5,.04,1.5],[0,2.76,1.5,.04,1.5], // side
+    [-3,2.76,0,6.4,.04],  [3,2.76,0,6.4,.04],   // hmm
+    [0,2.76,0,6.4,.04],
+  ];
+  [[0,2.76,-1.5],[0,2.76,1.5]].forEach(p=>{
+    const b=new THREE.Mesh(new THREE.BoxGeometry(6.4,.1,.1),steelMat);
+    b.position.set(...p); b.castShadow=true; cabin.add(b);
+  });
+  [[-3,2.76,0],[3,2.76,0],[0,2.76,0]].forEach(p=>{
+    const b=new THREE.Mesh(new THREE.BoxGeometry(.1,.1,3.1),steelMat);
+    b.position.set(...p); b.castShadow=true; cabin.add(b);
+  });
+  // Bottom frame
+  [[0,.12,-1.5],[0,.12,1.5]].forEach(p=>{
+    const b=new THREE.Mesh(new THREE.BoxGeometry(6.4,.08,.08),steelDark);
+    b.position.set(...p); cabin.add(b);
+  });
+  [[-3,.12,0],[3,.12,0]].forEach(p=>{
+    const b=new THREE.Mesh(new THREE.BoxGeometry(.08,.08,3.1),steelDark);
+    b.position.set(...p); cabin.add(b);
+  });
+
+  // ── Wall panels ──
+  // Back wall
+  const bw=new THREE.Mesh(new THREE.BoxGeometry(6.2,2.5,.1),panelMat);
+  bw.position.set(0,1.38,-1.5); bw.castShadow=true; cabin.add(bw);
+  // Roof
+  const rp=new THREE.Mesh(new THREE.BoxGeometry(6.5,.16,3.3),roofMat);
+  rp.position.set(0,2.82,0); rp.castShadow=true; cabin.add(rp);
+  // Side walls
+  [{x:-3,rx:0},{x:3,rx:0}].forEach(d=>{
+    const sw=new THREE.Mesh(new THREE.BoxGeometry(.1,2.5,3.1),panelMat);
+    sw.position.set(d.x,1.38,0); sw.castShadow=true; cabin.add(sw);
+  });
+  // Front wall panels (partial - leave space for door + window)
+  const fw1=new THREE.Mesh(new THREE.BoxGeometry(1.8,2.5,.1),panelMat);
+  fw1.position.set(-2.2,1.38,1.5); fw1.castShadow=true; cabin.add(fw1);
+  const fw2=new THREE.Mesh(new THREE.BoxGeometry(1.4,2.5,.1),panelMat);
+  fw2.position.set(2.3,1.38,1.5); fw2.castShadow=true; cabin.add(fw2);
+  // Top strip above door
+  const fwt=new THREE.Mesh(new THREE.BoxGeometry(6.2,.55,.1),panelMat);
+  fwt.position.set(0,2.5,1.5); cabin.add(fwt);
+
+  // ── Door ──
+  const door=new THREE.Group(); cabin.add(door);
+  const doorPanel=new THREE.Mesh(new THREE.BoxGeometry(.9,2.0,.08),doorMat);
+  doorPanel.position.set(-.05,1.12,1.55); doorPanel.castShadow=true; door.add(doorPanel);
+  // Door frame
+  const dfL=new THREE.Mesh(new THREE.BoxGeometry(.08,2.1,.12),steelDark);
+  dfL.position.set(.5,1.12,1.52); door.add(dfL);
+  const dfR=new THREE.Mesh(new THREE.BoxGeometry(.08,2.1,.12),steelDark);
+  dfR.position.set(-.55,1.12,1.52); door.add(dfR);
+  const dfT=new THREE.Mesh(new THREE.BoxGeometry(1.15,.08,.12),steelDark);
+  dfT.position.set(-.05,2.18,1.52); door.add(dfT);
+  // Handle
+  const hnd=new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,.25,8),goldMat);
+  hnd.rotation.z=Math.PI/2; hnd.position.set(.32,.95,1.61); door.add(hnd);
+  const hndb=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),goldMat);
+  hndb.position.set(.2,.95,1.61); door.add(hndb);
+
+  // ── Windows ──
+  function addWindow(x,y,z,w2,h2,depth){
+    const wg=new THREE.Group(); cabin.add(wg);
+    const wf=new THREE.Mesh(new THREE.BoxGeometry(w2+.12,h2+.12,depth+.04),steelDark);
+    wf.position.set(x,y,z); wg.add(wf);
+    const wg2=new THREE.Mesh(new THREE.BoxGeometry(w2,h2,depth),glassMat);
+    wg2.position.set(x,y,z+.01); wg.add(wg2);
+    // Cross divider
+    const wch=new THREE.Mesh(new THREE.BoxGeometry(w2+.02,.025,depth+.02),steelDark);
+    wch.position.set(x,y,z); wg.add(wch);
+    const wcv=new THREE.Mesh(new THREE.BoxGeometry(.025,h2+.02,depth+.02),steelDark);
+    wcv.position.set(x,y,z); wg.add(wcv);
+  }
+  addWindow(1.4,1.7,1.52,1.2,.75,.08);
+  addWindow(-1.8,1.7,-1.52,1.4,.7,.08);
+  addWindow(-3.02,1.5,0,.08,1.2,.9);
+
+  // ── Staircase for S+1 hint ──
+  for(let i=0;i<3;i++){
+    const st=new THREE.Mesh(new THREE.BoxGeometry(.7,.12,.35),steelDark);
+    st.position.set(3.4+.05,.06+i*.12,1.0-i*.175); cabin.add(st);
+  }
+
+  // ── METTEC logo plate ──
+  const logoPlate=new THREE.Mesh(new THREE.BoxGeometry(1.8,.5,.04),steelDark);
+  logoPlate.position.set(0,2.2,1.55); cabin.add(logoPlate);
+
+  // ── Roof solar panels (Autonomous preview) ──
+  for(let i=0;i<3;i++){
+    for(let j=0;j<2;j++){
+      const sp=new THREE.Mesh(new THREE.BoxGeometry(1.6,.03,.7),
+        new THREE.MeshStandardMaterial({color:0x111a33,metalness:.3,roughness:.6}));
+      sp.position.set(-2.2+i*1.9,2.91,-.7+j*.75); cabin.add(sp);
+      const spg=new THREE.Mesh(new THREE.BoxGeometry(1.55,.01,.65),
+        new THREE.MeshStandardMaterial({color:0x1a2a50,metalness:.1,roughness:.3}));
+      spg.position.set(-2.2+i*1.9,2.925,-.7+j*.75); cabin.add(spg);
+    }
+  }
+
+  // Views
+  const views={
+    perspective:{pos:[9,5.5,9],   look:[0,1,0]},
+    front:      {pos:[0,1.5,14],  look:[0,1.3,0]},
+    side:       {pos:[14,2,0],    look:[0,1.3,0]},
+    top:        {pos:[0,16,0.01], look:[0,0,0]},
+  };
+  window.setCabinView = function(name){
+    document.querySelectorAll('.v3d-btn').forEach(b=>b.classList.remove('active'));
+    event.target.classList.add('active');
+    const v=views[name];
+    if(!v) return;
+    const dur=1000;
+    const start={x:camera.position.x,y:camera.position.y,z:camera.position.z};
+    const t0=performance.now();
+    function animCam(now){
+      const t=Math.min((now-t0)/dur,1);
+      const e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+      camera.position.set(start.x+(v.pos[0]-start.x)*e,start.y+(v.pos[1]-start.y)*e,start.z+(v.pos[2]-start.z)*e);
+      camera.lookAt(...v.look);
+      if(t<1) requestAnimationFrame(animCam);
+    }
+    requestAnimationFrame(animCam);
+  };
+
+  let wireMode=false;
+  window.toggleWireframe=function(){
+    wireMode=!wireMode;
+    cabin.traverse(c=>{if(c.isMesh&&c.material&&!c.material.transparent){c.material.wireframe=wireMode}});
+  };
+
+  // Mouse orbit
+  let isDragging=false,lastX=0,lastY=0,rotY=0,rotX=0;
+  let radius=14, phi=Math.PI/5, theta=Math.PI/4;
+  canvas.addEventListener('mousedown',e=>{isDragging=true;lastX=e.clientX;lastY=e.clientY});
+  window.addEventListener('mouseup',()=>isDragging=false);
+  window.addEventListener('mousemove',e=>{
+    if(!isDragging) return;
+    theta -= (e.clientX-lastX)*.008;
+    phi   += (e.clientY-lastY)*.006;
+    phi=Math.max(.15,Math.min(1.4,phi));
+    lastX=e.clientX;lastY=e.clientY;
+  });
+  canvas.addEventListener('wheel',e=>{
+    e.preventDefault();
+    radius=Math.max(6,Math.min(22,radius+e.deltaY*.02));
+  },{passive:false});
+  canvas.addEventListener('touchstart',e=>{isDragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY},{passive:true});
+  window.addEventListener('touchend',()=>isDragging=false);
+  window.addEventListener('touchmove',e=>{
+    if(!isDragging)return;
+    theta-=(e.touches[0].clientX-lastX)*.01;
+    phi+=(e.touches[0].clientY-lastY)*.008;
+    phi=Math.max(.15,Math.min(1.4,phi));
+    lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;
+  },{passive:true});
+
+  // Gold light pulse
+  let lt=0;
+  (function loop(){
+    requestAnimationFrame(loop);
+    lt+=.016;
+    goldLight.intensity=.4+Math.sin(lt*.8)*.25;
+    if(isDragging){
+      camera.position.x=Math.sin(theta)*Math.sin(phi)*radius;
+      camera.position.y=Math.cos(phi)*radius;
+      camera.position.z=Math.cos(theta)*Math.sin(phi)*radius;
+      camera.lookAt(0,1,0);
+    }
+    renderer.render(scene,camera);
+  })();
+})();
+
+/* ════════════════════════════════════
+   CONFIGURATOR
+════════════════════════════════════ */
+const BASE_RATE = 722.2; // TND/m²
+const MIN_BASE = 13000;
+
+function calcPrice(){
+  const L=parseFloat(document.getElementById('sL').value);
+  const W=parseFloat(document.getElementById('sW').value);
+  const H=parseFloat(document.getElementById('sH').value);
+  document.getElementById('vL').textContent=L;
+  document.getElementById('vW').textContent=W;
+  document.getElementById('vH').textContent=H.toFixed(1);
+
+  const surface=L*W;
+  document.getElementById('cfgSurface').textContent=surface.toFixed(1)+' m²';
+
+  const base=Math.max(MIN_BASE, Math.round(surface*BASE_RATE/100)*100);
+  document.getElementById('cfgBase').textContent=base.toLocaleString('fr-FR')+' TND';
+
+  const configRadio=document.querySelector('input[name="config"]:checked');
+  const configExtra=configRadio?parseInt(configRadio.value):0;
+  if(configExtra>0){
+    document.getElementById('cfgConfigLine').style.display='flex';
+    document.getElementById('cfgConfigVal').textContent='+'+configExtra.toLocaleString('fr-FR')+' TND';
+  } else {
+    document.getElementById('cfgConfigLine').style.display='none';
+  }
+
+  let extras=0;
+  document.querySelectorAll('.cfg-check input:checked').forEach(c=>extras+=parseInt(c.dataset.price||0));
+  if(extras>0){
+    document.getElementById('cfgExtrasLine').style.display='flex';
+    document.getElementById('cfgExtrasVal').textContent='+'+extras.toLocaleString('fr-FR')+' TND';
+  } else {
+    document.getElementById('cfgExtrasLine').style.display='none';
+  }
+
+  const total=base+configExtra+extras;
+  document.getElementById('cfgTotal').textContent=total.toLocaleString('fr-FR')+' TND';
 }
-slAuto=setTimeout(()=>jumpTo(1),5000);
-document.getElementById('slP').onclick=()=>jumpTo(slIdx-1);
-document.getElementById('slN').onclick=()=>jumpTo(slIdx+1);
-carEl.addEventListener('mouseenter',()=>clearTimeout(slAuto));
-carEl.addEventListener('mouseleave',()=>{slAuto=setTimeout(()=>jumpTo(slIdx+1),4000)});
-let hTx=0;
-const heroEl=document.querySelector('.hero-r');
-heroEl.addEventListener('touchstart',e=>{hTx=e.touches[0].clientX},{passive:true});
-heroEl.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-hTx;if(Math.abs(dx)>40)jumpTo(dx<0?slIdx+1:slIdx-1)},{passive:true});
-window.addEventListener('resize',layout,{passive:true});
 
-/* ════════════════════════════════
-   GALLERY BAND
-════════════════════════════════ */
-const gallerySlides=[
-  {img:'slide1.webp',title:'Villa Bekalta',tag:'Habitation'},
-  {img:'slide3.webp',title:'Admin METTEC',tag:'Bureautique'},
-  {img:'slide5.webp',title:'Villa Ben Arous',tag:'Habitation'},
-  {img:'slide7.webp',title:'Cabine Technique',tag:'Industriel'},
-];
-const gbEl=document.getElementById('galleryBand');
-gallerySlides.forEach(s=>{
-  const d=document.createElement('div');d.className='gb-item';
-  d.innerHTML=`<img src="${s.img}" alt="${s.title}" loading="lazy" onerror="this.style.display='none'"/>
-    <div class="gb-item-over"><b>${s.title}</b><span>${s.tag}</span></div>`;
-  gbEl.appendChild(d);
+['sL','sW','sH'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('input',calcPrice);
 });
-
-/* ════════════════════════════════
-   ★ PARTNERS BELT
-════════════════════════════════ */
-const PARTNERS=[
-  {img:'logo1.png', name:'Aéroport Monastir'},
-  {img:'logo2.png', name:'Nouvelair'},
-  {img:'logo3.png', name:'Ambassade du Japon'},
-  {img:'logo4.png', name:'Azurex'},
-];
-
-const belt=document.getElementById('partnersBelt');
-// Build × 2 for seamless infinite scroll
-[...PARTNERS,...PARTNERS].forEach(p=>{
-  const item=document.createElement('div');
-  item.className='partner-item';
-  item.title=p.name;
-  item.innerHTML=`
-    <img
-      class="partner-logo"
-      src="${p.img}"
-      alt="${p.name}"
-      loading="lazy"
-      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-    />
-    <div class="partner-placeholder" style="display:none">
-      <div class="partner-placeholder-hex"></div>
-      <div class="partner-placeholder-name">${p.name}</div>
-    </div>`;
-  belt.appendChild(item);
+document.querySelectorAll('input[name="config"]').forEach(r=>{
+  r.addEventListener('change',function(){
+    document.querySelectorAll('.cfg-opt').forEach(o=>o.classList.remove('sel'));
+    this.closest('.cfg-opt').classList.add('sel');
+    calcPrice();
+  });
 });
+calcPrice();
 
-/* ════════════════════════════════
-   ACCORDION STEPS
-════════════════════════════════ */
+/* ════════════════════════════════════
+   STEPS ACCORDION
+════════════════════════════════════ */
 const STEPS=[
-  {n:'01',ph:'Analyse',     title:'Cahier des Charges',
-   ds:[{icon:'doc',b:'Analyse des besoins',s:'Réunions techniques et relevés de site.'},{icon:'eye',b:'Étude de faisabilité',s:'Contraintes techniques et budgétaires.'},{icon:'time',b:'Planning prévisionnel',s:'Calendrier avec jalons clés.'}],img:'step1.webp'},
-  {n:'02',ph:'Conception',  title:'Plans Techniques 2D',
-   ds:[{icon:'ruler',b:'Plans d\'architecture',s:'Dessins 2D cotés selon normes.'},{icon:'shield',b:'Calculs structure',s:'Dimensionnement aux Eurocodes.'},{icon:'doc',b:'Dossier technique',s:'Validation client et administration.'}],img:'step2.webp'},
-  {n:'03',ph:'Conception',  title:'Modélisation 3D BIM',
-   ds:[{icon:'cube',b:'Maquette numérique BIM',s:'Modélisation 3D intégrale.'},{icon:'eye',b:'Visite virtuelle',s:'Votre cabine avant fabrication.'},{icon:'gear',b:'Détection conflits',s:'Interférences résolues en amont.'}],img:'step3.webp'},
-  {n:'04',ph:'Fabrication', title:'Découpe Acier S355',
-   ds:[{icon:'bolt',b:'Découpe plasma & laser',s:'Précision < 0.1mm.'},{icon:'gear',b:'Pliage CNC',s:'Reproductibilité parfaite.'},{icon:'check',b:'Contrôle dimensionnel',s:'Vérification systématique.'}],img:'step4.webp'},
-  {n:'05',ph:'Fabrication', title:'Soudure Certifiée',
-   ds:[{icon:'fire',b:'Soudure MIG/MAG & TIG',s:'Certifiés EN ISO 9606.'},{icon:'eye',b:'CND Ultrason',s:'Ressuage 100%.'},{icon:'shield',b:'Traçabilité complète',s:'Chaque cordon documenté.'}],img:'step5.webp'},
-  {n:'06',ph:'Finition',    title:'Galvanisation 87μm',
-   ds:[{icon:'shield',b:'Grenaillage SA 2.5',s:'Adhérence maximale.'},{icon:'drop',b:'Galvanisation 87μm',s:'Protection corrosion & UV.'},{icon:'check',b:'Contrôle épaisseur',s:'Validation couche par couche.'}],img:'step6.webp'},
-  {n:'07',ph:'Enveloppe',   title:'Panneaux Sandwich PU',
-   ds:[{icon:'layers',b:'Polyuréthane 100mm',s:'R > 5 m².K/W.'},{icon:'wind',b:'Étanchéité à l\'air',s:'Conformité RT2020.'},{icon:'bolt',b:'Fixation mécanique',s:'Résistance vent & neige.'}],img:'step7.webp'},
-  {n:'08',ph:'Réseaux',     title:'Installations Techniques',
-   ds:[{icon:'bolt',b:'Électricité & LED',s:'Tableaux, câblage complet.'},{icon:'drop',b:'Plomberie',s:'Eau froide/chaude, sanitaires.'},{icon:'wind',b:'VMC & climatisation',s:'Confort optimal.'}],img:'step8.webp'},
-  {n:'09',ph:'Finitions',   title:'Menuiseries & Accès',
-   ds:[{icon:'door',b:'Portes industrielles',s:'Menuiseries & occultations.'},{icon:'layers',b:'Quais & niveleurs',s:'Équipements logistiques.'},{icon:'gear',b:'Signalétique',s:'Marquage & issues de secours.'}],img:'step9.webp'},
-  {n:'10',ph:'Qualité',     title:'Contrôle 360° Final',
-   ds:[{icon:'check',b:'Inspection finale',s:'Vérification par corps de métier.'},{icon:'doc',b:'Dossier des ouvrages',s:'Plans conformes & PV.'},{icon:'shield',b:'Garantie décennale',s:'Assurance tous risques.'}],img:'step10.webp'},
-  {n:'11',ph:'Livraison',   title:'Remise des Clés',
-   ds:[{icon:'key',b:'Réception contradictoire',s:'Visite & signature PV.'},{icon:'doc',b:'Documentation complète',s:'Manuels d\'exploitation.'},{icon:'shield',b:'SAV & hotline',s:'Maintenance & assistance.'}],img:'step11.webp'},
+  {n:'01',ph:'Analyse',   title:'Cahier des Charges',
+   ds:[{icon:'doc',b:'Analyse des besoins',s:'Étude complète de vos exigences techniques.'},{icon:'ruler',b:'Contraintes de site',s:'Topographie, accès, réseaux.'},{icon:'shield',b:'Normes applicables',s:'Vérification réglementaire locale.'}]},
+  {n:'02',ph:'Conception', title:'Plans Techniques 2D',
+   ds:[{icon:'ruler',b:'Plans d\'architecture',s:'Dessins 2D cotés selon normes.'},{icon:'shield',b:'Calculs structure',s:'Dimensionnement aux Eurocodes.'},{icon:'doc',b:'Dossier technique',s:'Validation client et administration.'}]},
+  {n:'03',ph:'Conception', title:'Modélisation 3D BIM',
+   ds:[{icon:'cube',b:'Maquette numérique BIM',s:'Modélisation 3D intégrale.'},{icon:'eye',b:'Visite virtuelle',s:'Votre cabine avant fabrication.'},{icon:'gear',b:'Détection conflits',s:'Interférences résolues en amont.'}]},
+  {n:'04',ph:'Fabrication',title:'Découpe Acier S355',
+   ds:[{icon:'bolt',b:'Découpe plasma & laser',s:'Précision < 0.1mm.'},{icon:'gear',b:'Pliage CNC',s:'Reproductibilité parfaite.'},{icon:'check',b:'Contrôle dimensionnel',s:'Vérification systématique.'}]},
+  {n:'05',ph:'Fabrication',title:'Soudure Certifiée',
+   ds:[{icon:'fire',b:'Soudure MIG/MAG & TIG',s:'Certifiés EN ISO 9606.'},{icon:'eye',b:'CND Ultrason',s:'Contrôle 100% des cordons.'},{icon:'shield',b:'Traçabilité complète',s:'Chaque cordon documenté.'}]},
+  {n:'06',ph:'Finition',   title:'Galvanisation 87μm',
+   ds:[{icon:'shield',b:'Grenaillage SA 2.5',s:'Adhérence maximale.'},{icon:'drop',b:'Galvanisation 87μm',s:'Protection corrosion & UV.'},{icon:'check',b:'Contrôle épaisseur',s:'Validation couche par couche.'}]},
+  {n:'07',ph:'Enveloppe',  title:'Panneaux Sandwich PU',
+   ds:[{icon:'layers',b:'Polyuréthane 100mm',s:'R > 5 m².K/W.'},{icon:'wind',b:'Étanchéité à l\'air',s:'Conformité RT2020.'},{icon:'bolt',b:'Fixation mécanique',s:'Résistance vent & neige.'}]},
+  {n:'08',ph:'Réseaux',    title:'Installations Techniques',
+   ds:[{icon:'bolt',b:'Électricité & LED',s:'Tableaux, câblage complet.'},{icon:'drop',b:'Plomberie',s:'Eau froide/chaude, sanitaires.'},{icon:'wind',b:'VMC & climatisation',s:'Confort optimal.'}]},
+  {n:'09',ph:'Finitions',  title:'Menuiseries & Accès',
+   ds:[{icon:'door',b:'Portes sur mesure',s:'Dimensions & matériaux au choix.'},{icon:'layers',b:'Fenêtres personnalisées',s:'Fixe, ouvrante, oscillo-battante.'},{icon:'gear',b:'Signalétique',s:'Marquage & accès sécurisé.'}]},
+  {n:'10',ph:'Qualité',    title:'Contrôle 360° Final',
+   ds:[{icon:'check',b:'Inspection finale',s:'Vérification par corps de métier.'},{icon:'doc',b:'Dossier des ouvrages',s:'Plans conformes & PV.'},{icon:'shield',b:'Garantie décennale',s:'Assurance tous risques.'}]},
+  {n:'11',ph:'Livraison',  title:'Remise des Clés',
+   ds:[{icon:'key',b:'Réception contradictoire',s:'Visite & signature PV.'},{icon:'doc',b:'Documentation complète',s:'Manuels d\'exploitation.'},{icon:'shield',b:'SAV & hotline',s:'Maintenance & assistance.'}]},
 ];
-
 const ICONS={
   doc:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
   check:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
-  time:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
   ruler:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="1"/><path d="M12 6v12M17 6v5M7 6v5"/></svg>',
   shield:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
   cube:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>',
@@ -1150,20 +1803,17 @@ const ICONS={
   bolt:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
   fire:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.5.5-3 1.5-4"/></svg>',
   drop:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>',
-  wind:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg>',
+  wind:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1114 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg>',
   layers:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
   door:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16"/></svg>',
   key:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="4"/><path d="M12 12l8 8M14 14l2 2M17 11l2 2"/></svg>'
 };
-
 const listEl=document.getElementById('stepsList');
 const progEl=document.getElementById('stProg');
 const progLbl=document.getElementById('stProgLbl');
-
 STEPS.forEach((s,i)=>{
   const row=document.createElement('div');
   row.className='step-row';
-  row.id='sr'+i;
   row.innerHTML=`
     <div class="step-num-col"><div class="step-num">${s.n}</div></div>
     <div class="step-content-col">
@@ -1177,72 +1827,132 @@ STEPS.forEach((s,i)=>{
         </div>
       </div>
       <div class="step-body">
-        <div class="step-body-inner${s.img?' has-img':''}">
-          ${s.ds.map(d=>`
-            <div class="step-detail">
-              <div class="step-detail-icon">${ICONS[d.icon]||ICONS.check}</div>
-              <b>${d.b}</b>
-              <span>${d.s}</span>
-            </div>`).join('')}
-          ${s.img?`<div class="step-img"><img src="${s.img}" alt="${s.title}" loading="lazy" onerror="this.parentElement.style.background='var(--linen)';this.remove()"/></div>`:''}
+        <div class="step-body-inner">
+          ${s.ds.map(d=>`<div class="step-detail"><div class="step-detail-icon">${ICONS[d.icon]||ICONS.check}</div><b>${d.b}</b><span>${d.s}</span></div>`).join('')}
         </div>
       </div>
     </div>`;
   row.addEventListener('click',()=>{
     const wasOpen=row.classList.contains('open');
     document.querySelectorAll('.step-row.open').forEach(r=>r.classList.remove('open'));
-    if(!wasOpen){
-      row.classList.add('open');
-      setTimeout(()=>row.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
-    }
+    if(!wasOpen){row.classList.add('open');setTimeout(()=>row.scrollIntoView({behavior:'smooth',block:'nearest'}),80)}
     updateProgress();
   });
   listEl.appendChild(row);
 });
-
 function updateProgress(){
   let seen=new Set();
-  document.querySelectorAll('.step-row').forEach((r,i)=>{
-    if(r.classList.contains('open')||r.dataset.visited){r.dataset.visited='1';seen.add(i)}
-  });
+  document.querySelectorAll('.step-row').forEach((r,i)=>{if(r.classList.contains('open')||r.dataset.visited){r.dataset.visited='1';seen.add(i)}});
   const pct=Math.round(seen.size/STEPS.length*100);
   progEl.style.width=pct+'%';
   progLbl.textContent=seen.size+' / '+STEPS.length;
 }
 
-/* ════════════════════════════════
+/* ════════════════════════════════════
+   TESTIMONIALS SLIDER
+════════════════════════════════════ */
+let testiIdx=0;
+const slider=document.getElementById('testiSlider');
+const cards=slider.children;
+function updateTesti(){
+  const isMob=window.innerWidth<=640;
+  const step=isMob?1:2;
+  const maxIdx=Math.max(0,cards.length-step);
+  testiIdx=Math.max(0,Math.min(testiIdx,maxIdx));
+  const cardW=cards[0].offsetWidth;
+  slider.style.transform=`translateX(-${testiIdx*(cardW+2)}px)`;
+}
+document.getElementById('testiPrev').onclick=()=>{testiIdx--;updateTesti()};
+document.getElementById('testiNext').onclick=()=>{testiIdx++;updateTesti()};
+window.addEventListener('resize',updateTesti);
+
+/* ════════════════════════════════════
+   PHONE MOCK LIVE DATA
+════════════════════════════════════ */
+function togglePhoneCtrl(el){
+  const isOn=el.classList.toggle('on');
+  const stateEl=el.querySelector('.phone-ctrl-state');
+  const nameEl=el.querySelector('.phone-ctrl-name').textContent;
+  if(nameEl.includes('Porte')||nameEl.includes('Fenêtre')) stateEl.textContent=isOn?'OUVERT':'FERMÉ';
+  else if(nameEl.includes('Éclairage')) stateEl.textContent=isOn?'ALLUMÉ':'ÉTEINT';
+  else stateEl.textContent=isOn?'ACTIF':'INACTIF';
+}
+setInterval(()=>{
+  const t=(23+Math.random()*4).toFixed(1);
+  const h=(55+Math.random()*10).toFixed(0);
+  const te=document.getElementById('pTemp');
+  const he=document.getElementById('pHum');
+  if(te)te.textContent=t+'°C';
+  if(he)he.textContent=h+'%';
+},3000);
+
+/* ════════════════════════════════════
+   FORM
+════════════════════════════════════ */
+function submitForm(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('button[type=submit]');
+  btn.textContent='Envoi en cours...';
+  btn.disabled=true;
+  setTimeout(()=>{
+    document.getElementById('mainForm').style.display='none';
+    document.getElementById('formSuccess').style.display='block';
+  },1200);
+}
+
+/* ════════════════════════════════════
+   REVEAL ON SCROLL
+════════════════════════════════════ */
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target)}});
+},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>revObs.observe(el));
+
+/* COUNT UP */
+const countObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting&&e.target.dataset.count){
+      const target=parseInt(e.target.dataset.count);
+      let v=0; const step=target/50;
+      const t=setInterval(()=>{v=Math.min(v+step,target);e.target.textContent=Math.round(v)+'+';if(v>=target)clearInterval(t)},30);
+      countObs.unobserve(e.target);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>countObs.observe(el));
+
+/* ════════════════════════════════════
    GRAIN
-════════════════════════════════ */
+════════════════════════════════════ */
 const cv=document.getElementById('grain'),gx=cv.getContext('2d');
 function rsz(){cv.width=innerWidth;cv.height=innerHeight}rsz();
 window.addEventListener('resize',rsz,{passive:true});
 (function g(){
   const w=cv.width,h=cv.height,id=gx.createImageData(w,h),d=id.data;
-  for(let i=0;i<d.length;i+=4){const v=(Math.random()-.5)*255*.12;d[i]=128+v;d[i+1]=128+v*.95;d[i+2]=128+v*.75;d[i+3]=Math.abs(v)*1.2}
+  for(let i=0;i<d.length;i+=4){const v=(Math.random()-.5)*255*.1;d[i]=128+v;d[i+1]=128+v*.95;d[i+2]=128+v*.75;d[i+3]=Math.abs(v)*1.1}
   gx.putImageData(id,0,0);requestAnimationFrame(g);
 })();
 
-/* CURSOR */
+/* ════════════════════════════════════
+   CURSOR
+════════════════════════════════════ */
 const dotEl=document.getElementById('cur'),ringEl=document.getElementById('curR');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
-(function cl(){dotEl.style.cssText=`left:${mx}px;top:${my}px`;rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ringEl.style.cssText=`left:${rx}px;top:${ry}px`;requestAnimationFrame(cl)})();
+(function cl(){dotEl.style.left=mx+'px';dotEl.style.top=my+'px';rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ringEl.style.left=rx+'px';ringEl.style.top=ry+'px';requestAnimationFrame(cl)})();
 
 /* SCROLL */
-function onScroll(){
+window.addEventListener('scroll',()=>requestAnimationFrame(()=>{
   const sy=window.scrollY;
   document.getElementById('nav').classList.toggle('on',sy>60);
   document.getElementById('btt').classList.toggle('show',sy>300);
   document.getElementById('tpbF').style.width=(sy/(document.body.scrollHeight-innerHeight)*100)+'%';
-}
-window.addEventListener('scroll',()=>requestAnimationFrame(onScroll),{passive:true});
+}),{passive:true});
 
 /* BURGER */
 const burg=document.getElementById('burg'),mob=document.getElementById('mob');
 burg.onclick=()=>{burg.classList.toggle('open');mob.classList.toggle('open');document.body.style.overflow=mob.classList.contains('open')?'hidden':''};
-mob.querySelectorAll('a').forEach(a=>a.onclick=()=>{burg.classList.remove('open');mob.classList.remove('open');document.body.style.overflow=''});
-
-window.addEventListener('load',()=>{layout();onScroll()});
+function closeMob(){mob.classList.remove('open');burg.classList.remove('open');document.body.style.overflow=''}
 </script>
 </body>
 </html>
